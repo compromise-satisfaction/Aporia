@@ -19,13 +19,20 @@ function Game_load(width,height){
 
       var Loading = new Entity();
       Loading._element = document.createElement("img");
-      Loading._element.src = "https://raw.githubusercontent.com/compromise-satisfaction/novel_game/gh-pages/画像/読み込み中.gif";
+      Loading._element.src = "https://raw.githubusercontent.com/compromise-satisfaction/Saved/refs/heads/master/画像/その他/読み込み中.png";
       Loading.width = width;
       Loading.height = width/5;
       Loading.y = height/2 - Loading.height/2;
+      Loading.opacity = 0;
 
       scene.addChild(Background);
       scene.addChild(Loading);
+
+      scene.addEventListener("enterframe",function(){
+        if(Loading.tl.queue.length) return;
+        if(Loading.opacity) Loading.tl.fadeOut(10);
+        else Loading.tl.fadeIn(10);
+      });
 
       return scene;
     };
@@ -49,6 +56,7 @@ function Game_load(width,height){
       Card_Name["絶望神アンチホープ"] = 13;
       Card_Name["アフター・グロー"] = 14;
       Card_Name["バニーラ"] = "https://www.ka-nabell.com/img/card/card100001778_1.jpg";
+      Card_Name["増殖するG"] = "https://www.ka-nabell.com/img/card/card100292274_1.jpg";
       Card_Name["モリンフェン"] = "https://www.ka-nabell.com/img/card/card100222215_1.jpg";
       Card_Name["光天使ブックス"] = "https://www.ka-nabell.com/img/card/card100012511_1.jpg";
       Card_Name["ペンギン・ナイトメア"] = "https://www.ka-nabell.com/img/card/card1000517_1.jpg";
@@ -62,6 +70,7 @@ function Game_load(width,height){
         Datas[I].時間 = I + "日目";
         Datas[I].タイトル = Temp[1];
         Datas[I].URL = Card_Name[Temp[6]];
+
         if(JSON.stringify(Datas[I].URL).length < 3) Datas[I].URL = IMAGE_U + Datas[I].URL + ".png";
         Datas[I].初手 = Temp[4].split("\n");
         Datas[I].終手 = Temp[5].split("\n");
