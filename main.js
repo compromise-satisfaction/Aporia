@@ -152,7 +152,11 @@ function Game_load(width,height){
       Create_Select(0,height/10*0,width,height/10);
       //Create_Text_Area(0,height/10*7,width,height/10,Password,"ラストドロー");
       //Create_Text_Area(0,height/10*8,width,height/10,"","URL");
-      //Create_Button(0,height/10*9,width,height/10,"これを消す");
+      Create_Button(height/10*0,height/10*9,height/10,height/10,"↑");
+      Create_Button(height/10*1,height/10*9,height/10,height/10,"↓");
+      Create_Button(width-height/10*1,height/10*9,height/10,height/10,"↑");
+      Create_Button(width-height/10*2,height/10*9,height/10,height/10,"↓");
+      Create_Button(height/10*2,height/10*9,width-height/10*4,height/10,"Space");
 
       function Create_Select(X,Y,W,H){
        I = Selects.length;
@@ -175,6 +179,7 @@ function Game_load(width,height){
        };
 
        Images._element.src = "";
+       Selects[I].Length = Option.length - 1;
 
        scene.addChild(Selects[I]);
        return;
@@ -193,13 +198,15 @@ function Game_load(width,height){
           Buttons[I].backgroundColor = "buttonface";
           scene.addChild(Buttons[I]);
           Buttons[I]._element.onclick = function(e){
-            console.log(ID);
-            game.replaceScene(Loading_Scene());
-            fetch(EXE,{method: 'POST'})
-              .then(res => res.json())
-              .then(result => {
-              game.replaceScene(Result_Scene(result));
-            },);
+            switch(V){
+              case "Space":
+                D_Shuffle();
+                break;
+              case "↑":
+              case "↓":
+                UP_DOWN(V);
+                break;
+            };
           };
           return;
         };
@@ -271,7 +278,56 @@ function Game_load(width,height){
         return;
       };
 
+      function Hand_shuffle(Hand,XX,YY,XR,YR,t){
+        XX -= Hand[0].width/2;
+        var X = XX;
+        var Y = YY;
+        var r = [];
+        var R = [];
+        var Number = null;
+        if(Hand.length==1) Hand[0].tl.moveTo(X,Y,t);
+        else{
+          for(var I = 0; I < Hand.length; I++) r[I] = [360 / Hand.length * I,I];
+          while(r.length){
+            Number = Rand(r.length);
+            R[R.length] = r[Number][0];
+            r.splice(Number,1);
+          };
+          for(var I = 0; I < Hand.length; I++){
+            X = XX;
+            Y = YY;
+            X -= Math.sin(R[I] * Math.PI / 180) * XR;
+            Y -= Math.cos(R[I] * Math.PI / 180) * YR;
+            Hand[I].tl.moveTo(X,Y,t);
+            Hand[I].tl.and();
+            Hand[I].tl.rotateBy(1000+Rand(360),t);
+          };
+        };
+        return;
+      };
+
+      var Time = 0;
+
+      function UP_DOWN(e){
+        if(Time) return;
+        switch(e){
+          case "↑":
+            Selects[0]._element.value--;
+            if(!Selects[0]._element.value) Selects[0]._element.value = Selects[0].Length;
+            break;
+          case "↓":
+            Selects[0]._element.value++;
+            if(!Selects[0]._element.value) Selects[0]._element.value = 1;
+            break;
+        };
+        Time = 2;
+        return;
+      };
+
       scene.addEventListener("enterframe",function(){
+        if(Time) Time--;
+        if(game.input.up) UP_DOWN("↑");
+        if(game.input.down) UP_DOWN("↓");
         /*
         if(Password!=Text_Areas[0]._element.value){
           Password = Text_Areas[0]._element.value;
@@ -307,7 +363,41 @@ function Game_load(width,height){
         };
       });
 
+      function D_Shuffle(){
+        if(Fast[0].tl.queue.length) return;
+        Hand_shuffle(Fast,width/5,height/2-KSH,height*2,height*2,10);
+        Hand_shuffle(Last,width/5*4,height/2-KSH,height*2,height*2,10);
+        for(var I = 0; I < Fast.length; I++){
+          Fast[I].tl.moveTo(width/5-KSW/2,height/2-KSH,10);
+          Fast[I].tl.and();
+          Fast[I].tl.rotateTo(0,10);
+        };
+        for(var I = 0; I < Last.length; I++){
+          Last[I].tl.moveTo(width/5*4-KSW/2,height/2-KSH,10);
+          Last[I].tl.and();
+          Last[I].tl.rotateTo(0,10);
+        };
+        Hand_Set(Fast,width/5,height/2-KSH,10);
+        Hand_Set(Last,width/5*4,height/2-KSH,10);
+        return;
+      };
+
+      window.addEventListener("keydown",function(e){
+        switch(e.code){
+          case "Space":
+            D_Shuffle();
+            break;
+          default:
+            console.log(e);
+            break;
+        };
+      });
+
       return scene;
+    };
+
+    function Rand(N){
+      return(Math.floor(Math.random()*(N)));
     };
 
     game.replaceScene(Loading_Scene());
