@@ -64,16 +64,20 @@ function Game_load(width,height){
 
       var IMAGE_U = "https://raw.githubusercontent.com/compromise-satisfaction/Saved/refs/heads/master/GAS/image/";
 
+      var Data_Names = {};
+
+      for(var I = 0; I < Datas[0].length; I++) Data_Names[Datas[0][I]] = I;
+
       for(var I = 1; I < Datas.length; I++){
         Temp = Datas[I];
         Datas[I] = {};
         Datas[I].時間 = I + "日目";
-        Datas[I].タイトル = Temp[1];
-        Datas[I].URL = Card_Name[Temp[6]];
+        Datas[I].タイトル = Temp[Data_Names["タイトル"]];
+        Datas[I].URL = Card_Name[Temp[Data_Names["結果"]]];
 
         if(JSON.stringify(Datas[I].URL).length < 3) Datas[I].URL = IMAGE_U + Datas[I].URL + ".png";
-        Datas[I].初手 = Temp[4].split("\n");
-        Datas[I].終手 = Temp[5].split("\n");
+        Datas[I].初手 = Temp[Data_Names["初期手札"]].split("\n");
+        Datas[I].終手 = Temp[Data_Names["最終手札"]].split("\n");
         for(var J = 0; J < Datas[I].初手.length; J++){
             Datas[I].初手[J] = Card_Name[Datas[I].初手[J]];
             if(JSON.stringify(Datas[I].初手[J]).length < 3) Datas[I].初手[J] = IMAGE_U + Datas[I].初手[J] + ".png";
