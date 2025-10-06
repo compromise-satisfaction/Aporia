@@ -8,7 +8,7 @@ function Game_load(width,height){
     var Hand_Cards_Scene = function(){
       var scene = new Scene();
 
-      var S = 3;
+      var S = 2;
       var KSW = 212/S;
       var KSH = 310/S;
       var Cards = [];
@@ -17,23 +17,7 @@ function Game_load(width,height){
       var MANNAKA_X = width/2-KSW/2;
       var MANNAKA_Y = height/2-KSH/2;
 
-      var J = 0;
-      var K = 0;
-      for(var I = 0; I < Card_Name.length; I++){
-        Temp = width - KSW;
-        Temp /= 19;
-        Temp *= J;
-        Temp2 = height/2 - KSH;
-        Temp2 /= 2;
-        Temp2 *= K;
-        Temp2 += height/2
-        Cards.push(Create_Image(Temp,Temp2,KSW,KSH,Card_Name[I]));
-        J++;
-        if(J==20){
-          K++;
-          J = 0;
-        };
-      };
+      for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I]));
 
       var Hand = [];
       var Deck = [];
@@ -41,7 +25,7 @@ function Game_load(width,height){
       var Cemetery_GO = 0;
 
       for(var I = 0; I < Cards.length; I++) Deck.push(Cards[I]);
-      Deck_Set(Deck,0);
+      Deck_Set(Deck,20);
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[14]));
       Cards[Cards.length-1].場所 = "ニードルワーム";
 
@@ -86,7 +70,7 @@ function Game_load(width,height){
           };
           Deck_Set(Deck,20);
           Hand_Set(Hand,width/2,height/12,10);
-          Cemetery_Set(Cemetery,width-KSW*2.5,height/4,20);
+          Cemetery_Set(Cemetery,width-KSW/2,KSH/2,20);
           return;
         });
         scene.addChild(Images[I]);
@@ -102,17 +86,17 @@ function Game_load(width,height){
           Deck[I] = Deck[I][1];
           Deck[I].Target = I;
           Temp = width - KSW;
-          Temp /= 19;
+          Temp /= 6;
           Temp *= J;
           Temp2 = height/2 - KSH;
-          Temp2 /= 2;
+          Temp2 /= 3;
           Temp2 *= K;
-          Temp2 += height/2
+          Temp2 += KSH * 2;
           Deck[I].tl.moveTo(Temp,Temp2,t);
           Deck[I].tl.and();
           Deck[I].tl.rotateTo(0,t);
           J++;
-          if(J==20){
+          if(J==7){
             K++;
             J = 0;
           };
