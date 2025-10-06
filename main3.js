@@ -28,6 +28,7 @@ function Game_load(width,height){
       Deck_Set(Deck,20);
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[14]));
       Cards[Cards.length-1].場所 = "ニードルワーム";
+      scene.addChild(Cards[Cards.length-1]);
 
       function Create_Image(X,Y,W,H,Data){
         var I = Images.length;
@@ -41,6 +42,7 @@ function Game_load(width,height){
         else Images[I].Number = JSON.stringify(I);
         while(Images[I].Number.length<10) Images[I].Number = "0" + Images[I].Number;
         Images[I].addEventListener("touchstart",function(e){
+          Sound_Play(Draw_SE);
           switch(this.場所){
             case "ニードルワーム":
               Cemetery_GO = 5;
@@ -69,11 +71,10 @@ function Game_load(width,height){
               break;
           };
           Deck_Set(Deck,20);
-          Hand_Set(Hand,width/2,height/12,10);
+          Hand_Set(Hand,width/2,KSH/4,10);
           Cemetery_Set(Cemetery,width-KSW/2,KSH/2,20);
           return;
         });
-        scene.addChild(Images[I]);
         return(Images[I]);
       };
 
@@ -130,7 +131,7 @@ function Game_load(width,height){
             Hand[0].tl.moveTo(XX,YY,t);
             Hand[0].tl.and();
             Hand[0].tl.rotateTo(0,t);
-            Z_axis(Hand[0]);
+            Z_axis(Hand);
             return;
           case 2://2~6枚
           case 3:
