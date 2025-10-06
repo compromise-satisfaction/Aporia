@@ -2,9 +2,90 @@ enchant();
 
 function Game_load(width,height){
   var game = new Game(width,height);
-  game.fps = 20;
+  game.fps = 60;
   game.onload = function(){
 
+
+    var Scene_s = {};
+    var New_Scene = false;
+    var Big_Card_src = null;
+    var Keydown_P = 1;
+    var Scene_Change = 0;
+    function Play_Scene_Set(Name){
+      New_Scene = false;
+      if(Scene_s[Name]) return(Scene_s[Name]);
+      else{
+        New_Scene = true;
+        Scene_s[Name] = new Scene();
+      };
+      return(Scene_s[Name]);
+    };
+
+    var Big_Card_Scene = function(W,H){
+      var scene = Play_Scene_Set("画像拡大");
+      if(!New_Scene) return scene;
+
+      var Background = new Entity();
+      Background._element = document.createElement("img");
+      Background._element.src = "https://raw.githubusercontent.com/compromise-satisfaction/novel_game/gh-pages/画像/半透明(黒).png";
+      Background.width = width;
+      Background.height = height;
+
+      var Card = new Entity();
+      Card._element = document.createElement("img");
+      Card._element.src = Big_Card_src;
+      Card.width = width;
+      Card.height = width / W * H;
+      if(Card.height < height) Card.y = (height - Card.height) / 2;
+      else{
+        Card.height = height;
+        Card.width = height / H * W;
+        Card.x = (width - Card.width) / 2;
+      };
+
+      scene.addChild(Background);
+      scene.addChild(Card);
+
+      window.addEventListener("keydown",function(e){
+        if(Keydown_P!=2||Scene_Change) return;
+        switch(e.key){
+          case " ":
+            Keydown_P = 1;
+            Scene_Change = 5;
+            game.popScene();
+            break;
+          case "b":
+            if(Card.tl.queue.length) return;
+            if(Card.y){
+              Card.tl.moveTo(Card.x,0,5);
+              Card.tl.and();
+              Card.tl.scaleTo(1,1,5);
+            }
+            else{
+              Card.tl.moveTo(Card.x,75,5);
+              Card.tl.and();
+              Card.tl.scaleTo(1.8,1.8,5);
+            };
+            break;
+          default:
+            console.log(e.key);
+            break;
+        };
+        return;
+      });
+
+      scene.addEventListener("enterframe",function(e){
+        if(Card._element.src != Big_Card_src) Card._element.src = Big_Card_src;
+        if(Scene_Change){
+          Scene_Change--;
+          if(Scene_Change < 0) Scene_Change = 0;
+          return;
+        };
+        return;
+      });
+
+      return scene;
+    };
     var Hand_Cards_Scene = function(){
       var scene = new Scene();
 
@@ -17,27 +98,20 @@ function Game_load(width,height){
       var MANNAKA_X = width/2-KSW/2;
       var MANNAKA_Y = height/2-KSH/2;
 
-      for(var I = 0; I < Card_Name.length; I++){
-        Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I][0],Card_Name[I][1],Card_Name[I][2],Card_Name[I][3],Card_Name[I][4]));
-      };
+      for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I]));
 
       for(var I = 0; I < Cards.length; I++){
-        Cards[I].表 = Create_Image(0,0,KSW,KSH,Cards[I].Name,Cards[I]._element.src);
-        Cards[I].表.scale(0,1);
-        Cards[I]._element.src = Cards[I].裏;
-        scene.removeChild(Cards[I].表);
-        scene.removeChild(Cards[I]);
         scene.addChild(Cards[I].表);
+        scene.addChild(Cards[I].裏);
         scene.addChild(Cards[I]);
+        Cards[I].面 = "裏";
         Temp = width - KSW;
         Temp /= (Cards.length - 1);
         Temp *= I;
         Cards[I].moveTo(Temp,MANNAKA_Y);
-        Cards[I].表.moveTo(Temp,MANNAKA_Y);
       };
 
-      var Shining = Create_Image(0,0,KSW,KSH,"シャイニング","image/シャイニング.png");
-      Shining.opacity = 0;
+      var Shining = {};
 
       var Deck = [];
       var Hand = [];
@@ -63,22 +137,33 @@ function Game_load(width,height){
         return(Array);
       };
 
-      function Create_Image(X,Y,W,H,N,C,S,K,Z){
+      function Create_Image(X,Y,W,H,Data){
         var I = Images.length;
         Images[I] = new Entity();
         Images[I].moveTo(X,Y);
         Images[I].width = W;
         Images[I].height = H;
         Images[I]._element = document.createElement("img");
-        Images[I]._element.src = C;
-        Images[I].キーカード = K;
-        if(Z) Images[I].Number = JSON.stringify(Z);
+        Images[I]._element.src = "image/シャイニング.png";
+        Images[I].キーカード = Data[3];
+        Images[I].opacity = 0;
+        if(Data[4]) Images[I].Number = JSON.stringify(Data[4]);
         else Images[I].Number = JSON.stringify(I);
-        Images[I].Name = N;
-        Images[I].裏 = S;
+        Images[I].名前 = Data[0];
+        Images[I].表 = new Entity();
+        Images[I].表.moveTo(X,Y);
+        Images[I].表.width = W;
+        Images[I].表.height = H;
+        Images[I].表._element = document.createElement("img");
+        Images[I].表._element.src = Data[1];
+        Images[I].裏 = new Entity();
+        Images[I].裏.moveTo(X,Y);
+        Images[I].裏.width = W;
+        Images[I].裏.height = H;
+        Images[I].裏._element = document.createElement("img");
+        Images[I].裏._element.src = Data[2];
         while(Images[I].Number.length<10) Images[I].Number = "0" + Images[I].Number;
         Images[I].初期 = {X:X,Y:Y,Y:Y,W:W,H:H};
-        scene.addChild(Images[I]);
         return(Images[I]);
       };
 
@@ -111,25 +196,40 @@ function Game_load(width,height){
 
       };
 
-      function Deck_Set(Deck,XX,YY,t,C){
-        for(var I = 0; I < Deck.length; I++){
-          Target = Deck[I];
-          if(Target.表.scaleX){
-            Target.シンクロ = true;
-            Target = Target.表;
-          };
-          Target.tl.moveTo(XX-KSW/2+I/2,YY-KSH/2-I/2,t);
-          Target.tl.and();
-          Target.tl.rotateTo(0,t);
-          if(C) Card_Flip(Deck[I],"表",t);
-          else Card_Flip(Deck[I],"裏",t);
-          scene.removeChild(Deck[I].表);
-          scene.removeChild(Deck[I]);
-          scene.addChild(Deck[I].表);
-          scene.addChild(Deck[I]);
+      function Z_axis(IMAGES,A){
+        for(var I = 0; I < IMAGES.length; I++){
+          scene.removeChild(IMAGES[I].表);
+          scene.removeChild(IMAGES[I].裏);
+          scene.removeChild(IMAGES[I]);
+          if(IMAGES[I].面=="表"&&!A) scene.addChild(IMAGES[I].裏);
+          scene.addChild(IMAGES[I].表);
+          scene.addChild(IMAGES[I].裏);
+          scene.addChild(IMAGES[I]);
         };
         return;
       };
+
+      function Deck_Set(Deck,XX,YY,t,C){
+        for(var I = 0; I < Deck.length; I++){
+          Deck[I].tl.moveTo(XX-KSW/2+I/2,YY-KSH/2-I/2,t);
+          Deck[I].tl.and();
+          Deck[I].tl.rotateTo(0,t);
+          switch(C){
+            default:
+              Card_Flip(Deck[I],"裏",t);
+              break;
+            case "c":
+              delete Deck[I].面固定;
+            case "e":
+              Card_Flip(Deck[I],"表",t);
+              break;
+          };
+        };
+        Z_axis(Deck,true);
+        return;
+      };
+
+      var Hand_F_B = "表";
 
       function Hand_Set(Hand,XX,YY,t,C){
         if(!Hand.length) return;
@@ -147,11 +247,8 @@ function Game_load(width,height){
             Hand[0].tl.moveTo(XX,YY,t);
             Hand[0].tl.and();
             Hand[0].tl.rotateTo(0,t);
-            if(!Hand[0].表.scaleX) Card_Flip(Hand[0],"表",t);
-            scene.removeChild(Hand[0].表);
-            scene.removeChild(Hand[0]);
-            scene.addChild(Hand[0].表);
-            scene.addChild(Hand[0]);
+            Card_Flip(Hand[0],Hand_F_B,t);
+            Z_axis(Hand);
             return;
           case 2://2~6枚
           case 3:
@@ -182,38 +279,20 @@ function Game_load(width,height){
           Hand[I].tl.moveTo(X,Y,t);
           Hand[I].tl.and();
           Hand[I].tl.rotateTo(r,t);
-          if(!Hand[I].表.scaleX) Card_Flip(Hand[I],"表",t);
+          Card_Flip(Hand[I],Hand_F_B,t);
         };
-        for(var I = 0; I < Hand.length; I++){
-          scene.removeChild(Hand[I].表);
-          scene.removeChild(Hand[I]);
-          scene.addChild(Hand[I].表);
-          scene.addChild(Hand[I]);
-        };
+        Z_axis(Hand);
         return;
       };
 
       function Card_Flip(Target,A,t){
-        switch(A){
-          case "表":
-            if(Target.scaleX){
-              if(Target.tl.queue.length) Target.tl.and();
-              Target.tl.scaleTo(0,1,t/2);
-              if(Target.表.tl.queue.length) Target.表.tl.and();
-              Target.表.tl.scaleTo(0,1,t/2);
-              Target.表.tl.scaleTo(1,1,t/2);
-            };
-            break;
-          case "裏":
-            if(Target.表.scaleX){
-              if(Target.表.tl.queue.length) Target.表.tl.and();
-              Target.表.tl.scaleTo(0,1,t/2);
-              if(Target.tl.queue.length) Target.tl.and();
-              Target.tl.scaleTo(0,1,t/2);
-              Target.tl.scaleTo(1,1,t/2);
-            };
-            break;
-        };
+        if(Target.面固定) if(Target.面固定!=A) return;
+        if(Target.面==A) return;
+        Target.面 = A;
+        Target.裏.tl.scaleTo(0,1,t/2);
+        Target.裏.tl.scaleTo(1,1,t/2);
+        Target.表.tl.scaleTo(0,1,t/2);
+        Target.表.tl.scaleTo(1,1,t/2);
         return;
       };
 
@@ -229,9 +308,14 @@ function Game_load(width,height){
       };
 
       var SEs = {};
-      var Put_SE = Create_SE("sound/1.mp3",1);
-      var Draw_SE = Create_SE("sound/2.mp3",2);
-      var Shuffle_SE = Create_SE("sound/3.mp3",3);
+      var Big_SE = Create_SE("sound/4.mp3",1);
+      var Put_SE = Create_SE("sound/1.mp3",2);
+      var Draw_SE = Create_SE("sound/2.mp3",3);
+      var Shuffle_SE = Create_SE("sound/3.mp3",4);
+
+      var Voices = [];
+      Voices.push(Create_SE("sound/1.wav",5));
+      Voices.push(Create_SE("sound/2.wav",6));
 
       function Create_SE(C,N){
         SEs[N] = document.createElement("audio");//サウンド
@@ -274,12 +358,7 @@ function Game_load(width,height){
               break;
           };
         };
-        for(var I = 0; I < Deck.length; I++){
-          scene.removeChild(Deck[I].表);
-          scene.removeChild(Deck[I]);
-          scene.addChild(Deck[I].表);
-          scene.addChild(Deck[I]);
-        };
+        Z_axis(Deck);
         Deck_Set(Deck,width-KSW,height/4,0);
         Sound_Play(Shuffle_SE);
         for(var I = 0; I < Deck.length; I++){
@@ -329,11 +408,18 @@ function Game_load(width,height){
 
       var Point = 0;
       var Return_Card = 0;
+      var Opacity = false;
       var Point_Count = false;
 
       window.addEventListener("keydown",function(e){
-        if(Cards_Move_Check()||Shining.ドロー) return;
+        if(Cards_Move_Check()||Shining.ドロー||Keydown_P!=1||Scene_Change) return;
         switch(e.key){
+          case "o":
+            Opacity = false;
+            break;
+          case "O":
+            Opacity = true;
+            break;
           case "P":
             Point = 2525;
             break;
@@ -344,7 +430,7 @@ function Game_load(width,height){
               Cemetery.push(Deck[Deck.length-1]);
               Deck.pop();
             };
-            Deck_Set(Cemetery,width-KSW*2.5,height/4,8,true);
+            Deck_Set(Cemetery,width-KSW*2.5,height/4,20,"c");
             break;
           case "N":
             if(!Deck.length) return;
@@ -353,7 +439,7 @@ function Game_load(width,height){
               Except.push(Deck[Deck.length-1]);
               Deck.pop();
             };
-            Deck_Set(Except,width-KSW*4,height/4,8,true);
+            Deck_Set(Except,width-KSW*4,height/4,20,"e");
             break;
           case "m":
             if(!Deck.length) return;
@@ -364,27 +450,54 @@ function Game_load(width,height){
             };
             Return_Card = Hand.length - 1;
             Sound_Play(Draw_SE);
-            Hand_Set(Hand,width/2,height/2,4,Hand[Hand.length-1]);
+            Hand_Set(Hand,width/2,height/2,10,Hand[Hand.length-1]);
             break;
           case "d":
             if(!Hand.length) return;
-            for(var I = 0; I < Hand.length; I++) Cemetery.push(Hand[I]);
+            Temp = 1;
+            for(var I = 0; I < Hand.length; I++){
+              if(Hand[I].名前=="絶望神アンチホープ") Temp++;
+              else Temp = 0;
+              if(Hand[I].名前=="天の川コズミックワンショルダー"&&!I) Temp = "アイカツ";
+              Cemetery.push(Hand[I]);
+            };
             Hand = [];
-            Sound_Play(Draw_SE);
-            Deck_Set(Cemetery,width-KSW*2.5,height/4,8,true);
+            switch(Temp){
+              case 4:
+                Temp = Voices[0];
+                break;
+              case "アイカツ":
+                Temp = Voices[1];
+                break;
+              default:
+                Temp = Draw_SE;
+                break;
+            };
+            Sound_Play(Temp);
+            Deck_Set(Cemetery,width-KSW*2.5,height/4,20,"c");
+            break;
+          case "q":
+          if(Hand_F_B=="表") return;
+            Hand_F_B = "表";
+            Hand_Set(Hand,width/2,height/2,20);
+            break;
+          case "w":
+          if(Hand_F_B=="裏") return;
+            Hand_F_B = "裏";
+            Hand_Set(Hand,width/2,height/2,20);
             break;
           case "r":
             if(!Cemetery.length) return;
             for(var I = Cemetery.length; I > 0; I--) Deck.push(Cemetery[I-1]);
             Cemetery = [];
-            Deck_Set(Deck,width-KSW,height/4,8);
+            Deck_Set(Deck,width-KSW,height/4,20);
             break;
           case "R":
             if(!Hand.length) return;
             for(var I = 0; I < Hand.length; I++) Deck.push(Hand[I]);
             Hand = [];
-            Hand_Set(Hand,width/2,height/2,2);
-            Deck_Set(Deck,width-KSW,height/4,8);
+            Hand_Set(Hand,width/2,height/2,6);
+            Deck_Set(Deck,width-KSW,height/4,20);
             break;
           case "c":
             Card_Deck(Cemetery,"c");
@@ -392,6 +505,21 @@ function Game_load(width,height){
           case "C":
             Card_Deck(Except,"e");
             break;
+          case "T":
+            if(!Deck.length) return;
+            if(Shining_Draw.length){
+              Temp = Rand(Shining_Draw.length);
+              Temp = [Shining_Draw[Temp],Temp];
+              Shining_Draw.splice(Temp[1],1);
+              Temp = Temp[0];
+              Temp = Create_Image(Deck[Deck.length-1].x,Deck[Deck.length-1].y,KSW,KSH,Temp);
+              Temp.面 = "裏";
+              scene.addChild(Temp.表);
+              scene.addChild(Temp.裏);
+              scene.addChild(Temp);
+              Cards.push(Temp);
+              Deck.push(Temp);
+            };
           case "t":
             if(!Deck.length) break;
             if(Point < 25) break;
@@ -402,10 +530,8 @@ function Game_load(width,height){
               Temp = [Shining_Draw[Temp],Temp];
               Shining_Draw.splice(Temp[1],1);
               Temp = Temp[0];
-              Temp = Create_Image(Deck[Deck.length-1].x,Deck[Deck.length-1].y,KSW,KSH,Temp[0],Temp[1],Temp[2],Temp[3],Temp[4]);
-              Temp.表 = Create_Image(Deck[Deck.length-1].x,Deck[Deck.length-1].y,KSW,KSH,Temp.Name,Temp._element.src);
-              Temp.表.scale(0,1);
-              Temp._element.src = Temp.裏;
+              Temp = Create_Image(Deck[Deck.length-1].x,Deck[Deck.length-1].y,KSW,KSH,Temp);
+              Temp.面 = "裏";
               Shining.ドロー = true;
               Temp.シャイニングドロー = true;
               Cards.push(Temp);
@@ -415,53 +541,79 @@ function Game_load(width,height){
           case "s":
           case "S":
             if(!Deck.length) return;
-            Deck_Shuffle(Deck,2,e.key);
+            Deck_Shuffle(Deck,6,e.key);
             break;
-            case "x":
-              if(!Cemetery.length) return;
-              Deck.push(Cemetery[Cemetery.length-1]);
-              Cemetery.pop();
-              Sound_Play(Draw_SE);
-              Deck_Set(Deck,width-KSW,height/4,8);
-              break;
-            case "z":
-              if(!Except.length) return;
-              Deck.push(Except[Except.length-1]);
-              Except.pop();
-              Sound_Play(Draw_SE);
-              Deck_Set(Deck,width-KSW,height/4,8);
-              break;
+          case "e":
+            if(!Hand.length) return;
+            delete Hand[Return_Card].面固定;
+            Card_Flip(Hand[Return_Card],Hand_F_B,8);
+            break;
+          case "v":
+          if(!Hand.length) return;
+            Hand[Return_Card].面固定 = "裏";
+            Card_Flip(Hand[Return_Card],"裏",8);
+            break;
+          case "V":
+            if(!Hand.length) return;
+            Hand[Return_Card].面固定 = "表";
+            Card_Flip(Hand[Return_Card],"表",8);
+            break;
+          case "x":
+            if(!Cemetery.length) return;
+            Deck.push(Cemetery[Cemetery.length-1]);
+            Cemetery.pop();
+            Sound_Play(Draw_SE);
+            Deck_Set(Deck,width-KSW,height/4,20);
+            break;
+          case "z":
+            if(!Except.length) return;
+            Deck.push(Except[Except.length-1]);
+            Except.pop();
+            Sound_Play(Draw_SE);
+            Deck_Set(Deck,width-KSW,height/4,20);
+            break;
+          case " ":
+            if(!Hand.length) return;
+            Big_Card_src = Hand[Return_Card].表._element.src;
+            Keydown_P = 2;
+            Scene_Change = 5;
+            Sound_Play(Big_SE);
+            game.pushScene(Big_Card_Scene(KSW,KSH));
+            break;
+          default:
+            console.log(e.key);
+            break;
         };
       });
 
       scene.addEventListener("enterframe",function(e){
+        if(Scene_Change){
+          Scene_Change--;
+          if(Scene_Change < 0) Scene_Change = 0;
+          return;
+        };
         if(Shining.ドロー){
-          Shining.ドロー = Deck.length - 1;
-          Shining.x = Deck[Shining.ドロー].x;
-          Shining.y = Deck[Shining.ドロー].y;
-          scene.removeChild(Shining);
-          scene.addChild(Shining);
-          if(!Shining.tl.queue.length){
-            Shining.tl.fadeOut(5);
-            Shining.tl.fadeIn(15);
+          if(!Deck[Deck.length-1].tl.queue.length){
+            Deck[Deck.length-1].tl.fadeOut(5);
+            Deck[Deck.length-1].tl.fadeIn(15);
           };
         };
         for(var I = 0; I < Cards.length; I++){
-          if(Cards[I].シンクロ){
-            Cards[I].x = Cards[I].表.x;
-            Cards[I].y = Cards[I].表.y;
-            Cards[I].rotation = Cards[I].表.rotation;
-          }
-          else{
-            Cards[I].表.x = Cards[I].x;
-            Cards[I].表.y = Cards[I].y;
-            Cards[I].表.rotation = Cards[I].rotation;
+          if(!Cards[I].表.scaleX&&!Cards[I].裏.scaleX){
+            if(Cards[I].裏.opacity) Cards[I].裏.opacity = 0;
+            else Cards[I].裏.opacity = 1;
           };
+          Cards[I].表.x = Cards[I].x;
+          Cards[I].表.y = Cards[I].y;
+          Cards[I].表.rotation = Cards[I].rotation;
+          Cards[I].裏.x = Cards[I].x;
+          Cards[I].裏.y = Cards[I].y;
+          Cards[I].裏.rotation = Cards[I].rotation;
         };
         if(Point) Label0.text = "ポイント:" + Point;
         else Label0.text = "";
         if(Hand.length){
-          Label1.text = Hand[Return_Card].Name;
+          Label1.text = Hand[Return_Card].名前;
           Label2.text = "手札:" + Hand.length + "枚";
         }
         else{
@@ -474,17 +626,21 @@ function Game_load(width,height){
         else Label4.text = "";
         if(Except.length) Label5.text = "除外:" + Except.length + "枚";
         else Label5.text = "";
-        if(Cards_Move_Check()) return;
-        for(var I = 0; I < Cards.length; I++) if(!Cards[I].表.scaleX) delete Cards[I].シンクロ;
+        if(Cards_Move_Check()&&!Shining.ドロー) return;
+        for(var I = 0; I < Hand.length; I++){
+          break;
+          if(I==Return_Card) Hand[I].opacity = 0.5;
+          else Hand[I].opacity = 0;
+        };
         if(game.input.right&&Hand.length){
           Return_Card++;
           if(Return_Card == Hand.length) Return_Card = 0;
-          Hand_Set(Hand,width/2,height/2,2);
+          Hand_Set(Hand,width/2,height/2,6);
         };
         if(game.input.left&&Hand.length){
           Return_Card--;
           if(Return_Card < 0) Return_Card = Hand.length - 1;
-          Hand_Set(Hand,width/2,height/2,2);
+          Hand_Set(Hand,width/2,height/2,6);
         };
         if(game.input.up){
           if(Shining.ドロー) return;
@@ -492,10 +648,10 @@ function Game_load(width,height){
           Point_Count = false;
         };
         if(game.input.down){
-          Shining.opacity = 0;
-          Shining.tl.queue = [];
           Shining.ドロー = false;
           if(!Deck.length) return;
+          Deck[Deck.length-1].opacity = 0;
+          Deck[Deck.length-1].tl.queue = [];
           if(Deck.length > 33 && Point_Count){
             Point += Deck.length - 33;
             Point_Count = false;
@@ -503,7 +659,7 @@ function Game_load(width,height){
           Hand.push(Deck[Deck.length-1]);
           Deck.pop();
           Sound_Play(Draw_SE);
-          Hand_Set(Hand,width/2,height/2,4,Hand[Hand.length-1]);
+          Hand_Set(Hand,width/2,height/2,10,Hand[Hand.length-1]);
         };
         return;
       });
@@ -511,33 +667,23 @@ function Game_load(width,height){
       function Card_Deck(Deck,C){
         if(!Hand.length) return;
         Deck.push(Hand[Return_Card]);
+        Temp = Hand[Return_Card];
         Hand.splice(Return_Card,1);
         if(Return_Card == Hand.length) Return_Card--;
         Sound_Play(Draw_SE);
-        Hand_Set(Hand,width/2,height/2,4);
+        Hand_Set(Hand,width/2,height/2,10);
         switch(C){
           case "e":
-            Deck_Set(Deck,width-KSW*4,height/4,8,C);
+            Deck_Set(Deck,width-KSW*4,height/4,20,C);
             break;
           case "c":
-            Deck_Set(Deck,width-KSW*2.5,height/4,8,C);
+            Deck_Set(Deck,width-KSW*2.5,height/4,20,C);
             break;
           default:
-            Deck_Set(Deck,width-KSW,height/4,8);
+            Deck_Set(Deck,width-KSW,height/4,20);
             break;
         }
         return;
-      };
-
-      function Cards_Move_Check(){
-        var Move = false;
-        for(var I = 0; I < Cards.length; I++){
-          if(Cards[I].tl.queue.length){
-            Move = true;
-            break;
-          };
-        };
-        return(Move);
       };
 
       return scene;

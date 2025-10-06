@@ -75,6 +75,7 @@ function Game_load(width,height){
         Datas[I] = {};
         Datas[I].時間 = I + "日目";
         Datas[I].時間 += " コイン:" + Temp[Data_Names["コイン"]];
+        Datas[I].時間 += " 時間:" + Temp[Data_Names["時間"]];
         if(Temp[Data_Names["観戦ID"]]) Datas[I].時間 += " 観戦ID:" + Temp[Data_Names["観戦ID"]];
         if(Temp[Data_Names["特別カード"]]) Datas[I].時間 += " 特別カード:" + Temp[Data_Names["特別カード"]];
         if(Temp[Data_Names["晩御飯"]]) Datas[I].備考 = " 晩御飯:" + Temp[Data_Names["晩御飯"]];
