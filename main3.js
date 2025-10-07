@@ -140,7 +140,7 @@ function Game_load(width,height){
           Deck[I] = Deck[I][1];
           Deck[I].Target = I;
           Temp = width - KSW;
-          Temp /= 6;
+          Temp /= 5;
           Temp *= J;
           Temp2 = height/2 - KSH;
           Temp2 /= 3;
@@ -150,7 +150,7 @@ function Game_load(width,height){
           Deck[I].tl.and();
           Deck[I].tl.rotateTo(0,t);
           J++;
-          if(J==7){
+          if(J==6){
             K++;
             J = 0;
           };
