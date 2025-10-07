@@ -143,7 +143,7 @@ function Game_load(width,height){
           Temp /= 5;
           Temp *= J;
           Temp2 = height/2 - KSH;
-          Temp2 /= 5;
+          Temp2 /= 4;
           Temp2 *= K;
           Temp2 += KSH * 2;
           Deck[I].tl.moveTo(Temp,Temp2,t);
