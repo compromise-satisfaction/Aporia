@@ -24,11 +24,35 @@ function Game_load(width,height){
       var Cemetery = [];
       var Cemetery_GO = 0;
 
-      for(var I = 0; I < Cards.length; I++) Deck.push(Cards[I]);
-      Deck_Set(Deck,20);
+      for(var I = 0; I < Cards.length; I++) Cards[I].場所 = "デッキ";
+      Cards_Set(20);
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[14]));
       Cards[Cards.length-1].場所 = "ニードルワーム";
+      Cards[Cards.length-1]._element.src = "image/ニードルワーム.png";
       scene.addChild(Cards[Cards.length-1]);
+
+      var Shining = new Entity();
+      Shining.width = KSW;
+      Shining.height = KSH;
+      Shining._element = document.createElement("img");
+      Shining._element.src = "image/シャイニング.png";
+      Shining.場所 = "ニードルワーム";
+      Shining.opacity = 0;
+      Shining.addEventListener("touchstart",function(e){
+        switch(Cemetery_GO){
+          case 0:
+            Cemetery_GO = 5;
+            break;
+          case "無限":
+            Cemetery_GO = 0;
+            break;
+          default:
+            Cemetery_GO = "無限";
+            Shining.opacity = 0.5;
+            break;
+        };
+      });
+      scene.addChild(Shining);
 
       function Create_Image(X,Y,W,H,Data){
         var I = Images.length;
@@ -42,6 +66,7 @@ function Game_load(width,height){
         else Images[I].Number = JSON.stringify(I);
         while(Images[I].Number.length<10) Images[I].Number = "0" + Images[I].Number;
         Images[I].addEventListener("touchstart",function(e){
+          for(var I = 0; I < Cards.length; I++) Cards[I].tl.queue = [];
           Sound_Play(Draw_SE);
           switch(this.場所){
             case "ニードルワーム":
@@ -49,33 +74,61 @@ function Game_load(width,height){
               break;
             case "手札":
               this.場所 = "墓地";
-              Cemetery.push(this);
-              Hand.splice(this.Target,1);
+              this.墓地 = Cemetery.length;
               break;
             case "墓地":
               this.場所 = "デッキ";
-              Deck.push(Cemetery[Cemetery.length-1]);
-              Cemetery.pop();
+              break;
+            case "デッキ":
+              if(!Cemetery_GO) this.場所 = "手札";
+              else{
+                this.場所 = "墓地";
+                this.墓地 = Cemetery.length;
+                if(Cemetery_GO!="無限") Cemetery_GO--;
+              };
               break;
             default:
-              if(Cemetery_GO){
-                this.場所 = "墓地";
-                Cemetery.push(this);
-                Cemetery_GO--;
-              }
-              else{
-                this.場所 = "手札";
-                Hand.push(this);
-              };
-              Deck.splice(this.Target,1);
+              console.log(this.場所);
               break;
           };
-          Deck_Set(Deck,20);
-          Hand_Set(Hand,width/2,KSH/4,10);
-          Cemetery_Set(Cemetery,width-KSW/2,KSH/2,20);
+          Cards_Set(10);
           return;
         });
         return(Images[I]);
+      };
+
+      function Cards_Set(t){
+        Hand = [];
+        Deck = [];
+        Cemetery = [];
+        for(var I = 0; I < Cards.length; I++){
+          switch(Cards[I].場所){
+            case "手札":
+              Hand.push(Cards[I]);
+              break;
+            case "デッキ"  :
+              Deck.push(Cards[I]);
+              break;
+            case "墓地":
+              Cemetery[Cards[I].墓地] = Cards[I];
+              break;
+          };
+        };
+        Cemetery_Set(Cemetery,width-KSW/2,KSH/2,t);
+        Deck_Set(Deck,t);
+        Hand_Set(Hand,width/2,KSH/4,t/2);
+        return;
+      };
+
+      function Cards_Move_Check(){
+        var Move = false;
+        for(var I = 0; I < Cards.length; I++){
+          if(Cards[I].tl.queue.length){
+            Move = true;
+            break;
+          };
+        };
+        return(Move);
       };
 
       function Deck_Set(Deck,t){
@@ -107,6 +160,9 @@ function Game_load(width,height){
       };
 
       function Cemetery_Set(Deck,XX,YY,t){
+        Temp = Deck;
+        Deck = [];
+        for(var I = 0; I < Temp.length; I++) if(Temp[I]) Deck.push(Temp[I]);
         for(var I = 0; I < Deck.length; I++){
           Deck[I].tl.moveTo(XX-KSW/2+I/2,YY-KSH/2-I/2,t);
           Deck[I].tl.and();
@@ -190,6 +246,22 @@ function Game_load(width,height){
         SE.play();
         return;
       };
+
+      scene.addEventListener("enterframe",function(e){
+        if(Cemetery_GO){
+          if(!Shining.tl.queue.length){
+            if(Cemetery_GO=="無限"){
+              Shining.tl.fadeIn(5);
+              Shining.tl.fadeOut(5);
+            }
+            else{
+              Shining.tl.fadeIn(20*(6-Cemetery_GO));
+              Shining.tl.fadeOut(10*(6-Cemetery_GO));
+            };
+          };
+        };
+        return;
+      });
 
       return scene;
     };
