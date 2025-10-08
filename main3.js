@@ -17,7 +17,7 @@ function Game_load(width,height){
       var MANNAKA_X = width/2-KSW/2;
       var MANNAKA_Y = height/2-KSH/2;
 
-      for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I]));
+      for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(20,20,KSW,KSH,Card_Name[I]));
 
       var Hand = [];
       var Deck = [];
@@ -25,11 +25,9 @@ function Game_load(width,height){
       var Cemetery_GO = 0;
 
       for(var I = 0; I < Cards.length; I++) Cards[I].場所 = "デッキ";
-      Cards_Set(20);
-      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[14]));
+      Cards.push(Create_Image(20,20,KSW,KSH,Shining_Draw[14]));
       Cards[Cards.length-1].場所 = "ニードルワーム";
       Cards[Cards.length-1]._element.src = "image/ニードルワーム.png";
-      Cards[Cards.length-1].moveTo(20,20);
       scene.addChild(Cards[Cards.length-1]);
 
       var Shining = new Entity();
@@ -55,6 +53,7 @@ function Game_load(width,height){
         };
       });
       scene.addChild(Shining);
+      Cards_Set(20);
 
       function Create_Image(X,Y,W,H,Data){
         var I = Images.length;
