@@ -8,7 +8,7 @@ function Game_load(width,height){
     var Hand_Cards_Scene = function(){
       var scene = new Scene();
 
-      var S = 2;
+      var S = 2.2;
       var KSW = 212/S;
       var KSH = 310/S;
       var Cards = [];
@@ -136,21 +136,24 @@ function Game_load(width,height){
         K = 0;
         for(var I = 0; I < Deck.length; I++) Deck[I] = [Deck[I].Number,Deck[I]];
         Deck.sort();
+        var Tate = 7;
+        var Yoko = 6;
         for(var I = 0; I < Deck.length; I++){
           Deck[I] = Deck[I][1];
           Deck[I].Target = I;
-          Temp = width - KSW;
-          Temp /= 5;
+          Temp = width - KSW -20;
+          Temp /= (Yoko - 1);
           Temp *= J;
+          Temp += 10;
           Temp2 = height - KSH * 3;
-          Temp2 /= 5;
+          Temp2 /= (Tate - 1);
           Temp2 *= K;
           Temp2 += KSH * 2;
           Deck[I].tl.moveTo(Temp,Temp2,t);
           Deck[I].tl.and();
           Deck[I].tl.rotateTo(0,t);
           J++;
-          if(J==6){
+          if(J==Yoko){
             K++;
             J = 0;
           };
