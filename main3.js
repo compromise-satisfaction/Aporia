@@ -8,9 +8,9 @@ function Game_load(width,height){
     var Hand_Cards_Scene = function(){
       var scene = new Scene();
 
-      var S = 2.2;
-      var KSW = 212/S;
-      var KSH = 310/S;
+      var S = 0.48;
+      var KSW = 212*S;
+      var KSH = 310*S;
       var Cards = [];
       var Images = [];
 
@@ -29,9 +29,11 @@ function Game_load(width,height){
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[14]));
       Cards[Cards.length-1].場所 = "ニードルワーム";
       Cards[Cards.length-1]._element.src = "image/ニードルワーム.png";
+      Cards[Cards.length-1].moveTo(20,20);
       scene.addChild(Cards[Cards.length-1]);
 
       var Shining = new Entity();
+      Shining.moveTo(20,20);
       Shining.width = KSW;
       Shining.height = KSH;
       Shining._element = document.createElement("img");
@@ -62,6 +64,7 @@ function Game_load(width,height){
         Images[I].height = H;
         Images[I]._element = document.createElement("img");
         Images[I]._element.src = Data[1];
+        Images[I].カード名 = Data[0];
         if(Data[4]) Images[I].Number = JSON.stringify(Data[4]);
         else Images[I].Number = JSON.stringify(I);
         while(Images[I].Number.length<10) Images[I].Number = "0" + Images[I].Number;
@@ -136,26 +139,34 @@ function Game_load(width,height){
         K = 0;
         for(var I = 0; I < Deck.length; I++) Deck[I] = [Deck[I].Number,Deck[I]];
         Deck.sort();
-        var Tate = 7;
-        var Yoko = 6;
+        var Tate = 6;
+        var Yoko = 7;
+        var Room = 0;
+        var Multiple = 0;
         for(var I = 0; I < Deck.length; I++){
           Deck[I] = Deck[I][1];
           Deck[I].Target = I;
-          Temp = width - KSW -20;
+          Temp = width - KSW - Room;
           Temp /= (Yoko - 1);
           Temp *= J;
-          Temp += 10;
+          Temp += Room + Multiple;
           Temp2 = height - KSH * 3;
           Temp2 /= (Tate - 1);
           Temp2 *= K;
-          Temp2 += KSH * 2;
+          Temp2 += KSH * 2 - Multiple;
           Deck[I].tl.moveTo(Temp,Temp2,t);
           Deck[I].tl.and();
           Deck[I].tl.rotateTo(0,t);
-          J++;
-          if(J==Yoko){
-            K++;
-            J = 0;
+          if(Deck[I+1]){
+            if(Deck[I].カード名==Deck[I+1][1].カード名&&false) Multiple += 10;
+            else{
+              J++;
+              Multiple = 0;
+              if(J==Yoko){
+                K++;
+                J = 0;
+              };
+            };
           };
         };
         Z_axis(Deck);
@@ -167,7 +178,7 @@ function Game_load(width,height){
         Deck = [];
         for(var I = 0; I < Temp.length; I++) if(Temp[I]) Deck.push(Temp[I]);
         for(var I = 0; I < Deck.length; I++){
-          Deck[I].tl.moveTo(XX-KSW/2+I/2,YY-KSH/2-I/2,t);
+          Deck[I].tl.moveTo(XX-KSW/2+I/2-20,YY-KSH/2-I/2+20,t);
           Deck[I].tl.and();
           Deck[I].tl.rotateTo(0,t);
         };
