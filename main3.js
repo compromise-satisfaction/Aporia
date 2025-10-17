@@ -30,6 +30,36 @@ function Game_load(width,height){
       Cards[Cards.length-1]._element.src = "image/ニードルワーム.png";
       scene.addChild(Cards[Cards.length-1]);
 
+      var Button = new Entity();
+      Button.moveTo(width-KSH,height-KSW);
+      Button.width = KSH;
+      Button.height = KSH;
+      Button._element = document.createElement("input");
+      Button._element.type = "submit";
+      Button._element.value = "デッキ";
+      Button._element.value = "デッキ";
+      Button.backgroundColor = "buttonface";
+      Button.backgroundColor = "buttonface";
+      scene.addChild(Button);
+      Button._element.onclick = function(e){
+        Text = "";
+        switch(Button._element.value){
+          case "墓地":
+            Temp = Cemetery;
+            Button._element.value = "デッキ";
+            break;
+          case "デッキ":
+            Temp = Deck;
+            Button._element.value = "墓地";
+            break;
+        };
+        for(var I = 0; I < Temp.length; I++){
+          if(I) Text += ",";
+          Text += Temp[I].カード名;
+        };
+        navigator.clipboard.writeText(Text);
+      };
+
       var Shining = new Entity();
       Shining.moveTo(20,20);
       Shining.width = KSW;
