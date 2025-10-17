@@ -31,14 +31,13 @@ function Game_load(width,height){
       scene.addChild(Cards[Cards.length-1]);
 
       var Button = new Entity();
-      Button.moveTo(width-KSH,height-KSW);
+      Button.moveTo(width-KSH,height-KSH);
       Button.width = KSH;
       Button.height = KSH;
       Button._element = document.createElement("input");
       Button._element.type = "submit";
       Button._element.value = "デッキ";
-      Button._element.value = "デッキ";
-      Button.backgroundColor = "buttonface";
+      Button._style["font-size"] = KSH/3.5;
       Button.backgroundColor = "buttonface";
       scene.addChild(Button);
       Button._element.onclick = function(e){
