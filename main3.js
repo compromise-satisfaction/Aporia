@@ -43,11 +43,16 @@ function Game_load(width,height){
       Button._element.onclick = function(e){
         Text = "";
         switch(Button._element.value){
-          case "墓地":
-            Temp = Cemetery;
+          case "手札":
+            Temp = Hand;
             Button._element.value = "デッキ";
             break;
+          case "墓地":
+            Temp = Cemetery;
+            Button._element.value = "手札";
+            break;
           case "デッキ":
+            Text += "デッキのカードは"
             Temp = Deck;
             Button._element.value = "墓地";
             break;
