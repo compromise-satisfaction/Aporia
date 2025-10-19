@@ -234,7 +234,7 @@ function Game_load(width,height){
           Hand[I].tl.and();
           Hand[I].tl.rotateTo(0,t);
         };
-        Z_axis(Hand);
+        Z_axis(Hand,true);
         return;
 
         XX -= KSW/2;
@@ -279,10 +279,18 @@ function Game_load(width,height){
         return;
       };
 
-      function Z_axis(IMAGES){
-        for(var I = 0; I < IMAGES.length; I++){
-          scene.removeChild(IMAGES[I]);
-          scene.addChild(IMAGES[I]);
+      function Z_axis(IMAGES,A){
+        if(A){
+          for(var I = IMAGES.length; I > 0; I--){
+            scene.removeChild(IMAGES[I-1]);
+            scene.addChild(IMAGES[I-1]);
+          };
+        }
+        else{
+          for(var I = 0; I < IMAGES.length; I++){
+            scene.removeChild(IMAGES[I]);
+            scene.addChild(IMAGES[I]);
+          };
         };
         return;
       };
