@@ -17,14 +17,23 @@ function Game_load(width,height){
       var MANNAKA_X = width/2-KSW/2;
       var MANNAKA_Y = height/2-KSH/2;
 
+      Cards.push(Create_Image(20,20,KSW,KSH,Shining_Draw[10]));
+      Cards.push(Create_Image(20,20,KSW,KSH,Shining_Draw[18]));
+      Cards.push(Create_Image(20,20,KSW,KSH,Shining_Draw[19]));
       for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(20,20,KSW,KSH,Card_Name[I]));
-
       var Hand = [];
       var Deck = [];
       var Cemetery = [];
       var Cemetery_GO = 0;
 
-      for(var I = 0; I < Cards.length; I++) Cards[I].場所 = "デッキ";
+      for(var I = 0; I < Cards.length; I++){
+        if(I > 2) Cards[I].場所 = "デッキ";
+        else{
+          Cards[I].墓地 = I;
+          Cards[I].場所 = "墓地";
+          Cards[I].カード名 = "特別カード" + (I + 1);
+        };
+      };
       Cards.push(Create_Image(0,KSH+5,KSW,KSH,Shining_Draw[14]));
       Cards[Cards.length-1].場所 = "ニードルワーム";
       Cards[Cards.length-1]._element.src = "image/ニードルワーム.png";
@@ -58,7 +67,11 @@ function Game_load(width,height){
             break;
         };
         for(var I = 0; I < Temp.length; I++){
-          if(I) Text += ",";
+          if(Temp[I].カード名.match(/特別カード/)) if(!Cemetery_GO) continue;
+          if(I){
+            if(!Cemetery_GO) Text += ",";
+            else Text += "\n";
+          };
           Text += Temp[I].カード名;
         };
         navigator.clipboard.writeText(Text);
