@@ -17,24 +17,25 @@ function Game_load(width,height){
       var MANNAKA_X = width/2-KSW/2;
       var MANNAKA_Y = height/2-KSH/2;
 
-      Cards.push(Create_Image(20,20,KSW,KSH,Shining_Draw[10]));
-      Cards.push(Create_Image(20,20,KSW,KSH,Shining_Draw[18]));
-      Cards.push(Create_Image(20,20,KSW,KSH,Shining_Draw[19]));
-      for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(20,20,KSW,KSH,Card_Name[I]));
+      for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[10]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[18]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[19]));
+      var ZONE = [];
       var Hand = [];
       var Deck = [];
       var Cemetery = [];
       var Cemetery_GO = 0;
 
       for(var I = 0; I < Cards.length; I++){
-        if(I > 2) Cards[I].場所 = "デッキ";
+        if(I < 40) Cards[I].場所 = "デッキ";
         else{
-          Cards[I].墓地 = I;
-          Cards[I].場所 = "墓地";
-          Cards[I].カード名 = "特別カード" + (I + 1);
+          Cards[I].場所 = "Z-ONE";
+          Cards[I].カード名 = "特別カード" + (I - 39);
         };
       };
-      Cards.push(Create_Image(0,KSH+5,KSW,KSH,Shining_Draw[14]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[14]));
+      Cards[Cards.length-1].Number = 0;
       Cards[Cards.length-1].場所 = "ニードルワーム";
       Cards[Cards.length-1]._element.src = "image/ニードルワーム.png";
       scene.addChild(Cards[Cards.length-1]);
@@ -69,12 +70,13 @@ function Game_load(width,height){
         for(var I = 0; I < Temp.length; I++){
           if(Temp[I].カード名.match(/特別カード/)) if(!Cemetery_GO) continue;
           if(I){
-            if(!Cemetery_GO) Text += ",";
+            if(!Cemetery_GO) Text += "、";
             else Text += "\n";
           };
           Text += Temp[I].カード名;
         };
         navigator.clipboard.writeText(Text);
+        return;
       };
 
       var Shining = new Entity();
@@ -98,8 +100,42 @@ function Game_load(width,height){
             Shining.opacity = 0.5;
             break;
         };
+        return;
       });
       scene.addChild(Shining);
+
+      var GO_ZONE = false;
+
+      var ButtonZ = new Entity();
+      ButtonZ.moveTo(width-KSW-5-KSH,Shining.y);
+      ButtonZ.width = KSH;
+      ButtonZ.height = KSH;
+      ButtonZ._element = document.createElement("input");
+      ButtonZ._element.type = "submit";
+      ButtonZ._element.value = "切替";
+      ButtonZ._style["font-size"] = KSH/3.5;
+      ButtonZ.backgroundColor = "buttonface";
+      scene.addChild(ButtonZ);
+      ButtonZ._element.onclick = function(e){
+        switch(ButtonZ._element.value){
+          case "墓地":
+            GO_ZONE = false;
+            ButtonZ._element.value = "切替";
+            Cards_Set(20);
+            break;
+          case "交換":
+            GO_ZONE = "墓地";
+            ButtonZ._element.value = "墓地";
+            Cards_Set(20);
+            break;
+          case "切替":
+            GO_ZONE = "はい";
+            ButtonZ._element.value = "交換";
+            break;
+        };
+        return;
+      };
+
       Cards_Set(20);
 
       function Create_Image(X,Y,W,H,Data){
@@ -122,18 +158,30 @@ function Game_load(width,height){
               Cemetery_GO = 5;
               break;
             case "手札":
+            case "Z-ONE":
               this.場所 = "墓地";
               this.墓地 = Cemetery.length;
               break;
             case "墓地":
               this.場所 = "デッキ";
+              if(GO_ZONE=="墓地"){
+                GO_ZONE = false;
+                ButtonZ._element.value = "切替";
+              };
               break;
             case "デッキ":
-              if(!Cemetery_GO) this.場所 = "手札";
+              if(GO_ZONE=="はい"){
+                GO_ZONE = false;
+                this.場所 = "Z-ONE";
+                ButtonZ._element.value = "切替";
+              }
               else{
-                this.場所 = "墓地";
-                this.墓地 = Cemetery.length;
-                if(Cemetery_GO!="無限") Cemetery_GO--;
+                if(!Cemetery_GO) this.場所 = "手札";
+                else{
+                  this.場所 = "墓地";
+                  this.墓地 = Cemetery.length;
+                  if(Cemetery_GO!="無限") Cemetery_GO--;
+                };
               };
               break;
             default:
@@ -147,11 +195,15 @@ function Game_load(width,height){
       };
 
       function Cards_Set(t){
+        ZONE = [Cards[43]];
         Hand = [];
         Deck = [];
         Cemetery = [];
         for(var I = 0; I < Cards.length; I++){
           switch(Cards[I].場所){
+            case "Z-ONE":
+              ZONE.push(Cards[I]);
+              break;
             case "手札":
               Hand.push(Cards[I]);
               break;
@@ -163,9 +215,16 @@ function Game_load(width,height){
               break;
           };
         };
-        Cemetery_Set(Cemetery,width-KSW/2,KSH/2,t);
-        Deck_Set(Deck,t);
-        Hand_Set(Hand,width/2,KSH/4,t/2);
+        if(GO_ZONE=="墓地"){
+          Cemetery_Set(Deck,width-KSW/2,KSH/2,t);
+          Deck_Set(Cemetery,t);
+        }
+        else{
+          Cemetery_Set(Cemetery,width-KSW/2,KSH/2,t);
+          Deck_Set(Deck,t);
+        };
+        Hand_Set(Hand,0,0,KSW,7,t/2);
+        Hand_Set(ZONE,0,Shining.y,KSW*2+KSH+15,5,t/2);
         return;
       };
 
@@ -183,8 +242,15 @@ function Game_load(width,height){
       function Deck_Set(Deck,t){
         J = 0;
         K = 0;
-        for(var I = 0; I < Deck.length; I++) Deck[I] = [Deck[I].Number,Deck[I]];
-        Deck.sort();
+        if(GO_ZONE!="墓地"){
+          for(var I = 0; I < Deck.length; I++) Deck[I] = [Deck[I].Number,Deck[I]];
+          Deck.sort();
+        }
+        else{
+          Temp = Deck;
+          Deck = [];
+          for(var I = Temp.length; I >= 0; I--) if(Temp[I]) Deck.push([I,Temp[I]]);
+        };
         var Tate = 6;
         var Yoko = 7;
         var Room = 0;
@@ -232,18 +298,23 @@ function Game_load(width,height){
         return;
       };
 
-      function Hand_Set(Hand,XX,YY,t){
+      function Hand_Set(Hand,XX,YY,A,B,t){
         if(!Hand.length) return;
-        for(var I = 0; I < Hand.length; I++) Hand[I] = [Hand[I].Number,Hand[I]];
+        for(var I = 0; I < Hand.length; I++){
+          if(B == 7) Hand[I] = [Hand[I].Number,Hand[I]];
+          else{
+            if(I<10) Hand[I] = [0+I,Hand[I]];
+            else Hand[I] = [I,Hand[I]];
+          };
+        };
         Hand.sort();
         for(var I = 0; I < Hand.length; I++){
           Hand[I] = Hand[I][1];
           Hand[I].Target = I;
-          Temp = width - KSW;
-          if(Hand.length < 7) Temp /= 6;
-          else Temp /= (Hand.length - 1);
+          if(Hand.length < B) Temp = (width - KSW) / 6;
+          else Temp = (width - A) / (Hand.length - 1);
           Temp *= I;
-          Hand[I].tl.moveTo(Temp,0,t);
+          Hand[I].tl.moveTo(Temp+XX,YY,t);
           Hand[I].tl.and();
           Hand[I].tl.rotateTo(0,t);
         };
@@ -294,9 +365,9 @@ function Game_load(width,height){
 
       function Z_axis(IMAGES,A){
         if(A){
-          for(var I = IMAGES.length; I > 0; I--){
-            scene.removeChild(IMAGES[I-1]);
-            scene.addChild(IMAGES[I-1]);
+          for(var I = IMAGES.length-1; I >= 0; I--){
+            scene.removeChild(IMAGES[I]);
+            scene.addChild(IMAGES[I]);
           };
         }
         else{
@@ -305,6 +376,8 @@ function Game_load(width,height){
             scene.addChild(IMAGES[I]);
           };
         };
+        scene.removeChild(Shining);
+        scene.addChild(Shining);
         return;
       };
 
