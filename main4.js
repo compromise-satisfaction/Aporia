@@ -121,12 +121,12 @@ function Game_load(width,height){
           case "墓地":
             GO_ZONE = false;
             ButtonZ._element.value = "切替";
-            Cards_Set(20);
+            Cards_Set(10);
             break;
           case "交換":
             GO_ZONE = "墓地";
             ButtonZ._element.value = "墓地";
-            Cards_Set(20);
+            Cards_Set(10);
             break;
           case "切替":
             GO_ZONE = "はい";
@@ -136,7 +136,7 @@ function Game_load(width,height){
         return;
       };
 
-      Cards_Set(20);
+      Cards_Set(50);
 
       function Create_Image(X,Y,W,H,Data){
         var I = Images.length;
