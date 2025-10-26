@@ -62,6 +62,8 @@ function Game_load(width,height){
       Card_Name["死のメッセージ「H」"] = 19;
       Card_Name["増殖するG"] = 20;
       Card_Name["混沌帝龍 －終焉の使者－"] = 21;
+      Card_Name["時械神メタイオン"] = 22;
+      Card_Name["フレムベル・マジカル"] = 23;
       Card_Name["不明"] = "不明";
 
       var IMAGE_U = "image/";

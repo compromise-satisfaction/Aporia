@@ -157,8 +157,12 @@ function Game_load(width,height){
             case "ニードルワーム":
               Cemetery_GO = 5;
               break;
-            case "手札":
             case "Z-ONE":
+              if(GO_ZONE=="はい"){
+                this.場所 = "手札";
+                break;
+              };
+            case "手札":
               this.場所 = "墓地";
               this.墓地 = Cemetery.length;
               break;
