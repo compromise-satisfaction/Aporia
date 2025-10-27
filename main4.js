@@ -161,6 +161,8 @@ function Game_load(width,height){
             case "Z-ONE":
               if(GO_ZONE=="はい"){
                 this.場所 = "手札";
+                GO_ZONE = false;
+                ButtonZ._element.value = "切替";
                 break;
               };
             case "手札":
