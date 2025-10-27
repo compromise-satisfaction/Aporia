@@ -59,7 +59,8 @@ Shining_Draw.push(["シャイニング・ドロー","image/26.png","image/よっ
 Shining_Draw.push(["バリアンズ・カオス・ドロー","image/27.png","image/よっちー1.gif",,280]);
 Shining_Draw.push(["死者蘇生","image/28.png","image/よっちー1.gif","キーカード",210]);
 Shining_Draw.push(["赫の聖女カルテシア","image/29.png","image/よっちー1.gif","キーカード",150]);
-Shining_Draw.push(["魔術師の弟子－ブラック・マジシャン・ガール","image/30.png","image/よっちー1.gif","キーカード",151]);
+Shining_Draw.push(["紅涙の魔ラクリモーサ","image/31.png","image/よっちー1.gif","キーカード",151]);
+Shining_Draw.push(["魔術師の弟子－ブラック・マジシャン・ガール","image/30.png","image/よっちー1.gif","キーカード",152]);
 Shining_Draw.push(["リーリエ","https://www.pokemon-card.com/assets/images/card_images/large/SM4p/035679_T_RIRIE.jpg","image/よっちー1.gif","キーカード",998]);
 Shining_Draw.push(["天の川コズミックワンショルダー","https://www.famitsu.com/images/000/022/146/l_506a6af609f8e.jpg?fgxeom9z5n60a1yjv&h0i1zou3ynfl9pdc5&52dfv3hop8wc6nreis&7l5gso1mxz8n&fhbozdq2sluri8k9g40","image/よっちー1.gif","キーカード",999]);
 Shining_Draw.push(["死者蘇生","image/28.png","image/よっちー1.gif","キーカード"]);
