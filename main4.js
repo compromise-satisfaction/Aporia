@@ -18,9 +18,9 @@ function Game_load(width,height){
       var MANNAKA_Y = height/2-KSH/2;
 
       for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I]));
-      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[10]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[18]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[19]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[20]));
       var ZONE = [];
       var Hand = [];
       var Deck = [];
@@ -52,6 +52,7 @@ function Game_load(width,height){
       scene.addChild(Button);
       Button._element.onclick = function(e){
         Text = "";
+        if(Cemetery_GO) Text += "アフターセット,シャッフル直前のデッキ,";
         switch(Button._element.value){
           case "手札":
             Temp = Hand;
