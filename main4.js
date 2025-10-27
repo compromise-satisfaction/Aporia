@@ -18,9 +18,9 @@ function Game_load(width,height){
       var MANNAKA_Y = height/2-KSH/2;
 
       for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[17]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[18]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[19]));
-      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[20]));
       var ZONE = [];
       var Hand = [];
       var Deck = [];
