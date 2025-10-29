@@ -51,9 +51,22 @@ function Game_load(width,height){
       Button.backgroundColor = "buttonface";
       scene.addChild(Button);
       Button._element.onclick = function(e){
-        Text = "";
-        if(Cemetery_GO) Text += "アフターセット,シャッフル直前のデッキ,";
+        Text = "アフターセット,シャッフル直前のデッキ,";
         switch(Button._element.value){
+          case "入替":
+            for(var I = 0; I < ZONE.length; I++) if(ZONE[I].カード名.match(/特別カード/)) ZONE[I].場所 = "デッキ";
+            for(var I = 0; I < Deck.length; I++) if(Deck[I].カード名.match(/アンチホープ/)) Deck[I].場所 = "Z-ONE";
+
+            GO_ZONE = false;
+            Button._element.value = "墓地";
+            ButtonZ._element.value = "切替";
+            Cards_Set(10);
+            break;
+          case "逆転":
+            Cemetery.reverse();
+            for(var I = 0; I < Cemetery.length; I++) Cemetery[I].墓地 = I;
+            Cards_Set(10);
+            return;
           case "手札":
             Temp = Hand;
             Button._element.value = "デッキ";
@@ -63,17 +76,12 @@ function Game_load(width,height){
             Button._element.value = "手札";
             break;
           case "デッキ":
-            Text += "デッキのカードは"
             Temp = Deck;
             Button._element.value = "墓地";
             break;
         };
         for(var I = 0; I < Temp.length; I++){
-          if(Temp[I].カード名.match(/特別カード/)) if(!Cemetery_GO) continue;
-          if(I){
-            if(!Cemetery_GO) Text += "、";
-            else Text += "\n";
-          };
+          if(I) Text += "\n";
           Text += Temp[I].カード名;
         };
         navigator.clipboard.writeText(Text);
@@ -121,16 +129,19 @@ function Game_load(width,height){
         switch(ButtonZ._element.value){
           case "墓地":
             GO_ZONE = false;
+            Button._element.value = "墓地";
             ButtonZ._element.value = "切替";
             Cards_Set(10);
             break;
           case "交換":
             GO_ZONE = "墓地";
+            Button._element.value = "逆転";
             ButtonZ._element.value = "墓地";
             Cards_Set(10);
             break;
           case "切替":
             GO_ZONE = "はい";
+            Button._element.value = "入替";
             ButtonZ._element.value = "交換";
             break;
         };
@@ -162,6 +173,7 @@ function Game_load(width,height){
               if(GO_ZONE=="はい"){
                 this.場所 = "手札";
                 GO_ZONE = false;
+                Button._element.value = "墓地";
                 ButtonZ._element.value = "切替";
                 break;
               };
@@ -173,6 +185,7 @@ function Game_load(width,height){
               this.場所 = "デッキ";
               if(GO_ZONE=="墓地"){
                 GO_ZONE = false;
+                Button._element.value = "墓地";
                 ButtonZ._element.value = "切替";
               };
               break;
@@ -180,6 +193,7 @@ function Game_load(width,height){
               if(GO_ZONE=="はい"){
                 GO_ZONE = false;
                 this.場所 = "Z-ONE";
+                Button._element.value = "墓地";
                 ButtonZ._element.value = "切替";
               }
               else{
