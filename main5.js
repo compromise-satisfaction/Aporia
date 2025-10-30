@@ -229,6 +229,7 @@ function Game_load(width,height){
     var Cards = Result.get("card");
     if(!Cards) Cards = "アフター・グロー,アフター・グロー,アフター・グロー";
     Cards = Cards.split(",");
+    console.log(Cards)
     game.replaceScene(Result_Scene(Cards,Draw));
     return;
 };
