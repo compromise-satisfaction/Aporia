@@ -5,7 +5,7 @@ function Game_load(width,height){
   game.fps = 60;
   game.onload = function(){
 
-    var Result_Scene = function(Datas){
+    var Result_Scene = function(Datas,Result){
       var scene = new Scene();
 
       var Background = new Entity();
@@ -54,11 +54,10 @@ function Game_load(width,height){
       Card_Name["希望皇アストラル・ホープ"] = "c2c4aeff157425c4f6faadc83ee17dae";
       Card_Name["不明"] = "不明";
 
-      var IMAGE_U = "image/";
-
       var Data_Names = {};
 
       var SSS = 0.9;
+      if(Result) SSS = 0.375;
       var Hand = [];
       var KSW = 450*SSS;
       var KSH = 654*SSS;
@@ -69,13 +68,82 @@ function Game_load(width,height){
         Cards[Length]._element = document.createElement("img");
         Cards[Length].width = KSW;
         Cards[Length].height = KSH;
-        Cards[Length]._element.src = "https://i.gyazo.com/" + src + ".png";
+        Cards[Length]._element.src = "https://i.gyazo.com/" + Card_Name[src] + ".png";
         scene.addChild(Cards[Length]);
+        if(src==Result){
+          Cards[Length].枠 = new Sprite();
+          Cards[Length].枠._element = document.createElement("img");
+          Cards[Length].枠.width = KSW;
+          Cards[Length].枠.height = KSH;
+          Cards[Length].枠._element.src = "image/結果.png";
+          scene.addChild(Cards[Length].枠);
+        };
         return;
       };
 
-      for(var I = 0; I < Datas.length; I++) Create_Card(Hand,Card_Name[Datas[I]]);
-      Hand_Set(Hand,width/2,height/2-KSH/1.5,0);
+      var D1 = [];
+      var D2 = [];
+      var D3 = [];
+      var D4 = [];
+
+      for(var I = 0; I < Datas.length; I++) Create_Card(Hand,Datas[I]);
+      if(!Result) Hand_Set(Hand,width/2,height/2-KSH/1.5,0);
+      else{
+        for(var I = 0; I < Hand.length; I++){
+          if(D1.length<10){
+            D1.push(Hand[I]);
+            continue;
+          };
+          if(D2.length<10){
+            D2.push(Hand[I]);
+            continue;
+          };
+          if(D3.length<10){
+            D3.push(Hand[I]);
+            continue;
+          };
+          if(D4.length<10){
+            D4.push(Hand[I]);
+            continue;
+          };
+        };
+        for(var I = 0; I < D1.length; I++){
+          Temp = width - KSW;
+          Temp /= 9;
+          Temp *= I;
+          D1[I].moveTo(Temp,KSH*0);
+          if(D1[I].枠) D1[I].枠.moveTo(Temp,KSH*0);
+        };
+        for(var I = 0; I < D2.length; I++){
+          Temp1 = width - KSW;
+          Temp1 /= 9;
+          Temp1 *= I;
+          Temp2 = height - KSH;
+          Temp2 /= 3;
+          D2[I].moveTo(Temp1,Temp2);
+          if(D2[I].枠) D2[I].枠.moveTo(Temp1,Temp2);
+        };
+        for(var I = 0; I < D3.length; I++){
+          Temp1 = width - KSW;
+          Temp1 /= 9;
+          Temp1 *= I;
+          Temp2 = height - KSH;
+          Temp2 /= 3;
+          Temp2 *= 2;
+          D3[I].moveTo(Temp1,Temp2);
+          if(D3[I].枠) D3[I].枠.moveTo(Temp1,Temp2);
+        };
+        for(var I = 0; I < D4.length; I++){
+          Temp1 = width - KSW;
+          Temp1 /= 9;
+          Temp1 *= I;
+          Temp2 = height - KSH;
+          Temp2 /= 3;
+          Temp2 *= 3;
+          D4[I].moveTo(Temp1,Temp2);
+          if(D4[I].枠) D4[I].枠.moveTo(Temp1,Temp2);
+        };
+      };
 
       function Hand_Set(Hand,XX,YY,t){
         XX -= KSW/2;
@@ -87,6 +155,8 @@ function Game_load(width,height){
             Hand[0].tl.rotateTo(0,t);
             Hand[0].tl.and();
             Hand[0].tl.scaleTo(0,1,t/2);
+            scene.removeChild(Hand[0]);
+            scene.addChild(Hand[0]);
             return;
           case 2://2~6枚
           case 3:
@@ -154,9 +224,12 @@ function Game_load(width,height){
 
       return scene;
     };
-    var result = new URLSearchParams(document.location.search);
-    result = result.get("card").split(",");
-    game.replaceScene(Result_Scene(result));
+    var Result = new URLSearchParams(document.location.search);
+    var Draw = Result.get("draw");
+    var Cards = Result.get("card");
+    if(!Cards) Cards = "アフター・グロー,アフター・グロー,アフター・グロー";
+    Cards = Cards.split(",");
+    game.replaceScene(Result_Scene(Cards,Draw));
     return;
 };
 game.start();
