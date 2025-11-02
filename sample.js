@@ -45,6 +45,51 @@ Card_Name["不明"] = "不明";
 
 var Data_Names = {};
 
+var Datas = null;
+var Result = null;
+Result = "14";
+Datas = ["1","1","1","2","2","2","3","3","3"];
+Datas.push("4");
+Datas.push("4");
+Datas.push("4");
+Datas.push("5");
+Datas.push("5");
+Datas.push("5");
+Datas.push("6");
+Datas.push("6");
+Datas.push("6");
+Datas.push("7");
+Datas.push("7");
+Datas.push("7");
+Datas.push("8");
+Datas.push("8");
+Datas.push("8");
+Datas.push("9");
+Datas.push("9");
+Datas.push("9");
+Datas.push("10");
+Datas.push("10");
+Datas.push("10");
+Datas.push("11");
+Datas.push("11");
+Datas.push("11");
+Datas.push("12");
+Datas.push("12");
+Datas.push("12");
+Datas.push("13");
+Datas.push("13");
+Datas.push("13");
+Datas.push("14");
+
+Result = new URLSearchParams(document.location.search);
+Datas = ["1","2","3","10","11","12"];
+
+var Draw = Result.get("draw");
+var Cards = Result.get("card");
+if(Cards) Datas = Cards.split(",");
+if(Draw) Result = Draw;
+else Result = false;
+
 var SSS = 0.9;
 if(Result) SSS = 0.375;
 var Hand = [];
@@ -54,16 +99,8 @@ var KSH = 654*SSS;
 function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
-  Cards[Length].width = KSW;
-  Cards[Length].height = KSH;
   Cards[Length].src = "https://i.gyazo.com/" + Card_Name[src] + ".png";
-  if(src==Result){
-    Cards[Length].枠 = new Sprite();
-    Cards[Length].枠._element = document.createElement("img");
-    Cards[Length].枠.width = KSW;
-    Cards[Length].枠.height = KSH;
-    Cards[Length].枠._element.src = "image/結果.png";
-  };
+  if(src==Result) Cards[Length].枠 = true;
   return(Cards[Length]);
 };
 
@@ -101,23 +138,80 @@ function Hand_Set(Hand,XX,YY){
     Y += YY;
     Hand[I].x = X;
     Hand[I].y = Y;
+    Hand[I].r = r;
     //Hand[I].tl.and();
     //Hand[I].tl.rotateTo(r,t);
   };
   return;
 };
 
-Create_Card(Hand,1);
-Create_Card(Hand,2);
-Create_Card(Hand,3);
-Create_Card(Hand,10);
-Create_Card(Hand,11);
-Create_Card(Hand,12);
-Hand_Set(Hand,1777/2,1000/2-KSH/1.5);
+var D1 = [];
+var D2 = [];
+var D3 = [];
+var D4 = [];
+
+for(var I = 0; I < Datas.length; I++) Create_Card(Hand,Datas[I]);
+if(!Result) Hand_Set(Hand,1777/2,1000/2-KSH/1.5);
+else{
+  for(var I = 0; I < Hand.length; I++){
+    if(D1.length<10){
+      D1.push(Hand[I]);
+      continue;
+    };
+    if(D2.length<10){
+      D2.push(Hand[I]);
+      continue;
+    };
+    if(D3.length<10){
+      D3.push(Hand[I]);
+      continue;
+    };
+    if(D4.length<10){
+      D4.push(Hand[I]);
+      continue;
+    };
+  };
+  for(var I = 0; I < D1.length; I++){
+    Temp = 1777 - KSW;
+    Temp /= 9;
+    Temp *= I;
+    D1[I].x = Temp;
+    D1[I].y = 0;
+  };
+  for(var I = 0; I < D2.length; I++){
+    Temp1 = 1777 - KSW;
+    Temp1 /= 9;
+    Temp1 *= I;
+    Temp2 = 1000 - KSH;
+    Temp2 /= 3;
+    D2[I].x = Temp1;
+    D2[I].y = Temp2;
+  };
+  for(var I = 0; I < D3.length; I++){
+    Temp1 = 1777 - KSW;
+    Temp1 /= 9;
+    Temp1 *= I;
+    Temp2 = 1000 - KSH;
+    Temp2 /= 3;
+    Temp2 *= 2;
+    D3[I].x = Temp1;
+    D3[I].y = Temp2;
+  };
+  for(var I = 0; I < D4.length; I++){
+    Temp1 = 1777 - KSW;
+    Temp1 /= 9;
+    Temp1 *= I;
+    Temp2 = 1000 - KSH;
+    Temp2 /= 3;
+    Temp2 *= 3;
+    D4[I].x = Temp1;
+    D4[I].y = Temp2;
+  };
+};
 
 var canvas;
 var ctx;
-var img = [];
+var img;
 function draw() {
   canvas = document.getElementById("canvas");
   if(!canvas || !canvas.getContext) return false;
@@ -125,41 +219,50 @@ function draw() {
   for(var I = 0; I < Hand.length; I++){
     img = new Image();
     img.src = Hand[I].src;
-    //ctx.beginPath();
-    //ctx.arc(240, 160, 150, 0, Math.PI * 2, false);
-    //ctx.clip();
-    //ctx.drawImage(img,Hand[I].x,Hand[I].y);
-    ctx.drawImage(img,I*100,0);
-    ctx.font = 'bold 32px MS PGothic';
-    ctx.fillStyle = '#ff0000';
+    if(Result){
+      ctx.drawImage(img,Hand[I].x,Hand[I].y,KSW,KSH);
+      if(Hand[I].枠){
+        img = new Image();
+        img.src = "https://i.gyazo.com/7d31007a51d696bd8c13abfd1ffd8a36.png";
+        ctx.drawImage(img,Hand[I].x,Hand[I].y,KSW,KSH);
+        img.onload = function(){};
+      };
+    }
+    else {
+      angleRad = Hand[I].r*Math.PI/180;
+      ctx.save();
+      ctx.translate(Hand[I].x+KSW/2,Hand[I].y+KSH/2);
+      ctx.rotate(angleRad);
+      ctx.drawImage(img,-KSW/2,-KSH/2,KSW,KSH);
+      ctx.restore();
+    };
     img.onload = function(){};
   };
-  return;
+  canvas.toBlob(function(result){
+    Result = URL.createObjectURL(result);
+    console.log(Result);
+    return(result);
+  });
 };
 
 document.getElementById('output').addEventListener('click', function() {
-    canvas.toBlob(function(result) {
-      console.log(result);
-        var imageURL = URL.createObjectURL(result);
-        console.log(imageURL);
-        document.getElementById('result').innerHTML = '<img src="' + imageURL + '">';
-    });
-}, false);
-/*
-document.getElementById('output').addEventListener('click', function() {
-    canvas.toBlob(function(result){
+  canvas.toBlob(function(result) {
     console.log(result);
+    var imageURL = URL.createObjectURL(result);
+    console.log(imageURL);
+    document.getElementById('result').innerHTML = '<img src="' + imageURL + '">';
     var Token = "Bearer O7sR1zID6M-tZBhyEqN_uUn-Jdfw0Wy5pupomxXMdYs";
     var Headers = {Accept:"application/json",Authorization:Token};
     var Title = "タイトル";
     var Comment = "コメント"
     var Postdata = {imagedata:result,title:Title,desc:Comment};
-    var Options = {method:"post",type:"jpeg",headers:Headers,payload:Postdata};
-    var URL = "https://upload.gyazo.com/api/upload";
-    fetch(URL,Options)
+    var Options = {method:"post",type:"png",headers:Headers,payload:Postdata};
+    var Gyazo_URL = "https://upload.gyazo.com/api/upload";
+    return;
+    fetch(Gyazo_URL,Options)
       .then(res => res.json())
       .then(result => {
         console.log(result);
-    },);
-},'image/png');});
-*/
+    });
+  });
+});
