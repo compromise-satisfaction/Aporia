@@ -2,8 +2,6 @@ window.onload = function(){
   draw();
 };
 
-Result = 0;
-
 var Card_Name = {};
 Card_Name["1"] = "35c5489dc023959b25bb3b76b7006015";
 Card_Name["2"] = "baad6d19baa471a642592a9a4ec17f84";
@@ -86,7 +84,7 @@ Datas = ["1","2","3","10","11","12"];
 
 var Draw = Result.get("draw");
 var Cards = Result.get("card");
-if(Cards) Datas = Cards.split(",");
+if(Cards) Datas = Cards.split("a");
 if(Draw) Result = Draw;
 else Result = false;
 
