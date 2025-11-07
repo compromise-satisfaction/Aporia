@@ -85,8 +85,21 @@ Datas = ["1","2","3","10","11","12"];
 var Draw = Result.get("draw");
 var Cards = Result.get("card");
 if(Cards) Datas = Cards.split("a");
+var Days = Result.get("days");
+var About = Result.get("about");
 if(Draw) Result = Draw;
 else Result = false;
+switch(About){
+  case 1:
+    About = "初期手札";
+    break;
+  case 2:
+    About = "最終手札";
+    break;
+  case 3:
+    About = "シャッフル直前のデッキ";
+    break;
+};
 
 var SSS = 0.9;
 if(Result) SSS = 0.375;
@@ -243,6 +256,15 @@ function draw() {
   });
 };
 
+document.getElementById("download").onclick = (event) => {
+	let canvas = document.getElementById("canvas");
+	let link = document.createElement("a");
+	link.href = canvas.toDataURL("image/png");
+	link.download = "【"+Days+"日目】"+About+".png";
+	link.click();
+}
+
+/*
 document.getElementById('output').addEventListener('click', function() {
   canvas.toBlob(function(result) {
     console.log(result);
@@ -264,3 +286,4 @@ document.getElementById('output').addEventListener('click', function() {
     });
   });
 });
+*/
