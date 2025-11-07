@@ -257,10 +257,12 @@ function draw() {
 };
 
 document.getElementById("download").onclick = (event) => {
+  Text = "【"+Days+"日目】"+About+".png";
+  navigator.clipboard.writeText(Text);
 	let canvas = document.getElementById("canvas");
 	let link = document.createElement("a");
 	link.href = canvas.toDataURL("image/png");
-	link.download = "【"+Days+"日目】"+About+".png";
+	link.download = Text;
 	link.click();
 }
 
