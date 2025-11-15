@@ -55,7 +55,7 @@ function Game_load(width,height){
       Button.backgroundColor = "buttonface";
       scene.addChild(Button);
       Button._element.onclick = function(e){
-        Text = "アフターセット,シャッフル直前のデッキ,";
+        Text = "アフターセット,";
         switch(Button._element.value){
           case "逆転":
             Temp = Cemetery;
@@ -68,10 +68,12 @@ function Game_load(width,height){
           case "手札":
             Temp = Hand;
             Button._element.value = "デッキ";
+            Text += "初期手札,";
             break;
           case "墓地":
             Temp = Cemetery;
             Button._element.value = "手札";
+            Text += "シャッフル直前のデッキ,";
             break;
           case "デッキ":
             Temp = Deck;
