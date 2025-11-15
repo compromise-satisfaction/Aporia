@@ -88,5 +88,6 @@ Generally.push(["沈黙の魔導剣士－サイレント・パラディン","ima
 Generally.push(["希望皇アストラル・ホープ","image/希望皇アストラル・ホープ.png","","",141]);
 Generally.push(["クロニクル・ソーサレス","image/クロニクル・ソーサレス.png","","",142]);
 Generally.push(["ガーベージ・ロード","image/ガーベージ・ロード.png","","",143]);
-Generally.push(["カオス・ソルジャー","image/カオス・ソルジャー.png","","",201]);
+//Generally.push(["オッドアイズ・ペンデュラム・ドラゴン","image/オッドアイズ・ペンデュラム・ドラゴン.png","","",201]);
+Generally.push(["カオス・ソルジャー","image/カオス・ソルジャー.png","","",202]);
 Generally.push(["補強要員","image/補強要員.png","","",271]);
