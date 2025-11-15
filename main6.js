@@ -20,9 +20,11 @@ function Game_load(width,height){
       for(var I = 0; I < Generally.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Generally[I]));
 
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[0]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[1]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[3]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[4]));
-      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[6]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[5]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[7]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[8]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[9]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[3]));
