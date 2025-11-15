@@ -37,7 +37,6 @@ function Game_load(width,height){
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[36]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[39]));
 
-      var ZONE = [];
       var Hand = [];
       var Deck = [];
       var Cemetery = [];
@@ -59,6 +58,9 @@ function Game_load(width,height){
         Text = "アフターセット,シャッフル直前のデッキ,";
         switch(Button._element.value){
           case "逆転":
+            Temp = Cemetery;
+            Cemetery = [];
+            for(var I = 0; I < Temp.length; I++) if(Temp[I]) Cemetery.push(Temp[I]);
             Cemetery.reverse();
             for(var I = 0; I < Cemetery.length; I++) Cemetery[I].墓地 = I;
             Cards_Set(10);
@@ -132,14 +134,6 @@ function Game_load(width,height){
           for(var I = 0; I < Cards.length; I++) Cards[I].tl.queue = [];
           Sound_Play(Draw_SE);
           switch(this.場所){
-            case "Z-ONE":
-              if(GO_ZONE=="はい"){
-                this.場所 = "手札";
-                GO_ZONE = false;
-                Button._element.value = "墓地";
-                ButtonZ._element.value = "切替";
-                break;
-              };
             case "手札":
               this.場所 = "墓地";
               this.墓地 = Cemetery.length;
@@ -153,19 +147,11 @@ function Game_load(width,height){
               };
               break;
             case "デッキ":
-              if(GO_ZONE=="はい"){
-                GO_ZONE = false;
-                this.場所 = "Z-ONE";
-                Button._element.value = "墓地";
-                ButtonZ._element.value = "切替";
-              }
+              if(!Cemetery_GO) this.場所 = "手札";
               else{
-                if(!Cemetery_GO) this.場所 = "手札";
-                else{
-                  this.場所 = "墓地";
-                  this.墓地 = Cemetery.length;
-                  if(Cemetery_GO!="無限") Cemetery_GO--;
-                };
+                this.場所 = "墓地";
+                this.墓地 = Cemetery.length;
+                if(Cemetery_GO!="無限") Cemetery_GO--;
               };
               break;
             default:
@@ -179,15 +165,11 @@ function Game_load(width,height){
       };
 
       function Cards_Set(t){
-        ZONE = [];
         Hand = [];
         Deck = [];
         Cemetery = [];
         for(var I = 0; I < Cards.length; I++){
           switch(Cards[I].場所){
-            case "Z-ONE":
-              ZONE.push(Cards[I]);
-              break;
             case "手札":
               Hand.push(Cards[I]);
               break;
@@ -208,7 +190,6 @@ function Game_load(width,height){
           Deck_Set(Deck,t);
         };
         Hand_Set(Hand,0,0,KSW,7,t/2);
-        Hand_Set(ZONE,0,KSH+5,KSW*2+KSH+15,5,t/2);
         if(Hand.length==6) Cemetery_GO = "無限";
         else Cemetery_GO = 0;
         return;

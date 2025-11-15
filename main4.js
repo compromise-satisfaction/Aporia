@@ -18,9 +18,9 @@ function Game_load(width,height){
       var MANNAKA_Y = height/2-KSH/2;
 
       for(var I = 0; I < Card_Name.length; I++) Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[I]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[17]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[18]));
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[19]));
-      Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[20]));
       var ZONE = [];
       var Hand = [];
       var Deck = [];
@@ -56,13 +56,15 @@ function Game_load(width,height){
           case "入替":
             for(var I = 0; I < ZONE.length; I++) if(ZONE[I].カード名.match(/特別カード/)) ZONE[I].場所 = "デッキ";
             for(var I = 0; I < Deck.length; I++) if(Deck[I].カード名.match(/アンチホープ/)) Deck[I].場所 = "Z-ONE";
-
             GO_ZONE = false;
             Button._element.value = "墓地";
             ButtonZ._element.value = "切替";
             Cards_Set(10);
             break;
           case "逆転":
+            Temp = Cemetery;
+            Cemetery = [];
+            for(var I = 0; I < Temp.length; I++) if(Temp[I]) Cemetery.push(Temp[I]);
             Cemetery.reverse();
             for(var I = 0; I < Cemetery.length; I++) Cemetery[I].墓地 = I;
             Cards_Set(10);
