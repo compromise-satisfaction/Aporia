@@ -78,6 +78,7 @@ function Game_load(width,height){
           case "デッキ":
             Temp = Deck;
             Button._element.value = "墓地";
+            Text += "結果,";
             break;
         };
         for(var I = 0; I < Temp.length; I++){
