@@ -49,7 +49,7 @@ Shining_Draw.push(["光天使ブックス","image/18.png","image/よっちー1.g
 Shining_Draw.push(["死のメッセージ「H」","image/19.png","image/よっちー1.gif","キーカード",290]);
 Shining_Draw.push(["増殖するG","image/20.png","image/よっちー1.gif","キーカード",80]);
 Shining_Draw.push(["混沌帝龍 －終焉の使者－","image/21.png","image/よっちー1.gif","キーカード",160]);
-Shining_Draw.push(["自戒神メタイオン","image/22.png","image/よっちー1.gif","キーカード",171]);
+Shining_Draw.push(["時械神メタイオン","image/22.png","image/よっちー1.gif","キーカード",171]);
 Shining_Draw.push(["星杯を戴く巫女","image/臍.png","image/よっちー1.gif","キーカード",11]);
 Shining_Draw.push(["スマイル・ワールド","image/25.png","image/よっちー1.gif","キーカード",250]);
 Shining_Draw.push(["スマイル・ワールド","image/25.png","image/よっちー1.gif","キーカード",250]);
