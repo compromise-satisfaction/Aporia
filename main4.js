@@ -83,7 +83,8 @@ function Game_load(width,height){
             break;
         };
         for(var I = 0; I < Temp.length; I++){
-          if(I) Text += "\n";
+          if(!Temp[I]) continue;
+          if(Text) Text += "\n";
           Text += Temp[I].カード名;
         };
         navigator.clipboard.writeText(Text);
