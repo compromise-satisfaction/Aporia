@@ -51,7 +51,7 @@ function Game_load(width,height){
       Button.backgroundColor = "buttonface";
       scene.addChild(Button);
       Button._element.onclick = function(e){
-        Text = "アフターセット,シャッフル直前のデッキ,";
+        Text = "アポリアセット,";
         switch(Button._element.value){
           case "入替":
             for(var I = 0; I < ZONE.length; I++) if(ZONE[I].カード名.match(/特別カード/)) ZONE[I].場所 = "デッキ";
@@ -72,14 +72,17 @@ function Game_load(width,height){
           case "手札":
             Temp = Hand;
             Button._element.value = "デッキ";
+            Text += "初期手札,";
             break;
           case "墓地":
             Temp = Cemetery;
             Button._element.value = "手札";
+            Text += "シャッフル直前のデッキ,";
             break;
           case "デッキ":
             Temp = Deck;
             Button._element.value = "墓地";
+            Text += "結果,";
             break;
         };
         for(var I = 0; I < Temp.length; I++){

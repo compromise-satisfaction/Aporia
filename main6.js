@@ -55,7 +55,7 @@ function Game_load(width,height){
       Button.backgroundColor = "buttonface";
       scene.addChild(Button);
       Button._element.onclick = function(e){
-        Text = "アフターセット,";
+        Text = "一般セット,";
         switch(Button._element.value){
           case "逆転":
             Temp = Cemetery;
