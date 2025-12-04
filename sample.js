@@ -39,7 +39,20 @@ Card_Name["33"] = "8366a40f2388f3718e951808b2433e25";
 Card_Name["34"] = "e620a98b8c2631ba8f7264b43380c1a9";
 Card_Name["35"] = "b47645e207dfac18482baff538ca8dca";
 Card_Name["36"] = "c2c4aeff157425c4f6faadc83ee17dae";
-Card_Name["不明"] = "不明";
+Card_Name["37"] = "a9afc15b1ce92084127184b5a17cc01e";
+Card_Name["38"] = "4f764235de5a05d8d03dd884ff95126e";
+Card_Name["39"] = "1d3243e6fe0df281fd6b785def872538";
+Card_Name["40"] = "7940180b68d6c0f387ec9a8ff26c7f17";
+Card_Name["41"] = "fec915a82a3f4030ee48eae17866496c";
+Card_Name["42"] = "c30c7fe755d90f5496ebe9c281b368ab";
+Card_Name["43"] = "619721c60a0dceb67f899c8b2d8bee7c";
+Card_Name["44"] = "589a4fcc903a1faab40b1e46b54c77f9";
+Card_Name["45"] = "799a17ee9e9119623bdcdd4a51015b56";
+Card_Name["46"] = "b764dd72c0b450083735ba68a5a14eda";
+Card_Name["47"] = "78f4f477fad1f250e14c0936836e99aa";
+Card_Name["48"] = "19111a073e3599e75f6ab7c69a51ff5c";
+Card_Name["49"] = "738f7cf999120e2a6a0c017888127ac6";
+Card_Name["50"] = "6b5ef77249fa74622c7a7f8449962fdc";
 
 var Data_Names = {};
 
@@ -90,13 +103,13 @@ var About = Result.get("about");
 if(Draw) Result = Draw;
 else Result = false;
 switch(About){
-  case "1":
+  case 1:
     About = "初期手札";
     break;
-  case "2":
+  case 2:
     About = "最終手札";
     break;
-  case "3":
+  case 3:
     About = "シャッフル直前のデッキ";
     break;
 };
@@ -110,6 +123,7 @@ var KSH = 654*SSS;
 function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
+  if(!Card_Name[src]) Card_Name[src] = "eb4088282367b46a4012fee90f17cf7b";
   Cards[Length].src = "https://i.gyazo.com/" + Card_Name[src] + ".png";
   if(src==Result) Cards[Length].枠 = true;
   return(Cards[Length]);
@@ -257,7 +271,7 @@ function draw() {
 };
 
 document.getElementById("download").onclick = (event) => {
-  Text = "【"+Days+"日目】"+About+".png";
+  Text = "【"+Days+"】"+About+".png";
   navigator.clipboard.writeText(Text);
 	let canvas = document.getElementById("canvas");
 	let link = document.createElement("a");
