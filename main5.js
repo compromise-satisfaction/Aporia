@@ -52,6 +52,20 @@ function Game_load(width,height){
       Card_Name["34"] = "e620a98b8c2631ba8f7264b43380c1a9";
       Card_Name["35"] = "b47645e207dfac18482baff538ca8dca";
       Card_Name["36"] = "c2c4aeff157425c4f6faadc83ee17dae";
+      Card_Name["37"] = "a9afc15b1ce92084127184b5a17cc01e";
+      Card_Name["38"] = "4f764235de5a05d8d03dd884ff95126e";
+      Card_Name["39"] = "1d3243e6fe0df281fd6b785def872538";
+      Card_Name["40"] = "7940180b68d6c0f387ec9a8ff26c7f17";
+      Card_Name["41"] = "fec915a82a3f4030ee48eae17866496c";
+      Card_Name["42"] = "c30c7fe755d90f5496ebe9c281b368ab";
+      Card_Name["43"] = "619721c60a0dceb67f899c8b2d8bee7c";
+      Card_Name["44"] = "589a4fcc903a1faab40b1e46b54c77f9";
+      Card_Name["45"] = "799a17ee9e9119623bdcdd4a51015b56";
+      Card_Name["46"] = "b764dd72c0b450083735ba68a5a14eda";
+      Card_Name["47"] = "78f4f477fad1f250e14c0936836e99aa";
+      Card_Name["48"] = "19111a073e3599e75f6ab7c69a51ff5c";
+      Card_Name["49"] = "738f7cf999120e2a6a0c017888127ac6";
+      Card_Name["50"] = "6b5ef77249fa74622c7a7f8449962fdc";
       Card_Name["不明"] = "不明";
 
       var Data_Names = {};
@@ -68,6 +82,7 @@ function Game_load(width,height){
         Cards[Length]._element = document.createElement("img");
         Cards[Length].width = KSW;
         Cards[Length].height = KSH;
+        if(!Card_Name[src]) Card_Name[src] = "eb4088282367b46a4012fee90f17cf7b";
         Cards[Length]._element.src = "https://i.gyazo.com/" + Card_Name[src] + ".png";
         scene.addChild(Cards[Length]);
         if(src==Result){
@@ -151,10 +166,6 @@ function Game_load(width,height){
         switch(Hand.length){
           case 1://一枚の時何もしない
             Hand[0].tl.moveTo(XX,YY,t);
-            Hand[0].tl.and();
-            Hand[0].tl.rotateTo(0,t);
-            Hand[0].tl.and();
-            Hand[0].tl.scaleTo(0,1,t/2);
             scene.removeChild(Hand[0]);
             scene.addChild(Hand[0]);
             return;
@@ -194,6 +205,65 @@ function Game_load(width,height){
         return;
       };
 
+      /*
+      var Canvas = document.getElementById("canvas");
+      var Ctx = Canvas.getContext("2d");
+      function Draw(){
+          var Img = new Image();
+          Img.src = "image.png";
+          Img.onload = function() {
+              Ctx.beginPath();
+              Ctx.arc(240, 160, 150, 0, Math.PI * 2, false);
+              Ctx.clip();
+              Ctx.drawImage(Img, 0, 0);
+              Ctx.font = "bold 32px MS PGothic";
+              Ctx.fillStyle = "#ff0000";
+              Ctx.fillText('テスト', 260,240);
+          };
+      };
+
+      document.getElementById("output").addEventListener("click",function(){
+          Canvas.toBlob(function(result) {
+              console.log(result);
+              var ImageURL = URL.createObjectURL(result);
+              document.getElementById('result').innerHTML = '<img src="' + ImageURL + '">';
+          }, 'image/png');
+      },
+      false);
+      */
+
+      var canvas;
+      var ctx;
+      function draw(){
+        canvas = document.getElementById('canvas');
+        if(!canvas || !canvas.getContext) return false;
+        ctx = canvas.getContext('2d');
+        var img = new Image();
+        img.src = 'image.jpg';
+        img.onload = function() {
+            // マスク
+            ctx.beginPath();
+            ctx.arc(240, 160, 150, 0, Math.PI * 2, false);
+            ctx.clip();
+            ctx.drawImage(img, 0, 0);
+            ctx.font = 'bold 32px MS PGothic';
+            ctx.fillStyle = '#ff0000';
+            ctx.fillText('テスト', 260, 240);
+        };
+        return;
+      };
+
+      window.addEventListener("keydown",function(e){
+          // canvasを画像に変換して出力
+          canvas.toBlob(function(result) {
+              console.log(result);
+              var imageURL = URL.createObjectURL(result);
+              document.getElementById('result').innerHTML = '<img src="' + imageURL + '">';
+          }, 'image/jpeg');
+      },false);
+
+      draw();
+
       function Hand_shuffle(Hand,XX,YY,XR,YR,t){
         XX -= Hand[0].width/2;
         var X = XX;
@@ -221,15 +291,17 @@ function Game_load(width,height){
         };
         return;
       };
-
       return scene;
     };
     var Result = new URLSearchParams(document.location.search);
     var Draw = Result.get("draw");
     var Cards = Result.get("card");
-    if(!Cards) Cards = "アフター・グロー,アフター・グロー,アフター・グロー";
+    if(!Cards){
+      Draw = "41";
+      Cards = "1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9,10,10,10,11,11,11,12,12,12,13,13,13,14";
+      Cards = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,16,17,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,36";
+    };
     Cards = Cards.split(",");
-    console.log(Cards)
     game.replaceScene(Result_Scene(Cards,Draw));
     return;
 };
