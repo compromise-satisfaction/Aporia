@@ -103,13 +103,13 @@ var About = Result.get("about");
 if(Draw) Result = Draw;
 else Result = false;
 switch(About){
-  case 1:
+  case "1":
     About = "初期手札";
     break;
-  case 2:
+  case "2":
     About = "最終手札";
     break;
-  case 3:
+  case "3":
     About = "シャッフル直前のデッキ";
     break;
 };
@@ -271,7 +271,7 @@ function draw() {
 };
 
 document.getElementById("download").onclick = (event) => {
-  Text = "【"+Days+"】"+About+".png";
+  Text = "【アポリア"+Days+"】"+About+".png";
   navigator.clipboard.writeText(Text);
 	let canvas = document.getElementById("canvas");
 	let link = document.createElement("a");
