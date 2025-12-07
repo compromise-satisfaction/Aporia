@@ -3,6 +3,7 @@ window.onload = function(){
 };
 
 var Card_Name = {};
+/*
 Card_Name["1"] = "35c5489dc023959b25bb3b76b7006015";
 Card_Name["2"] = "baad6d19baa471a642592a9a4ec17f84";
 Card_Name["3"] = "3ec24ea37fad233f63d2f0745ef04a5b";
@@ -53,6 +54,7 @@ Card_Name["47"] = "78f4f477fad1f250e14c0936836e99aa";
 Card_Name["48"] = "19111a073e3599e75f6ab7c69a51ff5c";
 Card_Name["49"] = "738f7cf999120e2a6a0c017888127ac6";
 Card_Name["50"] = "6b5ef77249fa74622c7a7f8449962fdc";
+*/
 
 var Data_Names = {};
 
@@ -123,8 +125,8 @@ var KSH = 654*SSS;
 function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
-  if(!Card_Name[src]) Card_Name[src] = "eb4088282367b46a4012fee90f17cf7b";
-  Cards[Length].src = "https://i.gyazo.com/" + Card_Name[src] + ".png";
+  if(!Card_Name[src]) Card_Name[src] = "不明";
+  Cards[Length].src = "../image/" + Card_Name[src] + ".png";
   if(src==Result) Cards[Length].枠 = true;
   return(Cards[Length]);
 };
@@ -280,27 +282,3 @@ document.getElementById("download").onclick = (event) => {
 	link.download = Text;
 	link.click();
 }
-
-/*
-document.getElementById('output').addEventListener('click', function() {
-  canvas.toBlob(function(result) {
-    console.log(result);
-    var imageURL = URL.createObjectURL(result);
-    console.log(imageURL);
-    document.getElementById('result').innerHTML = '<img src="' + imageURL + '">';
-    var Token = "Bearer O7sR1zID6M-tZBhyEqN_uUn-Jdfw0Wy5pupomxXMdYs";
-    var Headers = {Accept:"application/json",Authorization:Token};
-    var Title = "タイトル";
-    var Comment = "コメント"
-    var Postdata = {imagedata:result,title:Title,desc:Comment};
-    var Options = {method:"post",type:"png",headers:Headers,payload:Postdata};
-    var Gyazo_URL = "https://upload.gyazo.com/api/upload";
-    return;
-    fetch(Gyazo_URL,Options)
-      .then(res => res.json())
-      .then(result => {
-        console.log(result);
-    });
-  });
-});
-*/
