@@ -177,10 +177,10 @@ var KSH = 654*SSS;
 function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
+  if(src==Result) Cards[Length].枠 = true;
   if(Card_Name[src]) src = Card_Name[src];
   else src = "不明";
   Cards[Length].src = "image/" + src + ".png";
-  if(src==Result) Cards[Length].枠 = true;
   return(Cards[Length]);
 };
 
@@ -304,7 +304,7 @@ function draw() {
       ctx.drawImage(img,Hand[I].x,Hand[I].y,KSW,KSH);
       if(Hand[I].枠){
         img = new Image();
-        img.src = "https://i.gyazo.com/7d31007a51d696bd8c13abfd1ffd8a36.png";
+        //img.src = "https://i.gyazo.com/7d31007a51d696bd8c13abfd1ffd8a36.png";
         img.src = "image/結果.png";
         ctx.drawImage(img,Hand[I].x,Hand[I].y,KSW,KSH);
         img.onload = function(){};
