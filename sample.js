@@ -125,7 +125,7 @@ var KSH = 654*SSS;
 function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
-  Cards[Length].src = "Aporia/image/不明.png";// + src + ".png";
+  Cards[Length].src = "image/" + src + ".png";
   if(src==Result) Cards[Length].枠 = true;
   return(Cards[Length]);
 };
