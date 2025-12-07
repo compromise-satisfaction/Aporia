@@ -243,6 +243,7 @@ function draw() {
   ctx = canvas.getContext("2d");
   for(var I = 0; I < Hand.length; I++){
     img = new Image();
+    img.crossOrigin = "Anonymous";
     img.src = Hand[I].src;
     if(Result){
       ctx.drawImage(img,Hand[I].x,Hand[I].y,KSW,KSH);
