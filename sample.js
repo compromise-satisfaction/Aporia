@@ -322,7 +322,7 @@ function draw() {
   };
   canvas.toBlob(function(result){
     Result = URL.createObjectURL(result);
-    console.log(Result);
+    console.log(Result.blob);
     return(result);
   });
 };
