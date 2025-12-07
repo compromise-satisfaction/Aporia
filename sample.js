@@ -177,7 +177,7 @@ var KSH = 654*SSS;
 function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
-  if(Cards_Name[src]) src = Cards_Name[src];
+  if(Card_Name[src]) src = Card_Name[src];
   else src = "不明";
   Cards[Length].src = "image/" + src + ".png";
   if(src==Result) Cards[Length].枠 = true;
