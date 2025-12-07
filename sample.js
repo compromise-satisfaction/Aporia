@@ -327,12 +327,27 @@ function draw() {
   });
 };
 
+var EXE = "https://script.google.com/macros/s/AKfycbwi6ekqJT9R4EB4hcX5bJ-UwZ_1SMYVVwRCsA6VAZxhVGmx--cV/exec";
+
+document.getElementById("Drive").onclick = (event) => {
+  Text = "【アポリア"+Days+"】"+About+".png";
+  var Send_Data = {blob:Result,名前:Text,タイプ:"Drive保存",ID:"1bY8fDvfPHRevSQOP0-GLZmp-kbMuxXE4"};
+  Send_Data = JSON.stringify(Send_Data);
+  fetch(EXE,{method:"POST",body:Send_Data})
+    .then(res => res.json())
+    .then(result => {
+      game.replaceScene(Result_Scene(result));
+  },);
+  return;
+};
+
 document.getElementById("download").onclick = (event) => {
   Text = "【アポリア"+Days+"】"+About+".png";
-  navigator.clipboard.writeText(Text);
-	let canvas = document.getElementById("canvas");
-	let link = document.createElement("a");
+  //navigator.clipboard.writeText(Text);
+	var canvas = document.getElementById("canvas");
+	var link = document.createElement("a");
 	link.href = canvas.toDataURL("image/png");
 	link.download = Text;
 	link.click();
-}
+  return;
+};
