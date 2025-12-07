@@ -126,7 +126,7 @@ function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
   if(!Card_Name[src]) Card_Name[src] = "不明";
-  Cards[Length].src = "../image/" + Card_Name[src] + ".png";
+  Cards[Length].src = "image/" + Card_Name[src] + ".png";
   if(src==Result) Cards[Length].枠 = true;
   return(Cards[Length]);
 };
