@@ -322,7 +322,6 @@ function draw() {
   };
   canvas.toBlob(function(result){
     Result = URL.createObjectURL(result);
-    console.log(Result.blob);
     return(result);
   });
 };
@@ -331,7 +330,8 @@ var EXE = "https://script.google.com/macros/s/AKfycbwi6ekqJT9R4EB4hcX5bJ-UwZ_1SM
 
 document.getElementById("Drive").onclick = (event) => {
   Text = "【アポリア"+Days+"】"+About+".png";
-  var Send_Data = {blob:Result.blob,名前:Text,タイプ:"Drive保存",ID:"1bY8fDvfPHRevSQOP0-GLZmp-kbMuxXE4"};
+  console.log(Result);
+  var Send_Data = {blob:Result,名前:Text,タイプ:"Drive保存",ID:"1bY8fDvfPHRevSQOP0-GLZmp-kbMuxXE4"};
   Send_Data = JSON.stringify(Send_Data);
   fetch(EXE,{method:"POST",body:Send_Data})
     .then(res => res.json())
