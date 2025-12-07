@@ -3,6 +3,58 @@ window.onload = function(){
 };
 
 var Card_Name = {};
+
+Card_Name["1"] = "1";
+Card_Name["2"] = "2";
+Card_Name["3"] = "3";
+Card_Name["4"] = "4";
+Card_Name["5"] = "5";
+Card_Name["6"] = "6";
+Card_Name["7"] = "7";
+Card_Name["8"] = "8";
+Card_Name["9"] = "9";
+Card_Name["10"] = "10";
+Card_Name["11"] = "11";
+Card_Name["12"] = "12";
+Card_Name["13"] = "13";
+Card_Name["14"] = "14";
+Card_Name["15"] = "15";
+Card_Name["16"] = "16";
+Card_Name["17"] = "17";
+Card_Name["18"] = "18";
+Card_Name["19"] = "19";
+Card_Name["20"] = "20";
+Card_Name["21"] = "21";
+Card_Name["22"] = "22";
+Card_Name["23"] = "23";
+Card_Name["24"] = "24";
+Card_Name["25"] = "25";
+Card_Name["26"] = "海月－ジェリーフィッシュ－";
+Card_Name["27"] = "デスハムスター";
+Card_Name["28"] = "山";
+Card_Name["29"] = "はにわ";
+Card_Name["30"] = "岩石の精霊";
+Card_Name["31"] = "ジャンク・シンクロン";
+Card_Name["32"] = "N・アクア・ドルフィン";
+Card_Name["33"] = "ドラゴニックP";
+Card_Name["34"] = "サイボーグドクター";
+Card_Name["35"] = "カオス・ソルジャー";
+Card_Name["36"] = "希望皇アストラル・ホープ";
+Card_Name["37"] = "魔導雑貨商人";
+Card_Name["38"] = "ガーベージ・ロード";
+Card_Name["39"] = "補強要員";
+Card_Name["40"] = "海神の巫女";
+Card_Name["41"] = "沈黙の魔導剣士－サイレント・パラディン";
+Card_Name["42"] = "調律の魔術師";
+Card_Name["43"] = "魔界発現世行きバス";
+Card_Name["44"] = "デーモン・テイマー";
+Card_Name["45"] = "クロニクル・ソーサレス";
+Card_Name["46"] = "封印されし者の右足";
+Card_Name["47"] = "封印されし者の左足";
+Card_Name["48"] = "封印されし者の右腕";
+Card_Name["49"] = "封印されし者の左腕";
+Card_Name["50"] = "封印されしエクゾディア";
+
 /*
 Card_Name["1"] = "35c5489dc023959b25bb3b76b7006015";
 Card_Name["2"] = "baad6d19baa471a642592a9a4ec17f84";
@@ -125,6 +177,8 @@ var KSH = 654*SSS;
 function Create_Card(Cards,src){
   var Length = Cards.length;
   Cards[Length] = {};
+  if(Cards[src]) src = Cards[src];
+  else src = "不明";
   Cards[Length].src = "image/" + src + ".png";
   if(src==Result) Cards[Length].枠 = true;
   return(Cards[Length]);
@@ -251,6 +305,7 @@ function draw() {
       if(Hand[I].枠){
         img = new Image();
         img.src = "https://i.gyazo.com/7d31007a51d696bd8c13abfd1ffd8a36.png";
+        img.src = "image/結果.png";
         ctx.drawImage(img,Hand[I].x,Hand[I].y,KSW,KSH);
         img.onload = function(){};
       };
