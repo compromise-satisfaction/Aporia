@@ -336,6 +336,22 @@ document.getElementById("Drive").onclick = (event) => {
   Text = "【アポリア"+Days+"】"+About+".png";
   console.log(Result);
   var Send_Data = {blob:canvas.toDataURL("image/png"),名前:Text,タイプ:"Drive保存",ID:"1bY8fDvfPHRevSQOP0-GLZmp-kbMuxXE4"};
+  Send_Data = {
+    method:"post",
+    headers:{
+      Accept:"application/json",
+      Authorization:"Bearer O7sR1zID6M-tZBhyEqN_uUn-Jdfw0Wy5pupomxXMdYs",
+    },
+    payload:{imagedata:Result}
+  };
+  var URL = "https://upload.gyazo.com/api/upload";
+  fetch(URL,Send_Data)
+    .then(res => res.json())
+    .then(result => {
+      console.log(result);
+      game.replaceScene(Result_Scene(result));
+  },);
+  return;
   Send_Data = JSON.stringify(Send_Data);
   fetch(EXE,{method:"POST",body:Send_Data})
     .then(res => res.json())
