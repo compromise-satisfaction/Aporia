@@ -1,5 +1,12 @@
-window.onload = function(){
-  draw();
+enchant();
+
+function Game_load(width,height){
+  var game = new Game(width,height);
+  game.fps = 60;
+  game.onload = function(){
+    draw();
+  };
+  game.start();
 };
 
 var Card_Name = {};
