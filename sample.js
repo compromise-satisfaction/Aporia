@@ -344,6 +344,7 @@ document.getElementById("Drive").onclick = (event) => {
     },
     payload:{imagedata:Result}
   };
+  console.log("ギャゾ");
   var URL = "https://upload.gyazo.com/api/upload";
   fetch(URL,Send_Data)
     .then(res => res.json())
