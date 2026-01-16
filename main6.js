@@ -29,11 +29,13 @@ function Game_load(width,height){
       Cards.push(Create_Image(0,0,KSW,KSH,Shining_Draw[9]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[3]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[9]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[12]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[15]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[18]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[21]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[24]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[27]));
+      Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[30]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[36]));
       Cards.push(Create_Image(0,0,KSW,KSH,Card_Name[39]));
 
