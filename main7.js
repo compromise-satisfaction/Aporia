@@ -395,6 +395,7 @@ function Game_load(width,height){
             };
           };
           for(var J = 0; J < Temp.length; J++){
+            if(Crews[Temp[J]].敵&&Crews[Temp[J]].人間) Crews[Temp[J]].確定 = "AC主義者";
             if(HANTEI.真エンジニア){
               if(Crews[HANTEI.真エンジニア].認定){
                 switch(Crews[HANTEI.真エンジニア].認定[Temp[J]]){
