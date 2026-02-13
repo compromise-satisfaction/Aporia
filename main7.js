@@ -243,11 +243,28 @@ function Game_load(width,height){
           Temp = Object.keys(Crews);
           for(var J = 0; J < Temp.length; J++){
             if(Crews[Temp[J]].判定){
+              Crews[Temp[J]].エド = [0,0,0,0];
+              for(var K = 0; K < Crews[Temp[J]].判定.人間.length; K++){
+                if(HANTEI.エンジニア[Crews[Temp[J]].判定.人間[K]]) Crews[Temp[J]].エド[0]++
+                if(HANTEI.ドクター[Crews[Temp[J]].判定.人間[K]]) Crews[Temp[J]].エド[2]++;
+              };
               for(var K = 0; K < Crews[Temp[J]].判定.グノーシア.length; K++){
+                if(HANTEI.エンジニア[Crews[Temp[J]].判定.グノーシア[K]]) Crews[Temp[J]].エド[1]++
+                if(HANTEI.ドクター[Crews[Temp[J]].判定.グノーシア[K]]) Crews[Temp[J]].エド[3]++;
                 if(!Crews[Temp[J]].役割.グノーシア){
                   Crews[Crews[Temp[J]].判定.グノーシア[K]].敵 = true;
                   break;
                 };
+              };
+              if(Crews[Temp[J]].エド[0]==HANTEI.エンジニア.数) delete Crews[Temp[J]].役割.グノーシア;
+              if(Crews[Temp[J]].エド[1]==HANTEI.エンジニア.数){
+                Crews[Temp[J]].確定 = "グノーシア";
+                Crews[Temp[J]].敵 = true;
+              };
+              if(Crews[Temp[J]].エド[2]==HANTEI.ドクター.数) delete Crews[Temp[J]].役割.グノーシア;
+              if(Crews[Temp[J]].エド[3]==HANTEI.ドクター.数){
+                Crews[Temp[J]].確定 = "グノーシア";
+                Crews[Temp[J]].敵 = true;
               };
             };
           };
@@ -402,6 +419,8 @@ function Game_load(width,height){
             if(HANTEI.エンジニア.数&&!S_crews.エンジニア) Crews[Temp[J]].敵 = true;
             if(HANTEI.ドクター.数&&!S_crews.ドクター) Crews[Temp[J]].敵 = true;
             if(Crews[Temp[J]].敵){
+              if(HANTEI.エンジニア[Temp[J]]) HANTEI.エンジニア.数--;
+              if(HANTEI.ドクター[Temp[J]]) HANTEI.ドクター.数--;
               delete HANTEI.エンジニア[Temp[J]];
               delete HANTEI.ドクター[Temp[J]];
               delete Crews[Temp[J]].役割.エンジニア;
