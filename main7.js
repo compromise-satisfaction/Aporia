@@ -339,9 +339,11 @@ function Game_load(width,height){
                   S_crews[S_crews.Temp[K]].確定 = Object.keys(S_crews[S_crews.Temp[K]].役割)[0];
                 };
                 if(Crews[Temp[J]].認定){
-                  if(S_crews[S_crews.Temp[K]].確定!="グノーシア"&&Crews[Temp[J]].認定[S_crews.Temp[K]]=="グノーシア"){
-                    Crews[Temp[J]].敵 = true;
-                    break;
+                  if(S_crews[S_crews.Temp[K]].確定){
+                    if(S_crews[S_crews.Temp[K]].確定!="グノーシア"&&Crews[Temp[J]].認定[S_crews.Temp[K]]=="グノーシア"){
+                      Crews[Temp[J]].敵 = true;
+                      break;
+                    };
                   };
                   if(S_crews[S_crews.Temp[K]].確定=="グノーシア"&&Crews[Temp[J]].認定[S_crews.Temp[K]]=="人間"){
                     Crews[Temp[J]].敵 = true;
