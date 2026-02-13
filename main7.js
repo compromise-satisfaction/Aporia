@@ -399,7 +399,7 @@ function Game_load(width,height){
               if(Crews[HANTEI.真エンジニア].認定){
                 switch(Crews[HANTEI.真エンジニア].認定[Temp[J]]){
                   case "人間":
-                    if(!Crews[Temp[J]].ステータス||!Crews[Temp[J]].役割.バグ) Crews[Temp[J]].人間 = true;
+                    if(Crews[Temp[J]].ステータス!="消滅"||!Crews[Temp[J]].役割.バグ) Crews[Temp[J]].人間 = true;
                     delete Crews[Temp[J]].役割.グノーシア;
                     break;
                   case "グノーシア":
