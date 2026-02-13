@@ -379,6 +379,7 @@ function Game_load(width,height){
         Text = "";
         for(var I = 0; I < Temp.length; I++){
           if(Crews[Temp[I]].確定||Crews[Temp[I]].敵||Crews[Temp[I]].人間){
+            if(Crews[Temp[I]].ステータス&&Moto_Datas.除外) continue;
             if(Crews[Temp[I]].確定!="留守番"){
               if(Text) Text += "\n";
               if(Crews[Temp[I]].確定){
@@ -473,6 +474,15 @@ function Game_load(width,height){
       Label4.width = width;
       scene.addChild(Label4);
 
+      var Label5 = new Label();
+      Label5.x = 0;
+      Label5.y = height/20*5;
+      Label5.font = height/20 + "px 'Arial'";
+      if(Moto_Datas.除外) Label5.text = "消滅,冷凍者除外:する";
+      else Label5.text = "消滅,冷凍者除外:しない";
+      Label5.width = width;
+      scene.addChild(Label5);
+
       var Buttons = [];
 
       Button_Set(0,height-height/10*1,width,"開始");
@@ -482,6 +492,7 @@ function Game_load(width,height){
       Button_Set(width/2,height-height/10*4,width/2,"グノ-");
       Button_Set(0,height-height/10*5,width/2,"乗員+");
       Button_Set(width/2,height-height/10*5,width/2,"乗員-");
+      Button_Set(0,height-height/10*6,width,"除外");
 
       function Button_Set(X,Y,W,A){
         var I = Buttons.length;
@@ -497,6 +508,7 @@ function Game_load(width,height){
         scene.addChild(Buttons[I]);
         Buttons[I]._element.onclick = function(e){
           switch(A){
+            case "除外":
             case "バグ":
             case "AC主義者":
               Moto_Datas[A.slice(0,2)] = !Moto_Datas[A.slice(0,2)];
@@ -525,6 +537,8 @@ function Game_load(width,height){
           else Label3.text = "AC主義者:なし";
           if(Moto_Datas.バグ) Label4.text = "バグ:あり";
           else Label4.text = "バグ:なし";
+          if(Moto_Datas.除外) Label5.text = "消滅,冷凍者除外:する";
+          else Label5.text = "消滅,冷凍者除外:しない";
           return;
         };
         return;
