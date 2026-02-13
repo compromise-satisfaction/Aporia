@@ -400,6 +400,25 @@ function Game_load(width,height){
                   };
                 };
               };
+
+              S_crews.残 = Datas.乗員;
+              S_crews.残グノ = Datas.グノーシア;
+              for(var K = 0; K < S_crews.Temp.length; K++){
+                if(S_crews[S_crews.Temp[K]].ステータス){
+                  S_crews.残--;
+                  if(S_crews[S_crews.Temp[K]].役割.グノーシア){
+                    if(Crews[Temp[J]].認定){
+                      if(Crews[Temp[J]].認定[S_crews.Temp[K]]=="人間");
+                      else S_crews.残グノ--;
+                    }
+                    else S_crews.残グノ--;
+                  };
+                };
+              };
+              if(S_crews.残グノ*2>=S_crews.残){
+                Crews[Temp[J]].敵 = true;
+                break;
+              };
               if(Datas.数.グノーシア > Datas.グノーシア || S_crews.処理グノーシア >= Datas.グノーシア){
                 if(!Crews[Temp[J]].ステータス){
                   Crews[Temp[J]].敵 = true;
