@@ -228,6 +228,10 @@ function Game_load(width,height){
                 case "ドクター":
                   Test3(Temp.誰が,Temp.結果);
                   delete Datas[Temp.結果];
+                  for(var J = 0; J < Temp.誰が.length; J++){
+                    Crews[Temp.誰が[J]].名乗 = {};
+                    Crews[Temp.誰が[J]].名乗[Temp.結果] = true;
+                  };
                   break;
                 case "留守番":
                   for(var J = 0; J < Temp.誰が.length; J++) Crews[Temp.誰が[J]].確定 = Temp.結果;
@@ -313,12 +317,42 @@ function Game_load(width,height){
               S_crews.バグ = 0;
               S_crews.敵 = 0;
               S_crews.処理グノーシア = 0;
+              Datas.数.エンジニア = false;
+              Datas.数.ドクター = false;
+              Datas.数.グノーシア = 0;
               for(var K = 0; K < S_crews.Temp.length; K++){
                 if(S_crews[S_crews.Temp[K]].役割.エンジニア) S_crews.エンジニア++;
                 if(S_crews[S_crews.Temp[K]].役割.ドクター) S_crews.ドクター++;
                 if(S_crews[S_crews.Temp[K]].敵) S_crews.敵++;
                 if(S_crews[S_crews.Temp[K]].確定=="グノーシア"){
                   if(S_crews[S_crews.Temp[K]].ステータス) S_crews.処理グノーシア++;
+                  Datas.数.グノーシア++;
+                };
+                if(S_crews[S_crews.Temp[K]].役割.AC主義者) continue;
+                if(S_crews[S_crews.Temp[K]].役割.バグ) continue;
+                if(!S_crews[S_crews.Temp[K]].名乗) continue;
+                if(!S_crews[S_crews.Temp[K]].役割.グノーシア) continue;
+                if(S_crews[S_crews.Temp[K]].名乗.エンジニア){
+                  if(Datas.数.エンジニア) Datas.数.グノーシア++;
+                  else Datas.数.エンジニア = true;
+                };
+                if(S_crews[S_crews.Temp[K]].名乗.ドクター){
+                  if(Datas.数.ドクター) Datas.数.グノーシア++;
+                  else Datas.数.ドクター = true;
+                };
+              };
+              if(Datas.数.グノーシア > Datas.グノーシア || S_crews.処理グノーシア >= Datas.グノーシア){
+                Crews[Temp[J]].敵 = true;
+                break;
+              };
+              if(Datas.数.グノーシア==Datas.グノーシア){
+                for(var K = 0; K < S_crews.Temp.length; K++){
+                  if(S_crews[S_crews.Temp[K]].確定=="グノーシア") continue;
+                  if(S_crews[S_crews.Temp[K]].役割.エンジニア) continue;
+                  if(S_crews[S_crews.Temp[K]].役割.ドクター) continue;
+                  delete S_crews[S_crews.Temp[K]].役割.グノーシア;
+                  if(!Crews[Temp[J]].認定) Crews[Temp[J]].認定 = {};
+                  Crews[Temp[J]].認定[S_crews.Temp[K]] = "人間";
                 };
               };
             };
@@ -395,6 +429,7 @@ function Game_load(width,height){
           };
         };
         Text_Area2._element.value = Text;
+        //Logger.log(Text);
         return;
       };
 
