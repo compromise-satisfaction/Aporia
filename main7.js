@@ -78,6 +78,7 @@ function Game_load(width,height){
         Buttons[I]._element.value = A;
         Buttons[I]._style["font-size"] = height/30;
         Buttons[I].backgroundColor = "buttonface";
+        Buttons[I].Name = A;
         scene.addChild(Buttons[I]);
         Buttons[I]._element.onclick = function(e){
           switch(A){
@@ -383,8 +384,10 @@ function Game_load(width,height){
                 };
               };
               if(Datas.数.グノーシア > Datas.グノーシア || S_crews.処理グノーシア >= Datas.グノーシア){
-                Crews[Temp[J]].敵 = true;
-                break;
+                if(!Crews[Temp[J]].ステータス){
+                  Crews[Temp[J]].敵 = true;
+                  break;
+                };
               };
               if(Datas.数.グノーシア==Datas.グノーシア){
                 for(var K = 0; K < S_crews.Temp.length; K++){
@@ -482,7 +485,7 @@ function Game_load(width,height){
             };
           };
         };
-        Text_Area2._element.value = Text;
+        Test4(Crews,Text);
         return;
       };
 
@@ -511,6 +514,55 @@ function Game_load(width,height){
           else if(!Crews[D[I]].ステータス&&Crews[D[I]].役割) delete Crews[D[I]].役割[B];
         };
         HANTEI[B].数 = Object.keys(HANTEI[B]).length;
+        return;
+      };
+
+      function Test4(Crews,Text){
+        var Temp = Object.keys(Crews);
+        var BBB = "buttonface";
+        for(var I = 0; I < Buttons.length; I++){
+          MMM = "black";
+          BBB = "buttonface";
+          if(Crews[Buttons[I].Name]){
+            if(Crews[Buttons[I].Name].人間) MMM = "#FFFFFF";
+            if(Crews[Buttons[I].Name].敵) MMM = "#D32F2F";
+            switch(Crews[Buttons[I].Name].確定){
+              case "グノーシア":
+                MMM = "#F44336";
+                break;
+              case "バグ":
+                MMM = "#C6FF00";
+                break;
+              case "AC主義者":
+                MMM = "#E91E63";
+                break;
+              case "エンジニア":
+                MMM = "#2196F3";
+                break;
+              case "ドクター":
+                MMM = "#00C853";
+                break
+              case "留守番":
+                MMM = "#FF9800";
+                break;
+              case "乗員":
+                MMM = "#E0F7FA";
+                break;
+            };
+            switch(Crews[Buttons[I].Name].ステータス){
+              case "消滅":
+              case "消滅二人":
+                BBB = "red";
+                break;
+              case "コールドスリープ":
+                BBB = "blue";
+                break;
+            };
+          };
+          Buttons[I]._style.color = MMM;
+          Buttons[I].backgroundColor = BBB;
+        };
+        Text_Area2._element.value = Text;
         return;
       };
 
