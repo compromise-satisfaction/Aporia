@@ -241,6 +241,16 @@ function Game_load(width,height){
           };
           Temp = Object.keys(Crews);
           for(var J = 0; J < Temp.length; J++){
+            if(Crews[Temp[J]].判定){
+              for(var K = 0; K < Crews[Temp[J]].判定.グノーシア.length; K++){
+                if(!Crews[Temp[J]].役割.グノーシア){
+                  Crews[Crews[Temp[J]].判定.グノーシア[K]].敵 = true;
+                  break;
+                };
+              };
+            };
+          };
+          for(var J = 0; J < Temp.length; J++){
             if(Crews[Temp[J]].確定){
               Crews[Temp[J]].実態 = {};
               Crews[Temp[J]].実態[Crews[Temp[J]].確定] = true;
