@@ -344,13 +344,19 @@ function Game_load(width,height){
                 if(!S_crews[S_crews.Temp[K]].役割.グノーシア) continue;
                 if(S_crews[S_crews.Temp[K]].名乗.エンジニア){
                   S_crews[S_crews.Temp[K]].疑惑 = true;
-                  if(Datas.数.エンジニア) Datas.数.グノーシア++;
-                  else Datas.数.エンジニア = true;
+                  if(!Datas.数.エンジニア) Datas.数.エンジニア = true;
+                  else{
+                    Datas.数.グノーシア++;
+                    S_crews.処理グノーシア++;
+                  };
                 };
                 if(S_crews[S_crews.Temp[K]].名乗.ドクター){
                   S_crews[S_crews.Temp[K]].疑惑 = true;
-                  if(Datas.数.ドクター) Datas.数.グノーシア++;
-                  else Datas.数.ドクター = true;
+                  if(!Datas.数.ドクター) Datas.数.ドクター = true;
+                  else{
+                    Datas.数.グノーシア++;
+                    S_crews.処理グノーシア++;
+                  };
                 };
               };
               if(Datas.数.グノーシア > Datas.グノーシア || S_crews.処理グノーシア >= Datas.グノーシア){
@@ -458,31 +464,31 @@ function Game_load(width,height){
       };
 
       function Test2(A){
-        if(!A) return;
-        if(typeof(A)=="string") A = [A];
-        for(var I = 0; I < A.length; I++){
-          if(!Crews[A[I]]){
-            Crews[A[I]] = {役割:{グノーシア:true,乗員:true}};
-            if(Datas.エンジニア) Crews[A[I]].役割.エンジニア = true;
-            if(Datas.ドクター) Crews[A[I]].役割.ドクター = true;
-            if(Datas.AC) Crews[A[I]].役割.AC主義者 = true;
-            if(Datas.バグ) Crews[A[I]].役割.バグ = true;
-          };
-        };
-        return;
+      if(!A) return;
+      if(typeof(A)=="string") A = [A];
+      for(var I = 0; I < A.length; I++){
+      if(!Crews[A[I]]){
+      Crews[A[I]] = {役割:{グノーシア:true,乗員:true}};
+      if(Datas.エンジニア) Crews[A[I]].役割.エンジニア = true;
+      if(Datas.ドクター) Crews[A[I]].役割.ドクター = true;
+      if(Datas.AC) Crews[A[I]].役割.AC主義者 = true;
+      if(Datas.バグ) Crews[A[I]].役割.バグ = true;
+      };
+      };
+      return;
       };
 
       function Test3(A,B){
-        var C = "エンジニア";
-        if(B=="エンジニア") C = "ドクター";
-        var D = Object.keys(Crews);
-        for(var I = 0; I < A.length; I++) HANTEI[B][A[I]] = true;
-        for(var I = 0; I < D.length; I++){
-          if(HANTEI[B][D[I]]) delete Crews[D[I]].役割[C];
-          else if(!Crews[D[I]].ステータス&&Crews[D[I]].役割) delete Crews[D[I]].役割[B];
-        };
-        HANTEI[B].数 = Object.keys(HANTEI[B]).length;
-        return;
+      var C = "エンジニア";
+      if(B=="エンジニア") C = "ドクター";
+      var D = Object.keys(Crews);
+      for(var I = 0; I < A.length; I++) HANTEI[B][A[I]] = true;
+      for(var I = 0; I < D.length; I++){
+      if(HANTEI[B][D[I]]) delete Crews[D[I]].役割[C];
+      else if(!Crews[D[I]].ステータス&&Crews[D[I]].役割) delete Crews[D[I]].役割[B];
+      };
+      HANTEI[B].数 = Object.keys(HANTEI[B]).length;
+      return;
       };
 
       scene.addEventListener("enterframe",function(e){
