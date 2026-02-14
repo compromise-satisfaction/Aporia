@@ -565,38 +565,36 @@ function Game_load(width,height){
           MMM = "black";
           BBB = "buttonface";
           if(Crews[Buttons[I].Name]){
-            if(Crews[Buttons[I].Name].人間) MMM = "#FFFFFF";
-            if(Crews[Buttons[I].Name].敵) MMM = "#D32F2F";
+            if(Crews[Buttons[I].Name].人間) BBB = "yellow";
+            if(Crews[Buttons[I].Name].敵) BBB = "red";
             switch(Crews[Buttons[I].Name].確定){
               case "グノーシア":
-                MMM = "#F44336";
+                BBB = "red";
                 break;
               case "バグ":
-                MMM = "#C6FF00";
+                BBB = "gray";
                 break;
               case "AC主義者":
-                MMM = "#E91E63";
+                BBB = "pink";
                 break;
               case "エンジニア":
-                MMM = "#2196F3";
+                BBB = "blue";
                 break;
               case "ドクター":
-                MMM = "#00C853";
+                BBB = "purple";
                 break
               case "留守番":
-                MMM = "#FF9800";
-                break;
               case "乗員":
-                MMM = "#E0F7FA";
+                BBB = "green";
                 break;
             };
             switch(Crews[Buttons[I].Name].ステータス){
               case "消滅":
               case "消滅二人":
-                BBB = "red";
+                MMM = "red";
                 break;
               case "コールドスリープ":
-                BBB = "blue";
+                MMM = "blue";
                 break;
             };
           };
