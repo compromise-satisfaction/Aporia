@@ -179,6 +179,10 @@ function Game_load(width,height){
               };
               if(!Crews[Temp.誰を].判定) Crews[Temp.誰を].判定 = {人間:[],グノーシア:[]};
               Crews[Temp.誰が].認定[Temp.誰を] = Temp.結果;
+              if(!Crews[Temp.誰を].ステータス){
+                if(!Crews[Temp.誰が].絶対) Crews[Temp.誰が].絶対 = {};
+                Crews[Temp.誰が].絶対[Temp.誰を] = Temp.結果;
+              };
               Crews[Temp.誰を].判定[Temp.結果].push(Temp.誰が);
               if(Crews[Temp.誰が].疑){
                 if(Temp.誰を!=Crews[Temp.誰が].疑[0]&&Temp.誰を!=Crews[Temp.誰が].疑[1]){
@@ -478,6 +482,12 @@ function Game_load(width,height){
             if(Crews[Temp[J]].確定) continue;
             if(Crews[Temp[J]].敵&&Crews[Temp[J]].人間) Crews[Temp[J]].確定 = "AC主義者";
             if(HANTEI.真エンジニア){
+              if(Crews[HANTEI.真エンジニア].絶対){
+                if(Crews[HANTEI.真エンジニア].絶対[Temp[J]]=="人間"){
+                  Crews[Temp[J]].人間 = true;
+                  delete Crews[Temp[J]].役割.バグ;
+                };
+              };
               if(Crews[HANTEI.真エンジニア].認定){
                 switch(Crews[HANTEI.真エンジニア].認定[Temp[J]]){
                   case "人間":
