@@ -246,14 +246,30 @@ function Game_load(width,height){
           };
           Temp = Object.keys(Crews);
           for(var J = 0; J < Temp.length; J++){
+            if(Crews[Temp[J]].判定&&Crews[Temp[J]].ステータス=="消滅"){
+              for(var K = 0; K < Crews[Temp[J]].判定.人間.length; K++){
+                if(HANTEI.エンジニア[Crews[Temp[J]].判定.人間[K]]){
+                  if(!Crews[Crews[Temp[J]].判定.人間[K]].絶対) Crews[Temp[J]].バグ疑惑 = true;
+                  else{
+                    if(!Crews[Crews[Temp[J]].判定.人間[K]].絶対[Temp[J]]){
+                      Crews[Temp[J]].バグ疑惑 = true;
+                    };
+                  };
+                };
+              };
+              if(!Crews[Temp[J]].バグ疑惑) delete Crews[Temp[J]].役割.バグ;
+              delete Crews[Temp[J]].バグ疑惑;
+            };
+          };
+          for(var J = 0; J < Temp.length; J++){
             if(Crews[Temp[J]].判定){
               Crews[Temp[J]].エド = [0,0,0,0];
               for(var K = 0; K < Crews[Temp[J]].判定.人間.length; K++){
-                if(HANTEI.エンジニア[Crews[Temp[J]].判定.人間[K]]) Crews[Temp[J]].エド[0]++
+                if(HANTEI.エンジニア[Crews[Temp[J]].判定.人間[K]]) Crews[Temp[J]].エド[0]++;
                 if(HANTEI.ドクター[Crews[Temp[J]].判定.人間[K]]) Crews[Temp[J]].エド[2]++;
               };
               for(var K = 0; K < Crews[Temp[J]].判定.グノーシア.length; K++){
-                if(HANTEI.エンジニア[Crews[Temp[J]].判定.グノーシア[K]]) Crews[Temp[J]].エド[1]++
+                if(HANTEI.エンジニア[Crews[Temp[J]].判定.グノーシア[K]]) Crews[Temp[J]].エド[1]++;
                 if(HANTEI.ドクター[Crews[Temp[J]].判定.グノーシア[K]]) Crews[Temp[J]].エド[3]++;
                 if(!Crews[Temp[J]].役割.グノーシア){
                   Crews[Crews[Temp[J]].判定.グノーシア[K]].敵 = true;
