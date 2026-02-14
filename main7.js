@@ -284,7 +284,7 @@ function Game_load(width,height){
                   break;
               };
               for(var K = 0; K < Temp.length; K++){
-                if(!Crews[Temp[K]].確定&&Crews[Temp[J]].確定!="グノーシア"){
+                if(!Crews[Temp[K]].確定&&Crews[Temp[J]].確定!="グノーシア"&&Crews[Temp[J]].確定!="乗員"){
                   delete Crews[Temp[K]].役割[Crews[Temp[J]].確定];
                 };
               };
@@ -475,12 +475,16 @@ function Game_load(width,height){
             };
           };
           for(var J = 0; J < Temp.length; J++){
+            if(Crews[Temp[J]].確定) continue;
             if(Crews[Temp[J]].敵&&Crews[Temp[J]].人間) Crews[Temp[J]].確定 = "AC主義者";
             if(HANTEI.真エンジニア){
               if(Crews[HANTEI.真エンジニア].認定){
                 switch(Crews[HANTEI.真エンジニア].認定[Temp[J]]){
                   case "人間":
-                    if(Crews[Temp[J]].ステータス!="消滅"||!Crews[Temp[J]].役割.バグ) Crews[Temp[J]].人間 = true;
+                    if(Crews[Temp[J]].ステータス!="消滅"||!Crews[Temp[J]].役割.バグ){
+                      Crews[Temp[J]].人間 = true;
+                      delete Crews[Temp[J]].役割.バグ;
+                    };
                     delete Crews[Temp[J]].役割.グノーシア;
                     break;
                   case "グノーシア":
@@ -523,7 +527,7 @@ function Game_load(width,height){
             };
           };
         };
-        Test4(Crews,Text);
+        Test4(Temp,Text);
         return;
       };
 
@@ -555,8 +559,7 @@ function Game_load(width,height){
         return;
       };
 
-      function Test4(Crews,Text){
-        var Temp = Object.keys(Crews);
+      function Test4(Temp,Text){
         var BBB = "buttonface";
         for(var I = 0; I < Buttons.length; I++){
           MMM = "black";
