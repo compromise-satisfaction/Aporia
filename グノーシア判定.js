@@ -64,6 +64,7 @@ Test_Text += "\n夕里子が冷凍";
 Test_Text += "\nSQが消滅";
 Test_Text += "\n自分「コメットはグノーシア」";
 Test_Datas = {乗員:15,グノーシア:3,AC主義者:true,バグ:true};
+Test_Text = "";
 
 function Test(Text){
   Datas.乗員データ = {};
