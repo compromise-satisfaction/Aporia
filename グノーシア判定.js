@@ -28,9 +28,23 @@ Test_Text += "\n自分「SQはグノーシア」";
 Test_Text += "\nセツ「コメットは人間」";
 //セツは絶対に敵だ
 Test_Text += "\n沙明が冷凍";
-//Test_Text += "\nジョナスとステラが消滅";
+Test_Text += "\nジョナスとステラが消滅";
 //自分は絶対にエンジニアだ
 //SQは絶対にグノーシアだ
+
+//*//
+Test_Text  = "コメットが留守番";
+Test_Text += "\nオトメとラキオがドクター";
+Test_Text += "\nレムナンとジナと沙明がエンジニア";
+Test_Text += "\nオトメが冷凍";
+Test_Text += "\nジナ「ステラはグノーシア」";
+Test_Text += "\n沙明「ジョナスは人間」";
+Test_Text += "\nレムナン「自分はグノーシア」";
+Test_Text += "\nラキオ「オトメはグノーシア」";
+Test_Text += "\n自分が留守番";
+Test_Datas = {乗員:12,グノーシア:3,AC主義者:true};
+//*/
+
 Test_Text = "";
 
 function Test(Text){
@@ -92,10 +106,14 @@ function Test(Text){
         };
         break;
     };
+    Datas.log = Temp;
     Temp = Object.keys(Datas.乗員データ);
     Loop = true;
+    Loops = 0;
     while(Loop){
+      Loops++;
       Loop = false;
+      if(Loops==10) breaka;
       SIN_HANTEI();
       for(var J = 0; J < Temp.length; J++){
         //Teki_Seiri(Temp[J]);
@@ -106,30 +124,47 @@ function Test(Text){
       //Check_CS();
       Check_KAKUTEI();
     };
-    if(!Datas.現在.真.ドクター){
-      for(var K  = 0; K < Datas.名乗り.ドクター.length; K++){
-        Datas.保存 = JSON.stringify(Datas);
-        Datas.現在.真.テスト = Datas.名乗り.ドクター[K];
-        Datas.現在.真.ドクター = Datas.現在.真.テスト;
-        Datas.乗員データ[Datas.現在.真.テスト].確定 = "ドクター";
-        Log("ドクターを"+Datas.現在.真.テスト+"と仮定");
-        Loop = true;
-        while(Loop){
-          Loop = false;
-          SIN_HANTEI();
-          Check_KAKUTEI();
-          for(var J = 0; J < Temp.length; J++){
-            //Teki_Seiri(Temp[J]);
-            Check_ED(Temp[J]);
-            Kakutei(Temp[J]);
+    ED = ["エンジニア","ドクター"];
+    for(var J = 0; J < ED.length; J++){
+      if(!Datas.現在.真[ED]&&Datas.名乗り[ED[J]]){
+        for(var K  = 0; K < Datas.名乗り[ED[J]].length; K++){
+          if(!Datas.可能性[ED[J]][Datas.名乗り[ED[J]][K]]) continue;
+          if(Datas.矛盾) console.log("aaa");
+          delete Datas.矛盾;
+          Datas.保存 = JSON.stringify(Datas);
+          Datas.現在.真.テスト = Datas.名乗り[ED[J]][K];
+          Datas.現在.真[ED[J]] = Datas.現在.真.テスト;
+          Datas.乗員データ[Datas.現在.真.テスト].確定 = ED[J];
+          Log(ED[J] + "を"+Datas.現在.真.テスト + "と仮定");
+          Loop = true;
+          Loops = 0;
+          while(Loop){
+            Loops++;
+            Loop = false;
+            if(Loops==10) breaka;
+            ///SIN_HANTEI();
+            Check_KAKUTEI();
+            for(var L = 0; L < Temp.length; L++){
+              //Teki_Seiri(Temp[L]);
+              Check_ED(Temp[L]);
+              Kakutei(Temp[L]);
+            };
+            //Check_CS();
+            SIN_HANTEI();
+            Check_KAKUTEI();
           };
-          //Check_CS();
-          SIN_HANTEI();
-          Check_KAKUTEI();
+          if(Datas.矛盾){
+            Log(Datas.現在.真.テスト + "が本物だと" + Datas.矛盾 + "が矛盾");
+            Datas.保存 = JSON.parse(Datas.保存);
+            delete Datas.保存.可能性[ED[J]][Datas.現在.真.テスト];
+            Datas.保存.乗員データ[Datas.現在.真.テスト].敵 = "敵(" + Datas.矛盾 + "が矛盾)";
+            Datas.保存 = JSON.stringify(Datas.保存);
+          };
+          Datas = JSON.parse(Datas.保存);
         };
-        if(Datas.現在.真.テスト) Datas = JSON.parse(Datas.保存);
       };
     };
+    Check_KAKUTEI();
     continue;
     if(!SIN.エンジニア){
       MOTOMOTO.名乗り = JSON.stringify(Nanori);
@@ -142,8 +177,11 @@ function Test(Text){
         SIN.テスト = SIN.エンジニア;
         Temp = Object.keys(Crews);
         Loop = true;
+        Loops = 0;
         while(Loop){
+          Loops++;
           Loop = false;
+          if(Loops==10) breaka;
           for(var K = 0; K < Temp.length; K++){
             Kakutei(Temp[K]);
             Teki_Seiri(Temp[K]);
@@ -170,8 +208,11 @@ function Test(Text){
         SIN.テスト = SIN.ドクター;
         Temp = Object.keys(Crews);
         Loop = true;
+        Loops = 0;
         while(Loop){
+          Loops++;
           Loop = false;
+          if(Loops==10) breaka;
           for(var K = 0; K < Temp.length; K++){
             Kakutei(Temp[K]);
             Teki_Seiri(Temp[K]);
@@ -245,51 +286,101 @@ function Check_KAKUTEI(){
     Temp2 = Object.keys(Datas.可能性[Temp1[I]]);
     if(Temp2.length==1){
       if(!Datas.乗員データ[Temp2[0]].確定){
-        console.log(Datas.乗員データ[Temp2[0]]);
+        if(Temp1[I]=="エンジニア"||Temp1[I]=="ドクター") if(!Datas.名乗り[Temp1[I]][0]) continue;
+        if(Temp1[I]=="AC主義者"||Temp1[I]=="バグ") if(Datas.現在[Temp1[I]]) continue;
         Datas.乗員データ[Temp2[0]].確定 = Temp1[I];
         Loop = true;
       };
     };
   };
   var Temp = Object.keys(Datas.乗員データ);
+  var Temp1 = Object.keys(Datas.乗員データ);
   var Numbers = [[],[]];
+  Datas.疑惑 = {エンジニア:[],ドクター:[]}
   for(var I = 0; I < Temp.length; I++){
+    if(!Datas.乗員データ[Temp[I]].役割.グノーシア&&Datas.乗員データ[Temp[I]].報告){
+      if(Datas.乗員データ[Temp[I]].報告.グノーシア){
+        Temp1 = Object.keys(Datas.乗員データ[Temp[I]].報告.グノーシア);
+        for(var J = 0; J < Temp1.length; J++){
+          if(!Datas.乗員データ[Temp1[J]].敵) Loop = true;
+          Datas.乗員データ[Temp1[J]].敵 = "敵(グノーシア判定矛盾)";
+          delete Datas.可能性.エンジニア[Temp1[J]];
+          delete Datas.可能性.ドクター[Temp1[J]];
+          Temp2 = Object.keys(Datas.可能性.エンジニア);
+          if(Temp2.length==1) Datas.現在.真.エンジニア = Temp2[0];
+          Temp2 = Object.keys(Datas.可能性.ドクター);
+          if(Temp2.length==1) Datas.現在.真.ドクター = Temp2[0];
+        };
+      };
+    };
     if(Datas.乗員データ[Temp[I]].敵) Numbers[0].push(Temp[I]);
     if(Datas.乗員データ[Temp[I]].確定=="グノーシア") Numbers[1].push(Temp[I]);
-  };
-  if(Numbers[1].length==Datas.乗員数データ.グノーシア){
-    for(var I = 0; I < Temp.length; I++){
-      if(Datas.乗員データ[Temp[I]].確定!="グノーシア"){
-        if(Datas.乗員データ[Temp[I]].役割.グノーシア){
-          delete Datas.乗員データ[Temp[I]].役割.グノーシア;
-          Loop = true;
-        };
-      };
+    if(!Datas.乗員データ[Temp[I]].確定&&Datas.乗員データ[Temp[I]].名乗り){
+      Datas.疑惑[Datas.乗員データ[Temp[I]].名乗り].push(Temp[I]);
     };
   };
-  if(Numbers[0].length==Datas.乗員数データ.敵){
-    for(var I = 0; I < Temp.length; I++){
-      if(!Datas.乗員データ[Temp[I]].敵){
-        Datas.乗員データ[Temp[I]].人間 = true;
-        if(Datas.乗員データ[Temp[I]].役割.エンジニア){
-          if(!Datas.乗員データ[Temp[I]].確定){
-            Datas.乗員データ[Temp[I]].確定 = "エンジニア";
+  if(Datas.現在.真.テスト&&Datas.現在.真.テスト==Datas.現在.真.エンジニア){
+    Datas.疑惑.数 = Datas.疑惑.ドクター.length;
+    if(Datas.疑惑.数) Datas.疑惑.数--;
+    Datas.疑惑.数 += Numbers[0].length;
+    if(Numbers[1].length==Datas.現在.グノーシア){
+      for(var I = 0; I < Temp.length; I++){
+        if(Datas.乗員データ[Temp[I]].確定!="グノーシア"){
+          if(Datas.乗員データ[Temp[I]].役割.グノーシア){
+            delete Datas.乗員データ[Temp[I]].役割.グノーシア;
             Loop = true;
           };
         };
-        if(Datas.乗員データ[Temp[I]].役割.ドクター){
-          if(!Datas.乗員データ[Temp[I]].確定){
-            Datas.乗員データ[Temp[I]].確定 = "ドクター";
+      };
+    };
+    if(Datas.疑惑.数==Datas.現在.敵){
+      Datas.疑惑確認 = {};
+      for(var I = 0; I < Numbers[0].length; I++) Datas.疑惑確認[Numbers[0][I]] = true;
+      for(var I = 0; I < Datas.疑惑.ドクター.length; I++) Datas.疑惑確認[Datas.疑惑.ドクター[I]] = true;
+      Datas.保存 = JSON.parse(Datas.保存);
+      for(var I = 0; I < Temp.length; I++){
+        if(!Datas.疑惑確認[Temp[I]]){
+          if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
+          if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
+          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "エンジニア";
+          Datas.保存.調査[Datas.現在.真.テスト][Temp[I]] = "人間";
+        };
+      };
+      Datas.保存 = JSON.stringify(Datas.保存);
+    };
+  };
+  if(Datas.現在.真.テスト&&Datas.現在.真.テスト==Datas.現在.真.ドクター){
+    Datas.疑惑.数 = Datas.疑惑.エンジニア.length;
+    if(Datas.疑惑.数) Datas.疑惑.数--;
+    Datas.疑惑.数 += Numbers[0].length;
+    if(Numbers[1].length==Datas.現在.グノーシア){
+      for(var I = 0; I < Temp.length; I++){
+        if(Datas.乗員データ[Temp[I]].確定!="グノーシア"){
+          if(Datas.乗員データ[Temp[I]].役割.グノーシア){
+            delete Datas.乗員データ[Temp[I]].役割.グノーシア;
             Loop = true;
           };
         };
-        if(!Datas.乗員データ[Temp[I]].確定){
-          Datas.乗員データ[Temp[I]].確定 = "乗員";
-          Loop = true;
-        };
       };
     };
+    if(Datas.疑惑.数==Datas.現在.敵){
+      Datas.疑惑確認 = {};
+      for(var I = 0; I < Numbers[0].length; I++) Datas.疑惑確認[Numbers[0][I]] = true;
+      for(var I = 0; I < Datas.疑惑.エンジニア.length; I++) Datas.疑惑確認[Datas.疑惑.エンジニア[I]] = true;
+      Datas.保存 = JSON.parse(Datas.保存);
+      for(var I = 0; I < Temp.length; I++){
+        if(!Datas.疑惑確認[Temp[I]]){
+          if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
+          if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
+          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "ドクター";
+          Datas.保存.調査[Datas.現在.真.テスト][Temp[I]] = "人間";
+        };
+      };
+      Datas.保存 = JSON.stringify(Datas.保存);
+    };
   };
+  delete Datas.疑惑;
+  delete Datas.疑惑確認;
   return;
   for(var I = 0; I < Temp.length; I++){
     if(Datas.乗員データ[Temp[I]].役割.エンジニア&&Datas.名乗り.エンジニア[0]) Numbers[0].push(Temp[I]);
@@ -485,25 +576,6 @@ function SIN_HANTEI(){
     };
   };
   return;
-  if(SIN.エンジニア){
-    switch(NINTEI[SIN.エンジニア][Darega]){
-      default:
-        break;
-      case "人間":
-        if(!Crews[Darega].人間){
-          Crews[Darega].人間 = true;
-          Loop = true;
-        };
-        break;
-      case "グノーシア":
-      case "バグ":
-        if(!Crews[Darega].確定){
-          Crews[Darega].確定 = NINTEI[SIN.エンジニア][Darega];
-          Loop = true;
-        };
-        break;
-    };
-  };
   if(SIN.ドクター){
     if(SIN.ドクター=="セツ") console.log(Crews["自分"]);
     switch(NINTEI[SIN.ドクター][Darega]){
@@ -533,8 +605,60 @@ function SIN_HANTEI(){
   return;
 };
 
+function ZEN_TYOUSA(Darega){
+  var Temp = null;
+  var E_N = Object.keys(Datas.可能性.エンジニア);
+  var D_N = Object.keys(Datas.可能性.ドクター);
+  var N = Object.keys(Datas.乗員データ[Darega].役割).length;
+  var H = {エンジニア:{グノーシア:true,人間:true},ドクター:{グノーシア:true,人間:true}};
+  if(Datas.現在.真.エンジニア) H.エンジニア = {人間:false,グノーシア:false};
+  if(Datas.現在.真.ドクター) H.ドクター = {人間:false,グノーシア:false};
+  if(!Datas.乗員データ[Darega].報告) H = {グノーシア:"報告無し",人間:"報告無し"};
+  else{
+    if(!Datas.乗員データ[Darega].報告.人間) H.人間 = "報告無し";
+    else{
+      Temp = Datas.乗員データ[Darega].報告.人間;
+      for(var I = 0; I < E_N.length; I++) if(!Temp[E_N[I]]) H.エンジニア.人間 = false;
+      for(var I = 0; I < D_N.length; I++) if(!Temp[D_N[I]]) H.ドクター.人間 = false;
+    };
+    if(!Datas.乗員データ[Darega].報告.グノーシア) H.グノーシア = "報告無し";
+    else{
+      Temp = Datas.乗員データ[Darega].報告.グノーシア;
+      for(var I = 0; I < E_N.length; I++) if(!Temp[E_N[I]]) H.エンジニア.グノーシア = false;
+      for(var I = 0; I < D_N.length; I++) if(!Temp[D_N[I]]) H.ドクター.グノーシア = false;
+    };
+  };
+  if(!H.エンジニア) H.エンジニア = {};
+  if(!H.ドクター) H.ドクター = {};
+  if(H.人間){
+    H.エンジニア.人間 = false;
+    H.ドクター.人間 = false;
+  };
+  if(H.グノーシア){
+    H.エンジニア.グノーシア = false;
+    H.ドクター.グノーシア = false;
+  };
+  if(H.エンジニア.人間){
+    delete Datas.乗員データ[Darega].役割.グノーシア;
+    if(!Datas.乗員データ[Darega].ステータス) delete Datas.乗員データ[Darega].役割.バグ;
+  };
+  if(H.エンジニア.グノーシア) Datas.乗員データ[Darega].役割 = {グノーシア:true};
+  if(H.ドクター.人間) delete Datas.乗員データ[Darega].役割.グノーシア;
+  if(H.ドクター.グノーシア) Datas.乗員データ[Darega].役割 = {グノーシア:true};
+  if(N!=Object.keys(Datas.乗員データ[Darega].役割).length) Loop = true;
+  return;
+};
+
 function Kakutei(Darega){
-  var Temp = Object.keys(Datas.乗員データ[Darega].役割);
+  var Temp = Object.keys(Datas.乗員データ);
+  for(var I = 0; I < Temp.length; I++){
+    if(Object.keys(Datas.乗員データ[Temp[I]].役割).length==1){
+      Datas.乗員データ[Temp[I]].確定 = Object.keys(Datas.乗員データ[Temp[I]].役割)[0];
+    };
+  };
+  ZEN_TYOUSA(Darega);
+  Temp = Object.keys(Datas.乗員データ[Darega].役割);
+  if(!Datas.乗員データ[Darega].役割.グノーシア&&!Datas.乗員データ[Darega].役割.バグ) Datas.乗員データ[Darega].人間 = true;
   if(Datas.乗員データ[Darega].人間){
     if(Datas.乗員データ[Darega].敵){
       Datas.乗員データ[Darega].敵 = "AC主義者";
@@ -548,7 +672,10 @@ function Kakutei(Darega){
     delete Datas.乗員データ[Darega].役割.ドクター;
     delete Datas.乗員データ[Darega].役割.乗員
     delete Datas.生存エンジニア[Darega];
+    delete Datas.可能性.エンジニア[Darega];
+    delete Datas.可能性.ドクター[Darega];
   };
+
   if(Datas.調査[Datas.現在.真.エンジニア]){
     if(Datas.調査[Datas.現在.真.エンジニア][Darega]){
       if(Datas.調査[Datas.現在.真.エンジニア][Darega]=="人間") delete Datas.乗員データ[Darega].役割.グノーシア;
@@ -575,12 +702,12 @@ function Kakutei(Darega){
       };
     };
   };
+
   if(!Temp.length){
-    Temp = Datas.現在.真.テスト;
-    Datas = JSON.parse(Datas.保存);
-    Datas.乗員データ[Temp].敵 = "敵(" + Darega + "のデータが変)";
-    Log(Temp+"が本物だと"+Darega+"が矛盾");
+    Datas.矛盾 = Darega;
+    return;
   };
+
   if(Temp.length!=Object.keys(Datas.乗員データ[Darega].役割).length) Loop = true;
   if(Temp.length==1) Datas.乗員データ[Darega].確定 = Temp[0];
   if(!Datas.乗員データ[Darega].確定) return;
@@ -613,16 +740,15 @@ function Kakutei(Darega){
       return;
   };
   for(var I = 0; I < Temp.length; I++){
+    if(Temp[I]==Darega) continue;
     if(!Datas.乗員データ[Temp[I]].人間&&!Datas.乗員データ[Temp[I]].役割.グノーシア&&!Datas.乗員データ[Temp[I]].役割.バグ){
       Datas.乗員データ[Temp[I]].人間 = true;
       Loop = true;
     };
-    if(!Datas.乗員データ[Temp[I]].確定){
-      if(Datas.乗員データ[Temp[I]].役割[Delete]){
-        delete Datas.可能性[Delete][Temp[I]];
-        delete Datas.乗員データ[Temp[I]].役割[Delete];
-        Loop = true;
-      };
+    if(Object.keys(Datas.乗員データ[Temp[I]].役割).length>1&&Datas.乗員データ[Temp[I]].役割[Delete]){
+      delete Datas.可能性[Delete][Temp[I]];
+      delete Datas.乗員データ[Temp[I]].役割[Delete];
+      Loop = true;
     };
   };
   return;
@@ -654,7 +780,7 @@ function ADD_Crew(A){
   return;
 };
 
-var Log_True = false;
+var Log_True = true;
 
 function Log(A){
   if(Log_True) console.log(A);
@@ -668,6 +794,10 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
   var Temp = null;
   Datas.報告.push([Darega,Darewo,KEKKA]);
   Datas.調査[Darega][Darewo] = KEKKA;
+  if(Darega==Datas.現在.真.エンジニア&&Datas.バグ疑惑){
+    Datas.乗員データ[Darewo].確定 = "バグ";
+    delete Datas.バグ疑惑;
+  };
   if(!Datas.乗員データ[Darewo].報告) Datas.乗員データ[Darewo].報告 = {};
   if(!Datas.乗員データ[Darewo].報告[KEKKA]) Datas.乗員データ[Darewo].報告[KEKKA] = {};
   Datas.乗員データ[Darewo].報告[KEKKA][Darega] = Datas.乗員データ[Darega].名乗り;
@@ -744,17 +874,23 @@ function SYOUMETU(Darega){
       delete Datas.現在.バグ;
       Temp = Object.keys(Datas.生存エンジニア);
       if(Temp.length==1){
-        if(Datas.名乗り.エンジニア[Darega[0]]) break;
-        if(Datas.名乗り.エンジニア[Darega[1]]) break;
-        Datas.乗員データ[Temp[0]].確定 = "エンジニア";
+        if(Datas.名乗り.エンジニア[Darega[0]]) Temp[1] = true;
+        if(Datas.名乗り.エンジニア[Darega[1]]) Temp[1] = true;
+        if(!Temp[1]){
+          Datas.現在.真.エンジニア = [Temp[0]];
+          Datas.乗員データ[Temp[0]].確定 = "エンジニア";
+        };
       };
       if(!Datas.乗員データ[Darega[0]].役割.バグ) Datas.乗員データ[Darega[1]].確定 = "バグ";
       if(!Datas.乗員データ[Darega[1]].役割.バグ) Datas.乗員データ[Darega[0]].確定 = "バグ";
       if(Datas.乗員データ[Darega[0]].役割.バグ&&Datas.乗員データ[Darega[1]].役割.バグ){
         Temp = Object.keys(Datas.乗員データ);
+        Datas.バグ疑惑 = {};
         for(var I = 0; I < Temp.length; I++){
-          if(Temp[I]==Darega[0]) continue;
-          if(Temp[I]==Darega[1]) continue;
+          if(Temp[I]==Darega[0]||Temp[I]==Darega[1]){
+            Datas.バグ疑惑[Temp[I]] = true;
+            continue;
+          };
           delete Datas.乗員データ[Temp[I]].役割.バグ;
         };
       };
@@ -779,6 +915,8 @@ function ED_Nanori(Darega,ED){
     delete Datas.乗員データ[Darega[I]].役割.乗員;
     Datas.名乗り[ED].push(Darega[I]);
     Datas.調査[Darega[I]] = {};
+    Datas.乗員データ[Darega[I]].報告 = {人間:{}};
+    Datas.乗員データ[Darega[I]].報告.人間[Darega[I]] = ED;
     Datas.乗員データ[Darega[I]].名乗り = ED;
     Datas.可能性[ED][Darega[I]] = true;
     Datas.乗員データ[Darega[I]].役割[ED] = true;
