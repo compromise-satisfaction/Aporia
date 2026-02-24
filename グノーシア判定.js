@@ -315,7 +315,7 @@ function Check_KAKUTEI(){
   };
   var Temp = Object.keys(Datas.乗員データ);
   var Temp1 = Object.keys(Datas.乗員データ);
-  var Numbers = [[],[]];
+  var Numbers = [[],[],[]];
   Datas.疑惑 = {エンジニア:[],ドクター:[]}
   for(var I = 0; I < Temp.length; I++){
     if(!Datas.乗員データ[Temp[I]].役割.グノーシア&&Datas.乗員データ[Temp[I]].報告){
@@ -334,7 +334,10 @@ function Check_KAKUTEI(){
       };
     };
     if(Datas.乗員データ[Temp[I]].敵) Numbers[0].push(Temp[I]);
-    if(Datas.乗員データ[Temp[I]].確定=="グノーシア") Numbers[1].push(Temp[I]);
+    if(Datas.乗員データ[Temp[I]].確定=="グノーシア"){
+      Numbers[1].push(Temp[I]);
+      if(Datas.乗員データ[Temp[I]].ステータス) Numbers[2].push(Temp[I]);
+    };
     if(!Datas.乗員データ[Temp[I]].確定&&Datas.乗員データ[Temp[I]].名乗り){
       Datas.疑惑[Datas.乗員データ[Temp[I]].名乗り].push(Temp[I]);
     };
@@ -348,6 +351,10 @@ function Check_KAKUTEI(){
         };
       };
     };
+  };
+  if(Numbers[2].length==Datas.現在.グノーシア){
+    Datas.矛盾 = "終了判定";
+    return;
   };
   if(Datas.現在.真.テスト&&Datas.現在.真.テスト==Datas.現在.真.エンジニア){
     Datas.疑惑.数 = Datas.疑惑.ドクター.length;
