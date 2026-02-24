@@ -618,7 +618,10 @@ function ZEN_TYOUSA(Darega){
     if(!Datas.乗員データ[Darega].報告.人間) H.人間 = "報告無し";
     else{
       Temp = Datas.乗員データ[Darega].報告.人間;
-      for(var I = 0; I < E_N.length; I++) if(!Temp[E_N[I]]) H.エンジニア.人間 = false;
+      for(var I = 0; I < E_N.length; I++){
+        if(E_N[I]==Darega) continue;
+        if(!Temp[E_N[I]]) H.エンジニア.人間 = false;
+      };
       for(var I = 0; I < D_N.length; I++) if(!Temp[D_N[I]]) H.ドクター.人間 = false;
     };
     if(!Datas.乗員データ[Darega].報告.グノーシア) H.グノーシア = "報告無し";
@@ -915,8 +918,6 @@ function ED_Nanori(Darega,ED){
     delete Datas.乗員データ[Darega[I]].役割.乗員;
     Datas.名乗り[ED].push(Darega[I]);
     Datas.調査[Darega[I]] = {};
-    Datas.乗員データ[Darega[I]].報告 = {人間:{}};
-    Datas.乗員データ[Darega[I]].報告.人間[Darega[I]] = ED;
     Datas.乗員データ[Darega[I]].名乗り = ED;
     Datas.可能性[ED][Darega[I]] = true;
     Datas.乗員データ[Darega[I]].役割[ED] = true;

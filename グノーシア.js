@@ -155,6 +155,7 @@ function Game_load(width,height){
             What = "\n";
             break;
           default:
+            if(Datas.乗員データ[I]) console.log(Datas.乗員データ[I]);
             Texts.発言 += What + I;
             What = "と";
             break;
