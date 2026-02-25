@@ -75,6 +75,8 @@ function Test(Text){
   Datas.現在.敵 = Datas.現在.グノーシア;
   Datas.名乗り = {エンジニア:[],ドクター:[]};
   Datas.可能性 = {エンジニア:{},ドクター:{}};
+  Datas.乗員名 = {};
+  Datas.乗員番号 = {};
   if(Datas.乗員数データ.AC主義者){
     Datas.現在.敵++;
     Datas.可能性.AC主義者 = {};
@@ -87,6 +89,7 @@ function Test(Text){
   Datas.生存エンジニア = {};
   Datas.報告 = [];
   Datas.調査 = {};
+  Set_Crew(Datas.乗員数データ.乗員);
   var Temp = null;
   var Values = Text.split("\n");
   for(var I = 0; I < Values.length; I++){
@@ -98,7 +101,7 @@ function Test(Text){
         break;
       case "判定":
         ADD_Crew([Temp.誰を]);
-        ED_Tyousa(Temp.誰が[0],Temp.誰を,Temp.結果);
+        ED_Tyousa(Temp.誰が[0],Datas.乗員番号[Temp.誰を],Temp.結果);
         break;
       case "CS":
       case "凍結":
@@ -256,14 +259,19 @@ function Test(Text){
       if(Datas.乗員データ[Temp[I]].確定!="留守番"){
         if(Text) Text += "\n";
         if(Datas.乗員データ[Temp[I]].確定){
-          Text += Temp[I] + "は絶対に" + Datas.乗員データ[Temp[I]].確定 + "だ";
+          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は絶対に" + Datas.乗員データ[Temp[I]].確定 + "だ";
+          else Text += Datas.乗員データ[Temp[I]].名前 + "は絶対に" + Datas.乗員データ[Temp[I]].確定 + "だ";
           continue;
         };
         if(Datas.乗員データ[Temp[I]].人間){
-          Text += Temp[I] + "は絶対に人間だ";
+          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は絶対に人間だ";
+          else Text += Datas.乗員データ[Temp[I]].名前 + "は絶対に人間だ";
           continue;
         };
-        if(Datas.乗員データ[Temp[I]].敵) Text += Temp[I] + "は絶対に" + Datas.乗員データ[Temp[I]].敵 + "だ" ;
+        if(Datas.乗員データ[Temp[I]].敵){
+          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は絶対に" + Datas.乗員データ[Temp[I]].敵 + "だ";
+          else Text += Datas.乗員データ[Temp[I]].名前 + "は絶対に" + Datas.乗員データ[Temp[I]].敵 + "だ";
+        };
       };
     };
   };
@@ -306,8 +314,8 @@ function Check_KAKUTEI(){
     Temp2 = Object.keys(Datas.可能性[Temp1[I]]);
     if(Temp2.length==1){
       if(!Datas.乗員データ[Temp2[0]].確定){
-        if(Temp1[I]=="エンジニア"||Temp1[I]=="ドクター") if(!Datas.名乗り[Temp1[I]][0]) continue;
-        if(Temp1[I]=="AC主義者"||Temp1[I]=="バグ") if(Datas.現在[Temp1[I]]) continue;
+        //if(Temp1[I]=="エンジニア"||Temp1[I]=="ドクター") if(!Datas.名乗り[Temp1[I]][0]) continue;
+        //if(Temp1[I]=="AC主義者"||Temp1[I]=="バグ") if(Datas.現在[Temp1[I]]) continue;
         Datas.乗員データ[Temp2[0]].確定 = Temp1[I];
         Loop = true;
       };
@@ -622,6 +630,25 @@ function SIN_HANTEI(){
   return;
 };
 
+function Set_Crew(N){
+  for(var I = 1; I <= N; I++){
+    Datas.乗員データ["乗員"+I] = {役割:{グノーシア:true,乗員:true}};
+    Datas.可能性.エンジニア["乗員"+I] = true;
+    Datas.乗員データ["乗員"+I].役割.エンジニア = true;
+    Datas.可能性.ドクター["乗員"+I] = true;
+    Datas.乗員データ["乗員"+I].役割.ドクター = true;
+    if(Datas.乗員数データ.AC主義者){
+      Datas.可能性.AC主義者["乗員"+I] = true;
+      Datas.乗員データ["乗員"+I].役割.AC主義者 = true;
+    };
+    if(Datas.乗員数データ.バグ){
+      Datas.可能性.バグ["乗員"+I] = true;
+      Datas.乗員データ["乗員"+I].役割.バグ = true;
+    };
+  };
+  return;
+};
+
 function ZEN_TYOUSA(Darega){
   var Temp = null;
   var E_N = Object.keys(Datas.可能性.エンジニア);
@@ -776,25 +803,37 @@ function Kakutei(Darega){
 
 function ADD_Crew(A){
   if(!A) return;
+  N = 1;
   for(var I = 0; I < A.length; I++){
-    if(!Datas.乗員データ[A[I]]){
-      Datas.乗員データ[A[I]] = {役割:{グノーシア:true,乗員:true}};
-      if(!Datas.名乗り.エンジニア[0]){
-        Datas.可能性.エンジニア[A[I]] = true;
-        Datas.乗員データ[A[I]].役割.エンジニア = true;
-      };
-      if(!Datas.名乗り.ドクター[0]){
-        Datas.可能性.ドクター[A[I]] = true;
-        Datas.乗員データ[A[I]].役割.ドクター = true;
-      };
-      if(Datas.現在.AC主義者){
-        Datas.可能性.AC主義者[A[I]] = true;
-        Datas.乗員データ[A[I]].役割.AC主義者 = true;
-      };
-      if(Datas.現在.バグ){
-        Datas.可能性.バグ[A[I]] = true;
-        Datas.乗員データ[A[I]].役割.バグ = true;
-      };
+    if(Datas.乗員番号[A[I]]){
+      A[I] = Datas.乗員番号[A[I]];
+      continue;
+    };
+    while(Datas.乗員データ["乗員"+N].名前) N++;
+    Datas.乗員名["乗員"+N] = A[I];
+    Datas.乗員番号[A[I]] = "乗員" + N;
+    Datas.乗員データ["乗員"+N].名前 = A[I];
+    A[I] = "乗員" + N;
+  };
+  return;
+  for(var I = 0; I < A.length; I++){
+    if(Datas.乗員データ[A[I]]) continue;
+    Datas.乗員データ[A[I]] = {役割:{グノーシア:true,乗員:true}};
+    if(!Datas.名乗り.エンジニア[0]){
+      Datas.可能性.エンジニア[A[I]] = true;
+      Datas.乗員データ[A[I]].役割.エンジニア = true;
+    };
+    if(!Datas.名乗り.ドクター[0]){
+      Datas.可能性.ドクター[A[I]] = true;
+      Datas.乗員データ[A[I]].役割.ドクター = true;
+    };
+    if(Datas.現在.AC主義者){
+      Datas.可能性.AC主義者[A[I]] = true;
+      Datas.乗員データ[A[I]].役割.AC主義者 = true;
+    };
+    if(Datas.現在.バグ){
+      Datas.可能性.バグ[A[I]] = true;
+      Datas.乗員データ[A[I]].役割.バグ = true;
     };
   };
   return;
@@ -818,6 +857,7 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
     Datas.乗員データ[Darewo].確定 = "バグ";
     delete Datas.バグ疑惑;
   };
+  console.log(Darewo);
   if(!Datas.乗員データ[Darewo].報告) Datas.乗員データ[Darewo].報告 = {};
   if(!Datas.乗員データ[Darewo].報告[KEKKA]) Datas.乗員データ[Darewo].報告[KEKKA] = {};
   Datas.乗員データ[Darewo].報告[KEKKA][Darega] = Datas.乗員データ[Darega].名乗り;
@@ -923,7 +963,7 @@ function ED_Nanori(Darega,ED){
   var Temp = Object.keys(Datas.乗員データ);
   for(var I = 0; I < Temp.length; I++){
     if(!Datas.乗員データ[Temp[I]].ステータス){
-      delete Datas.可能性[ED][Darega[I]];
+      delete Datas.可能性[ED][Temp[I]];
       delete Datas.乗員データ[Temp[I]].役割[ED];
     };
   };

@@ -20,10 +20,14 @@ function Game_load(width,height){
       for(var I = 0; I < Temp.length; I++){
         MMM = "black";
         BBB = "buttonface";
-        if(Datas.乗員データ[Temp[I]]){
-          if(Datas.乗員データ[Temp[I]].人間) BBB = "yellow";
-          if(Datas.乗員データ[Temp[I]].敵) BBB = "red";
-          switch(Datas.乗員データ[Temp[I]].確定){
+        Buttons[Temp[I]]._style.color = MMM;
+        Buttons[Temp[I]].backgroundColor = BBB;
+        if(!Datas.乗員番号) continue;
+        if(!Datas.乗員番号[Temp[I]]) continue;
+        if(Datas.乗員データ[Datas.乗員番号[Temp[I]]]){
+          if(Datas.乗員データ[Datas.乗員番号[Temp[I]]].人間) BBB = "yellow";
+          if(Datas.乗員データ[Datas.乗員番号[Temp[I]]].敵) BBB = "red";
+          switch(Datas.乗員データ[Datas.乗員番号[Temp[I]]].確定){
             case "グノーシア":
               BBB = "red";
               break;
@@ -44,7 +48,7 @@ function Game_load(width,height){
               BBB = "green";
               break;
           };
-          switch(Datas.乗員データ[Temp[I]].ステータス){
+          switch(Datas.乗員データ[Datas.乗員番号[Temp[I]]].ステータス){
             case "消滅":
             case "消滅二人":
               MMM = "red";
