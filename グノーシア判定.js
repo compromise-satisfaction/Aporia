@@ -92,6 +92,7 @@ function Test(Text){
   Set_Crew(Datas.乗員数データ.乗員);
   var Temp = null;
   var Values = Text.split("\n");
+  Values.push("終了");
   for(var I = 0; I < Values.length; I++){
     Temp = Hatugen_Syori(Values[I]);
     if(!Temp) continue;
