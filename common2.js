@@ -1,5 +1,7 @@
 //enchantjsの画面サイズの設定
 
+var Tate = 2;
+
 function resetScreen(gameWidth,gameHeight){
 
   //ベースの幅を画面いっぱいに広げる

@@ -103,7 +103,7 @@ function Game_load(width,height){
       Buttons[I]._element = document.createElement("input");
       Buttons[I]._element.type = "submit";
       Buttons[I]._element.value = I;
-      if(Now_Scene=="メイン") Buttons[I]._style["font-size"] = height/30;
+      if(Now_Scene=="メイン") Buttons[I]._style["font-size"] = height/(30*Tate);
       else Buttons[I]._style["font-size"] = height/20;
       Buttons[I].backgroundColor = "buttonface";
       Scenes[Now_Scene].addChild(Buttons[I]);
