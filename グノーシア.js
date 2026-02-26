@@ -26,7 +26,7 @@ function Game_load(width,height){
         if(!Datas.乗員番号[Temp[I]]) continue;
         if(Datas.乗員データ[Datas.乗員番号[Temp[I]]]){
           if(Datas.乗員データ[Datas.乗員番号[Temp[I]]].人間) BBB = "yellow";
-          if(Datas.乗員データ[Datas.乗員番号[Temp[I]]].敵) BBB = "red";
+          if(Datas.乗員データ[Datas.乗員番号[Temp[I]]].敵) BBB = "orange";
           switch(Datas.乗員データ[Datas.乗員番号[Temp[I]]].確定){
             case "グノーシア":
               BBB = "red";
@@ -38,7 +38,7 @@ function Game_load(width,height){
               BBB = "pink";
               break;
             case "エンジニア":
-              BBB = "blue";
+              BBB = "lightblue";
               break;
             case "ドクター":
               BBB = "purple";
@@ -69,9 +69,9 @@ function Game_load(width,height){
       if(X) X = width/X;
       Texts[I] = "";
       Text_Areas[I] = new Entity();
-      Text_Areas[I].moveTo(X,0);
+      Text_Areas[I].moveTo(X,height/5);
       Text_Areas[I].width = width/2;
-      Text_Areas[I].height = height/5;
+      Text_Areas[I].height = height/2;
       Text_Areas[I]._element = document.createElement("textarea");
       Text_Areas[I]._element.type = "textarea";
       Text_Areas[I]._element.placeholder = I;
@@ -93,7 +93,7 @@ function Game_load(width,height){
     };
 
     function Button_Set(X,Y,W,I){
-      if(Now_Scene=="メイン") X = width/3*X;
+      if(Now_Scene=="メイン") X = width/5*X;
       else if(X) X = width/X;
       W = width/W;
       Buttons[I] = new Entity();
@@ -104,7 +104,7 @@ function Game_load(width,height){
       Buttons[I]._element.type = "submit";
       Buttons[I]._element.value = I;
       if(Now_Scene=="メイン") Buttons[I]._style["font-size"] = height/30;
-      else Buttons[I]._style["font-size"] = height/15;
+      else Buttons[I]._style["font-size"] = height/20;
       Buttons[I].backgroundColor = "buttonface";
       Scenes[Now_Scene].addChild(Buttons[I]);
       Buttons[I]._element.onclick = function(e){
@@ -155,6 +155,7 @@ function Game_load(width,height){
           case "エンジニア":
           case "ドクター":
           case "留守番":
+          case "嘘":
             Texts.発言 += "が" + I;
             What = "\n";
             break;
@@ -219,30 +220,51 @@ function Game_load(width,height){
       Text_Area_Set(0,"発言");
       Text_Area_Set(2,"確定内容");
 
-      Button_Set(0,8,3,"エンジニア");
-      Button_Set(1,8,3,"ドクター");
-      Button_Set(2,8,3,"留守番");
-      Button_Set(0,7,3,"消滅");
-      Button_Set(1,7,3,"冷凍");
-      Button_Set(2,7,3,"「");
-      Button_Set(0,6,3,"人間");
-      Button_Set(1,6,3,"取り消し");
-      Button_Set(2,6,3,"グノーシア");
-      Button_Set(0,5,3,"自分");
-      Button_Set(1,5,3,"SQ");
-      Button_Set(2,5,3,"しげみち");
-      Button_Set(0,4,3,"セツ");
-      Button_Set(1,4,3,"ジナ");
-      Button_Set(2,4,3,"シピ");
-      Button_Set(0,3,3,"オトメ");
-      Button_Set(1,3,3,"レムナン");
-      Button_Set(2,3,3,"沙明");
-      Button_Set(0,2,3,"夕里子");
-      Button_Set(1,2,3,"ジョナス");
-      Button_Set(2,2,3,"ステラ");
-      Button_Set(0,1,3,"コメット");
-      Button_Set(1,1,3,"ラキオ");
-      Button_Set(2,1,3,"ククルシカ");
+      var B_font = [];
+
+      B_font.push("エンジニア");
+      B_font.push("ドクター");
+      B_font.push("留守番");
+      B_font.push("消滅");
+      B_font.push("冷凍");
+      B_font.push("「");
+      B_font.push("人間");
+      B_font.push("取り消し");
+      B_font.push("グノーシア");
+      B_font.push("嘘");
+
+      B_font.push("自分");
+      B_font.push("セツ");
+      B_font.push("ジナ");
+      B_font.push("SQ");
+      B_font.push("ラキオ");
+
+      B_font.push("ステラ");
+      B_font.push("しげみち");
+      B_font.push("シピ");
+      B_font.push("コメット");
+      B_font.push("ジョナス");
+
+      B_font.push("ククルシカ");
+      B_font.push("オトメ");
+      B_font.push("沙明");
+      B_font.push("レムナン");
+      B_font.push("夕里子");
+
+      var J = 0;
+      var K = 10;
+      for(var I = 0; I < B_font.length; I++){
+        if(B_font[I]=="自分"){
+          J = 0;
+          K = 3;
+        };
+        Button_Set(J,K,5,B_font[I]);
+        J++;
+        if(J>4){
+          K--;
+          J = 0;
+        };
+      };
 
       Scenes[Now_Scene].addEventListener("enterframe",function(e){
         if(Test_Text){

@@ -103,6 +103,12 @@ function Test(Text){
         ADD_Crew([Temp.誰を]);
         ED_Tyousa(Temp.誰が[0],Datas.乗員番号[Temp.誰を],Temp.結果);
         break;
+      case "嘘":
+        for(var J = 0; J < Temp.誰が.length; J++){
+          Datas.乗員データ[Temp.誰が[J]].嘘 = true;
+          Datas.乗員データ[Temp.誰が[J]].敵 = "敵(嘘)";
+        };
+        break;
       case "CS":
       case "凍結":
       case "冷凍":
@@ -123,7 +129,9 @@ function Test(Text){
             ED_Nanori(Temp.誰が,Temp.結果);
             break;
           case "留守番":
-            for(var J = 0; J < Temp.誰が.length; J++) Datas.乗員データ[Temp.誰が[J]].確定 = Temp.結果;
+            if(Temp.誰が.length < 3){
+              for(var J = 0; J < Temp.誰が.length; J++) Datas.乗員データ[Temp.誰が[J]].確定 = Temp.結果;
+            };
             break;
         };
         break;
@@ -148,7 +156,7 @@ function Test(Text){
     };
     ED = ["エンジニア","ドクター"];
     for(var J = 0; J < ED.length; J++){
-      if(!Datas.現在.真[ED]&&Datas.名乗り[ED[J]]){
+      if(!Datas.現在.真[ED[J]]&&Datas.名乗り[ED[J]]){
         for(var K  = 0; K < Datas.名乗り[ED[J]].length; K++){
           if(!Datas.可能性[ED[J]][Datas.名乗り[ED[J]][K]]) continue;
           if(Datas.矛盾) console.log("aaa");
@@ -283,7 +291,7 @@ function Test(Text){
 function Hatugen_Syori(Text){
   Temp = Text.match(/^(.+)「(.+)は(人間|グノーシア)」$/);
   if(Temp) return({タイプ:"判定",誰が:[Temp[1]],誰を:Temp[2],"結果":Temp[3]});
-  Temp = Text.match(/^(.+)が(ドクター|エンジニア|消滅|冷凍|CS|凍結|消失|留守番)$/);
+  Temp = Text.match(/^(.+)が(ドクター|エンジニア|消滅|冷凍|CS|凍結|消失|留守番|嘘)$/);
   if(Temp){
     switch(Temp[2]){
       case "CS":
@@ -323,7 +331,7 @@ function Check_KAKUTEI(){
   };
   var Temp = Object.keys(Datas.乗員データ);
   var Temp1 = Object.keys(Datas.乗員データ);
-  var Numbers = [[],[],[]];
+  var Numbers = [[],[],[],Datas.乗員数データ.乗員*1,Datas.乗員数データ.グノーシア*1];
   Datas.疑惑 = {エンジニア:[],ドクター:[]}
   for(var I = 0; I < Temp.length; I++){
     if(!Datas.乗員データ[Temp[I]].役割.グノーシア&&Datas.乗員データ[Temp[I]].報告){
@@ -346,6 +354,10 @@ function Check_KAKUTEI(){
       Numbers[1].push(Temp[I]);
       if(Datas.乗員データ[Temp[I]].ステータス) Numbers[2].push(Temp[I]);
     };
+    if(Datas.乗員データ[Temp[I]].ステータス){
+      Numbers[3]--;
+      if(Datas.乗員データ[Temp[I]].役割.グノーシア) Numbers[4]--;
+    };
     if(!Datas.乗員データ[Temp[I]].確定&&Datas.乗員データ[Temp[I]].名乗り){
       Datas.疑惑[Datas.乗員データ[Temp[I]].名乗り].push(Temp[I]);
     };
@@ -359,6 +371,14 @@ function Check_KAKUTEI(){
         };
       };
     };
+  };
+  if(Numbers[1].length > Datas.現在.グノーシア){
+    Datas.矛盾 = "グノーシア数";
+    return;
+  };
+  if(Numbers[4]*2 >= Numbers[3]){
+    Datas.矛盾 = "終了判定";
+    return;
   };
   if(Numbers[2].length==Datas.現在.グノーシア){
     Datas.矛盾 = "終了判定";
@@ -655,8 +675,8 @@ function ZEN_TYOUSA(Darega){
   var D_N = Object.keys(Datas.可能性.ドクター);
   var N = Object.keys(Datas.乗員データ[Darega].役割).length;
   var H = {エンジニア:{グノーシア:true,人間:true},ドクター:{グノーシア:true,人間:true}};
-  if(Datas.現在.真.エンジニア) H.エンジニア = {人間:false,グノーシア:false};
-  if(Datas.現在.真.ドクター) H.ドクター = {人間:false,グノーシア:false};
+  //if(Datas.現在.真.エンジニア) H.エンジニア = {人間:false,グノーシア:false};
+  //if(Datas.現在.真.ドクター) H.ドクター = {人間:false,グノーシア:false};
   if(!Datas.乗員データ[Darega].報告) H = {グノーシア:"報告無し",人間:"報告無し"};
   else{
     if(!Datas.乗員データ[Darega].報告.人間) H.人間 = "報告無し";
@@ -853,11 +873,25 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
   var Temp = null;
   Datas.報告.push([Darega,Darewo,KEKKA]);
   Datas.調査[Darega][Darewo] = KEKKA;
-  if(Darega==Datas.現在.真.エンジニア&&Datas.バグ疑惑){
-    Datas.乗員データ[Darewo].確定 = "バグ";
-    delete Datas.バグ疑惑;
+  if(Datas.消滅){
+    if(Datas.消滅.エンジニア[Darega]){
+      if(Datas.消滅.誰が[0]==Darewo||Datas.消滅.誰が[1]==Darewo) Datas.乗員データ[Darewo].バグ疑惑 = true;
+      delete Datas.消滅.エンジニア[Darega];
+    };
+    if(!Object.keys(Datas.消滅.エンジニア).length){
+      if(Datas.乗員データ[Datas.消滅.誰が[0]].バグ疑惑=="確認"){
+        delete Datas.乗員データ[Datas.消滅.誰が[0]].バグ疑惑;
+        delete Datas.乗員データ[Datas.消滅.誰が[0]].役割.バグ;
+      };
+      if(Datas.消滅.誰が[1]){
+        if(Datas.乗員データ[Datas.消滅.誰が[1]].バグ疑惑=="確認"){
+          delete Datas.乗員データ[Datas.消滅.誰が[1]].バグ疑惑;
+          delete Datas.乗員データ[Datas.消滅.誰が[1]].役割.バグ;
+        };
+      };
+    };
+    if(Darega==Datas.現在.真.エンジニア&&Datas.消滅.誰が.length==2) Datas.乗員データ[Darewo].確定 = "バグ";
   };
-  console.log(Darewo);
   if(!Datas.乗員データ[Darewo].報告) Datas.乗員データ[Darewo].報告 = {};
   if(!Datas.乗員データ[Darewo].報告[KEKKA]) Datas.乗員データ[Darewo].報告[KEKKA] = {};
   Datas.乗員データ[Darewo].報告[KEKKA][Darega] = Datas.乗員データ[Darega].名乗り;
@@ -876,6 +910,7 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
     };
   };
   return;
+  /*
   KEKKA = [KEKKA];
   if(Sonzai.エンジニア[Darega]&&C_DEBUG){
     KEKKA[1] = C_DEBUG[1].length;
@@ -922,14 +957,15 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
     delete Crews[Temp.誰が].疑;
   };
   return;
+  */
 };
 
 function SYOUMETU(Darega){
-  Datas.消滅 = Darega;
   for(var I = 0; I < Darega.length; I++){
     Datas.乗員データ[Darega[I]].ステータス = "消滅";
     delete Datas.乗員データ[Darega[I]].役割.グノーシア;
     delete Datas.生存エンジニア[Darega[I]];
+    Datas.乗員データ[Darega[I]].バグ疑惑 = "確認";
     if(I){
       delete Datas.現在.バグ;
       Temp = Object.keys(Datas.生存エンジニア);
@@ -945,17 +981,14 @@ function SYOUMETU(Darega){
       if(!Datas.乗員データ[Darega[1]].役割.バグ) Datas.乗員データ[Darega[0]].確定 = "バグ";
       if(Datas.乗員データ[Darega[0]].役割.バグ&&Datas.乗員データ[Darega[1]].役割.バグ){
         Temp = Object.keys(Datas.乗員データ);
-        Datas.バグ疑惑 = {};
         for(var I = 0; I < Temp.length; I++){
-          if(Temp[I]==Darega[0]||Temp[I]==Darega[1]){
-            Datas.バグ疑惑[Temp[I]] = true;
-            continue;
-          };
+          if(Temp[I]==Darega[0]||Temp[I]==Darega[1]) continue;
           delete Datas.乗員データ[Temp[I]].役割.バグ;
         };
       };
     };
   };
+  Datas.消滅 = {誰が:Darega,エンジニア:Datas.生存エンジニア};
   return;
 };
 
