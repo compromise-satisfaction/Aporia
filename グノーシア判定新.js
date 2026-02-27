@@ -93,7 +93,7 @@ Test_Text += "\nジナが冷凍";
 Test_Datas = {乗員:15,グノーシア:3,AC主義者:false,バグ:false};
 */
 
-//Test_Text = "";
+Test_Text = "";
 
 function Test(Text){
   Datas.乗員データ = {};
@@ -642,3 +642,4 @@ function ED_Nanori(Darega,ED){
   };
   return;
 };
+
