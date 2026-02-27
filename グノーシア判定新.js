@@ -93,6 +93,8 @@ Test_Text += "\nジナが冷凍";
 Test_Datas = {乗員:15,グノーシア:3,AC主義者:false,バグ:false};
 */
 
+//Test_Text = "";
+
 function Test(Text){
   Datas.乗員データ = {};
   Datas.現在 = {}
@@ -101,7 +103,7 @@ function Test(Text){
   Datas.現在.グノーシア = Datas.乗員数データ.グノーシア;
   Datas.現在.敵 = Datas.現在.グノーシア;
   Datas.名乗り = {エンジニア:[],ドクター:[]};
-  Datas.可能性 = {エンジニア:{},ドクター:{}};
+  Datas.可能性 = {エンジニア:{},ドクター:{},グノーシア:{},乗員:{}};
   Datas.乗員名 = {};
   Datas.乗員番号 = {};
   Datas.矛盾内容 = "";
@@ -285,6 +287,7 @@ function Check_KAKUTEI(){
   };
   var Temp = Object.keys(Datas.乗員データ);
   var Temp1 = Object.keys(Datas.乗員データ);
+  var Temp2 = Object.keys(Datas.可能性.グノーシア);
   var Numbers = [[],[],[],Datas.乗員数データ.乗員*1,Datas.乗員数データ.グノーシア*1];
   Datas.疑惑 = {エンジニア:[],ドクター:[]}
   for(var I = 0; I < Temp.length; I++){
@@ -323,6 +326,17 @@ function Check_KAKUTEI(){
         };
       };
     };
+  };
+  Temp2 = [Temp2,true];
+  for(var I = 0; I < Temp2[0].length; I++){
+    if(!Datas.乗員データ[Temp2[0][I]].ステータス){
+      Temp2[1] = false;
+      break;
+    };
+  };
+  if(Temp2[1]){
+    Datas.矛盾 = "終了判定";
+    return;
   };
   if(Numbers[1].length > Datas.現在.グノーシア){
     Datas.矛盾 = "グノーシア数";
@@ -382,6 +396,8 @@ function Check_KAKUTEI(){
 function Set_Crew(N){
   for(var I = 1; I <= N; I++){
     Datas.乗員データ["乗員"+I] = {役割:{グノーシア:true,乗員:true}};
+    Datas.可能性.乗員["乗員"+I] = true;
+    Datas.可能性.グノーシア["乗員"+I] = true;
     Datas.可能性.エンジニア["乗員"+I] = true;
     Datas.乗員データ["乗員"+I].役割.エンジニア = true;
     Datas.可能性.ドクター["乗員"+I] = true;
@@ -456,6 +472,8 @@ function Kakutei(Darega){
     };
     delete Datas.乗員データ[Darega].役割.バグ;
     delete Datas.乗員データ[Darega].役割.グノーシア;
+    if(Datas.現在.バグ) delete Datas.可能性.バグ[Darega];
+    delete Datas.可能性.グノーシア[Darega];
   };
   if(Datas.乗員データ[Darega].敵){
     delete Datas.乗員データ[Darega].役割.エンジニア;
@@ -464,6 +482,7 @@ function Kakutei(Darega){
     delete Datas.生存エンジニア[Darega];
     delete Datas.可能性.エンジニア[Darega];
     delete Datas.可能性.ドクター[Darega];
+    delete Datas.可能性.乗員[Darega];
   };
 
   if(!Temp.length){
