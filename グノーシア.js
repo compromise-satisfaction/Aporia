@@ -61,16 +61,17 @@ function Game_load(width,height){
         Buttons[Temp[I]]._style.color = MMM;
         Buttons[Temp[I]].backgroundColor = BBB;
       };
+      Text_Areas.矛盾内容._element.value = Datas.矛盾内容;
       Text_Areas.確定内容._element.value = Datas.確定内容;
       return;
     };
 
     function Text_Area_Set(X,I){
-      if(X) X = width/X;
+      X = width/3*X;
       Texts[I] = "";
       Text_Areas[I] = new Entity();
       Text_Areas[I].moveTo(X,height/5);
-      Text_Areas[I].width = width/2;
+      Text_Areas[I].width = width/3;
       Text_Areas[I].height = height/2;
       Text_Areas[I]._element = document.createElement("textarea");
       Text_Areas[I]._element.type = "textarea";
@@ -130,24 +131,24 @@ function Game_load(width,height){
             game.replaceScene(Main_Scene());
             break;
           case "取り消し":
-            if(!Texts.発言){
+            if(!Texts.日誌){
               game.replaceScene(Start_Scene());
               return;
             };
-            Texts.発言 = Texts.発言.replace(/(^|\n)(.+?)$/,"");
-            if(Texts.発言) What = "\n";
+            Texts.日誌 = Texts.日誌.replace(/(^|\n)(.+?)$/,"");
+            if(Texts.日誌) What = "\n";
             else{
               What = "";
-              Test(Texts.発言);
+              Test(Texts.日誌);
             };
             break;
           case "「":
-            Texts.発言 += I;
+            Texts.日誌 += I;
             What = "";
             break;
           case "グノーシア":
           case "人間":
-            Texts.発言 += "は" + I + "」";
+            Texts.日誌 += "は" + I + "」";
             What = "\n";
             break;
           case "消滅":
@@ -156,18 +157,18 @@ function Game_load(width,height){
           case "ドクター":
           case "留守番":
           case "嘘":
-            Texts.発言 += "が" + I;
+            Texts.日誌 += "が" + I;
             What = "\n";
             break;
           default:
             if(Datas.乗員データ[I]) console.log(Datas.乗員データ[I]);
-            Texts.発言 += What + I;
+            Texts.日誌 += What + I;
             What = "と";
             break;
         };
-        if(What=="\n") Test(Texts.発言);
+        if(What=="\n") Test(Texts.日誌);
         if(Now_Scene=="メイン"){
-          Text_Areas.発言._element.value = Texts.発言;
+          Text_Areas.日誌._element.value = Texts.日誌;
           SET_color();
         };
         return;
@@ -217,10 +218,12 @@ function Game_load(width,height){
       if(!Scenes[Now_Scene]) Scenes[Now_Scene] = new Scene();
       else return(Scenes[Now_Scene]);
 
-      Text_Area_Set(0,"発言");
+      Text_Area_Set(0,"日誌");
+      Text_Area_Set(1,"矛盾内容");
       Text_Area_Set(2,"確定内容");
 
       var B_font = [];
+      var Player_Name = "よっちー";
 
       B_font.push("エンジニア");
       B_font.push("ドクター");
@@ -233,7 +236,7 @@ function Game_load(width,height){
       B_font.push("グノーシア");
       B_font.push("嘘");
 
-      B_font.push("自分");
+      B_font.push(Player_Name);
       B_font.push("セツ");
       B_font.push("ジナ");
       B_font.push("SQ");
@@ -254,7 +257,7 @@ function Game_load(width,height){
       var J = 0;
       var K = 10;
       for(var I = 0; I < B_font.length; I++){
-        if(B_font[I]=="自分"){
+        if(B_font[I]==Player_Name){
           J = 0;
           K = 3;
         };
@@ -268,14 +271,14 @@ function Game_load(width,height){
 
       Scenes[Now_Scene].addEventListener("enterframe",function(e){
         if(Test_Text){
-          Text_Areas.発言._element.value = Test_Text;
+          Text_Areas.日誌._element.value = Test_Text;
           Datas.乗員数データ = Test_Datas;
           Test_Text = false;
           What = "\n";
         };
-        if(Texts.発言!=Text_Areas.発言._element.value){
-          Texts.発言 = Text_Areas.発言._element.value;
-          Test(Texts.発言);
+        if(Texts.日誌!=Text_Areas.日誌._element.value){
+          Texts.日誌 = Text_Areas.日誌._element.value;
+          Test(Texts.日誌);
           SET_color();
         };
         return;
