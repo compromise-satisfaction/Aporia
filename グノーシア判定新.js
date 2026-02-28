@@ -367,7 +367,7 @@ function Check_KAKUTEI(){
         if(!Datas.疑惑確認[Temp[I]]){
           if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
           if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
-          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "エンジニア";
+          //Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "エンジニア";
         };
       };
       Datas.保存 = JSON.stringify(Datas.保存);
@@ -386,7 +386,7 @@ function Check_KAKUTEI(){
         if(!Datas.疑惑確認[Temp[I]]){
           if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
           if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
-          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "ドクター";
+          //Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "ドクター";
         };
       };
       Datas.保存 = JSON.stringify(Datas.保存);
