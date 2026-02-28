@@ -242,8 +242,8 @@ function Loop_Check(){
       console.log("loopが変！");
       break;
     };
-    Check_KAKUTEI();
     for(var I = 0; I < Temp.length; I++) Kakutei(Temp[I]);
+    Check_KAKUTEI();
   };
   return;
 };
@@ -317,7 +317,7 @@ function Check_KAKUTEI(){
       Numbers[3]--;
       if(Datas.乗員データ[Temp[I]].役割.グノーシア) Numbers[4]--;
     };
-    if(!Datas.乗員データ[Temp[I]].確定&&Datas.乗員データ[Temp[I]].名乗り){
+    if(!Datas.乗員データ[Temp[I]].確定&&!Datas.乗員データ[Temp[I]].敵&&Datas.乗員データ[Temp[I]].名乗り){
       Datas.疑惑[Datas.乗員データ[Temp[I]].名乗り].push(Temp[I]);
     };
   };
@@ -359,15 +359,15 @@ function Check_KAKUTEI(){
     if(Datas.疑惑.数) Datas.疑惑.数--;
     Datas.疑惑.数 += Numbers[0].length;
     if(Datas.疑惑.数==Datas.現在.敵){
-      Datas.疑惑確認 = {};
-      for(var I = 0; I < Numbers[0].length; I++) Datas.疑惑確認[Numbers[0][I]] = true;
-      for(var I = 0; I < Datas.疑惑.ドクター.length; I++) Datas.疑惑確認[Datas.疑惑.ドクター[I]] = true;
+      Datas.疑惑.確認 = {};
+      for(var I = 0; I < Numbers[0].length; I++) Datas.疑惑.確認[Numbers[0][I]] = true;
+      for(var I = 0; I < Datas.疑惑.ドクター.length; I++) Datas.疑惑.確認[Datas.疑惑.ドクター[I]] = true;
       Datas.保存 = JSON.parse(Datas.保存);
       for(var I = 0; I < Temp.length; I++){
-        if(!Datas.疑惑確認[Temp[I]]&&!Datas.乗員データ[Temp[I]].敵){
+        if(!Datas.疑惑.確認[Temp[I]]){
           if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
           if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
-          //Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "エンジニア";
+          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "エンジニア";
         };
       };
       Datas.保存 = JSON.stringify(Datas.保存);
@@ -378,22 +378,21 @@ function Check_KAKUTEI(){
     if(Datas.疑惑.数) Datas.疑惑.数--;
     Datas.疑惑.数 += Numbers[0].length;
     if(Datas.疑惑.数==Datas.現在.敵){
-      Datas.疑惑確認 = {};
-      for(var I = 0; I < Numbers[0].length; I++) Datas.疑惑確認[Numbers[0][I]] = true;
-      for(var I = 0; I < Datas.疑惑.エンジニア.length; I++) Datas.疑惑確認[Datas.疑惑.エンジニア[I]] = true;
+      Datas.疑惑.確認 = {};
+      for(var I = 0; I < Numbers[0].length; I++) Datas.疑惑.確認[Numbers[0][I]] = true;
+      for(var I = 0; I < Datas.疑惑.エンジニア.length; I++) Datas.疑惑.確認[Datas.疑惑.エンジニア[I]] = true;
       Datas.保存 = JSON.parse(Datas.保存);
       for(var I = 0; I < Temp.length; I++){
-        if(!Datas.疑惑確認[Temp[I]]&&!Datas.乗員データ[Temp[I]].敵){
+        if(!Datas.疑惑.確認[Temp[I]]){
           if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
           if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
-          //Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "ドクター";
+          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "ドクター";
         };
       };
       Datas.保存 = JSON.stringify(Datas.保存);
     };
   };
   delete Datas.疑惑;
-  delete Datas.疑惑確認;
   return;
 };
 
@@ -423,50 +422,31 @@ function ZEN_TYOUSA(Darega){
   var E_N = Object.keys(Datas.可能性.エンジニア);
   var D_N = Object.keys(Datas.可能性.ドクター);
   var N = Object.keys(Datas.乗員データ[Darega].役割).length;
-  var H = {エンジニア:{グノーシア:true,人間:true,敵:0},ドクター:{グノーシア:true,人間:true,敵:0}};
-  if(!Datas.乗員データ[Darega].報告) H = {グノーシア:"報告無し",人間:"報告無し"};
-  else{
-    if(!Datas.乗員データ[Darega].報告.人間) H.人間 = "報告無し";
-    else{
-      Temp = Datas.乗員データ[Darega].報告.人間;
-      for(var I = 0; I < E_N.length; I++){
-        if(E_N[I]==Darega) continue;
-        if(!Temp[E_N[I]]) H.エンジニア.人間 = false;
+  var H = {エンジニア:{グノーシア:0,人間:0,敵:0},ドクター:{グノーシア:0,人間:0,敵:0}};
+  var P = ["人間","グノーシア","敵"];
+  if(Datas.乗員データ[Darega].報告){
+    for(J = 0; J < P.length; J++){
+      if(Datas.乗員データ[Darega].報告[P[J]]){
+        Temp = Datas.乗員データ[Darega].報告[P[J]];
+        for(var I = 0; I < E_N.length; I++) if(Temp[E_N[I]]) H.エンジニア[P[J]]++;
+        for(var I = 0; I < D_N.length; I++) if(Temp[D_N[I]]) H.ドクター[P[J]]++;
       };
-      for(var I = 0; I < D_N.length; I++) if(!Temp[D_N[I]]) H.ドクター.人間 = false;
-    };
-    if(!Datas.乗員データ[Darega].報告.グノーシア) H.グノーシア = "報告無し";
-    else{
-      Temp = Datas.乗員データ[Darega].報告.グノーシア;
-      for(var I = 0; I < E_N.length; I++) if(!Temp[E_N[I]]) H.エンジニア.グノーシア = false;
-      for(var I = 0; I < D_N.length; I++) if(!Temp[D_N[I]]) H.ドクター.グノーシア = false;
-    };
-    if(Datas.乗員データ[Darega].報告.敵){
-      Temp = Datas.乗員データ[Darega].報告.敵;
-      for(var I = 0; I < E_N.length; I++) if(Temp[E_N[I]]) H.エンジニア.敵++;;
-      for(var I = 0; I < D_N.length; I++) if(Temp[D_N[I]]) H.ドクター.敵++;
     };
   };
-  if(!H.エンジニア) H.エンジニア = {};
-  if(!H.ドクター) H.ドクター = {};
-  if(H.人間){
-    H.エンジニア.人間 = false;
-    H.ドクター.人間 = false;
+  if(E_N.length){
+    if(H.エンジニア.敵==E_N.length&&!Datas.乗員データ[Darega].敵) Datas.乗員データ[Darega].敵 = "エンジニア全員から敵";
+    if(H.エンジニア.人間==E_N.length){
+      delete Datas.乗員データ[Darega].役割.グノーシア;
+      if(!Datas.乗員データ[Darega].ステータス) delete Datas.乗員データ[Darega].役割.バグ;
+    };
+    if(H.エンジニア.グノーシア==E_N.length) Datas.乗員データ[Darega].役割 = {グノーシア:true};
   };
-  if(H.グノーシア){
-    H.エンジニア.グノーシア = false;
-    H.ドクター.グノーシア = false;
+  if(D_N.length){
+    if(H.ドクター.敵==D_N.length&&!Datas.乗員データ[Darega].敵) Datas.乗員データ[Darega].敵 = "ドクター全員から敵";
+    if(H.ドクター.人間==D_N.length) delete Datas.乗員データ[Darega].役割.グノーシア;
+    if(H.ドクター.グノーシア==D_N.length) Datas.乗員データ[Darega].役割 = {グノーシア:true};
+    if(N!=Object.keys(Datas.乗員データ[Darega].役割).length) Loop = true;
   };
-  if(H.エンジニア.人間){
-    delete Datas.乗員データ[Darega].役割.グノーシア;
-    if(!Datas.乗員データ[Darega].ステータス) delete Datas.乗員データ[Darega].役割.バグ;
-  };
-  if(H.エンジニア.グノーシア) Datas.乗員データ[Darega].役割 = {グノーシア:true};
-  if(H.ドクター.人間) delete Datas.乗員データ[Darega].役割.グノーシア;
-  if(H.ドクター.グノーシア) Datas.乗員データ[Darega].役割 = {グノーシア:true};
-  if(!H.エンジニア.敵&&H.エンジニア.敵==E_N.length) Datas.乗員データ[Darega].敵 = true;
-  if(!H.ドクター.敵&&H.ドクター.敵==D_N.length) Datas.乗員データ[Darega].敵 = true;
-  if(N!=Object.keys(Datas.乗員データ[Darega].役割).length) Loop = true;
   return;
 };
 
@@ -649,6 +629,9 @@ function ED_Nanori(Darega,ED){
     Datas.乗員データ[Darega[I]].名乗り = ED;
     Datas.可能性[ED][Darega[I]] = true;
     Datas.乗員データ[Darega[I]].役割[ED] = true;
+    Datas.乗員データ[Darega[I]].報告 = {};
+    Datas.乗員データ[Darega[I]].報告.人間 = {};
+    Datas.乗員データ[Darega[I]].報告.人間[Darega[I]] = ED;
     if(ED=="エンジニア") Datas.生存エンジニア[Darega[I]] = true;
     for(var J = 0; J < Darega.length; J++){
       if(I==J) continue;
