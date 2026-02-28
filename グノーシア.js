@@ -115,6 +115,7 @@ function Game_load(width,height){
       Buttons[I].backgroundColor = "buttonface";
       Scenes[Now_Scene].addChild(Buttons[I]);
       Buttons[I]._element.onclick = function(e){
+        if(I=="(自分)") I = Player_Name;
         switch(I){
           case "除外":
           case "バグ":
@@ -151,6 +152,7 @@ function Game_load(width,height){
           case "「":
             Texts.日誌 += I;
             if(Datas.冷凍){
+              console.log(Datas.冷凍.発言);
               if(Datas.乗員データ[Datas.乗員番号[Datas.冷凍.発言]].名乗り=="ドクター"){
                 if(!Datas.冷凍.誰が[1]) Texts.日誌 += Datas.乗員名[Datas.冷凍.誰が[0]];
               };
@@ -180,7 +182,7 @@ function Game_load(width,height){
         };
         if(What=="\n") Test(Texts.日誌);
         if(Now_Scene=="メイン"){
-          Text_Areas.日誌._element.value = Texts.日誌.replace(/\(自分\)/g,Player_Name);
+          Text_Areas.日誌._element.value = Texts.日誌;
           window.localStorage.setItem("日誌",Texts.日誌);
           window.localStorage.setItem("乗員",JSON.stringify(Datas.乗員数データ));
           SET_color();
