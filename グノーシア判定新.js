@@ -210,18 +210,18 @@ function Test(Text){
       if(Datas.乗員データ[Temp[I]].確定!="留守番"||true){
         if(Text) Text += "\n";
         if(Datas.乗員データ[Temp[I]].確定){
-          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は絶対に" + Datas.乗員データ[Temp[I]].確定 + "だ";
-          else Text += Datas.乗員データ[Temp[I]].名前 + "は絶対に" + Datas.乗員データ[Temp[I]].確定 + "だ";
+          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は" + Datas.乗員データ[Temp[I]].確定;
+          else Text += Datas.乗員データ[Temp[I]].名前 + "は" + Datas.乗員データ[Temp[I]].確定;
           continue;
         };
         if(Datas.乗員データ[Temp[I]].人間){
-          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は絶対に人間だ";
-          else Text += Datas.乗員データ[Temp[I]].名前 + "は絶対に人間だ";
+          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は人間";
+          else Text += Datas.乗員データ[Temp[I]].名前 + "は人間";
           continue;
         };
         if(Datas.乗員データ[Temp[I]].敵){
-          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は絶対に敵だ";
-          else Text += Datas.乗員データ[Temp[I]].名前 + "は絶対に敵だ";
+          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は敵";
+          else Text += Datas.乗員データ[Temp[I]].名前 + "は敵";
         };
       };
     };
@@ -364,10 +364,10 @@ function Check_KAKUTEI(){
       for(var I = 0; I < Datas.疑惑.ドクター.length; I++) Datas.疑惑確認[Datas.疑惑.ドクター[I]] = true;
       Datas.保存 = JSON.parse(Datas.保存);
       for(var I = 0; I < Temp.length; I++){
-        if(!Datas.疑惑確認[Temp[I]]){
+        if(!Datas.疑惑確認[Temp[I]]&&!Datas.乗員データ[Temp[I]].敵){
           if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
           if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
-          //Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "エンジニア";
+          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "エンジニア";
         };
       };
       Datas.保存 = JSON.stringify(Datas.保存);
@@ -383,10 +383,10 @@ function Check_KAKUTEI(){
       for(var I = 0; I < Datas.疑惑.エンジニア.length; I++) Datas.疑惑確認[Datas.疑惑.エンジニア[I]] = true;
       Datas.保存 = JSON.parse(Datas.保存);
       for(var I = 0; I < Temp.length; I++){
-        if(!Datas.疑惑確認[Temp[I]]){
+        if(!Datas.疑惑確認[Temp[I]]&&!Datas.乗員データ[Temp[I]].敵){
           if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
           if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
-          //Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "ドクター";
+          Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = "ドクター";
         };
       };
       Datas.保存 = JSON.stringify(Datas.保存);
