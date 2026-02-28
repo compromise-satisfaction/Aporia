@@ -144,6 +144,11 @@ function Game_load(width,height){
             break;
           case "「":
             Texts.日誌 += I;
+            if(Datas.冷凍){
+              if(Datas.乗員データ[Datas.乗員番号[Datas.冷凍.発言]].名乗り=="ドクター"){
+                if(!Datas.冷凍.誰が[1]) Texts.日誌 += Datas.乗員名[Datas.冷凍.誰が[0]];
+              };
+            };
             What = "";
             break;
           case "グノーシア":
@@ -161,6 +166,7 @@ function Game_load(width,height){
             What = "\n";
             break;
           default:
+            if(Datas.冷凍) Datas.冷凍.発言 = I;
             if(Datas.乗員データ[I]) console.log(Datas.乗員データ[I]);
             Texts.日誌 += What + I;
             What = "と";

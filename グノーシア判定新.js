@@ -93,7 +93,7 @@ Test_Text += "\nジナが冷凍";
 Test_Datas = {乗員:15,グノーシア:3,AC主義者:false,バグ:false};
 */
 
-Test_Text = "";
+if(!Test_Play) Test_Text = "";
 
 function Test(Text){
   Datas.乗員データ = {};
@@ -108,6 +108,7 @@ function Test(Text){
   Datas.乗員番号 = {};
   Datas.矛盾内容 = "";
   Datas.消滅 = false;
+  Datas.冷凍 = false;
   if(Datas.乗員数データ.AC主義者){
     Datas.現在.敵++;
     Datas.可能性.AC主義者 = {};
@@ -151,6 +152,7 @@ function Test(Text){
           Datas.乗員データ[Temp.誰が[J]].ステータス = "コールドスリープ";
           delete Datas.生存エンジニア[Temp.誰が[J]];
         };
+        Datas.冷凍 = {誰が:Temp.誰が};
         break;
       case "消滅":
       case "消失":
@@ -573,7 +575,7 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
     };
     if(Datas.消滅.誰が.length==2){
       if(Darega==Datas.現在.真.エンジニア) Datas.乗員データ[Darewo].役割 = {バグ:true};
-      if(Darewo!=Datas.消滅.誰が[0]&&Darewo!=Datas.消滅.誰が[1]){
+      if(Darewo!=Datas.消滅.誰が[0]&&Darewo!=Datas.消滅.誰が[1]&&Datas.乗員データ[Darega].名乗り=="エンジニア"){
         Datas.乗員データ[Darega].敵 = "敵(バグ未調査)";
         if(Datas.矛盾内容) Datas.矛盾内容 += "\n";
         Datas.矛盾内容 += Datas.乗員名[Darega] + "がバグ未調査";
@@ -642,4 +644,3 @@ function ED_Nanori(Darega,ED){
   };
   return;
 };
-
