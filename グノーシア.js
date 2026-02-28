@@ -12,6 +12,8 @@ function Game_load(width,height){
     var Text_Areas = {};
     var Texts = {};
     var What = "";
+    var Player_Name = window.localStorage.getItem("自分");
+    if(!Player_Name) Player_Name = "よっちー";
 
     function SET_color(){
       var MMM = "break";
@@ -20,8 +22,10 @@ function Game_load(width,height){
       for(var I = 0; I < Temp.length; I++){
         MMM = "black";
         BBB = "buttonface";
+        if(Temp[I]=="(自分)") Buttons[Temp[I]]._element.value = Player_Name;
         Buttons[Temp[I]]._style.color = MMM;
         Buttons[Temp[I]].backgroundColor = BBB;
+        if(Temp[I]=="(自分)") Temp[I] = Player_Name;
         if(!Datas.乗員番号) continue;
         if(!Datas.乗員番号[Temp[I]]) continue;
         if(Datas.乗員データ[Datas.乗員番号[Temp[I]]]){
@@ -58,6 +62,7 @@ function Game_load(width,height){
               break;
           };
         };
+        if(Temp[I]==Player_Name) Temp[I] = "(自分)";
         Buttons[Temp[I]]._style.color = MMM;
         Buttons[Temp[I]].backgroundColor = BBB;
       };
@@ -103,6 +108,7 @@ function Game_load(width,height){
       Buttons[I].height = height/10;
       Buttons[I]._element = document.createElement("input");
       Buttons[I]._element.type = "submit";
+      Buttons[I]._element.Name = I;
       Buttons[I]._element.value = I;
       if(Now_Scene=="メイン") Buttons[I]._style["font-size"] = height/(30*Tate);
       else Buttons[I]._style["font-size"] = height/20;
@@ -174,8 +180,16 @@ function Game_load(width,height){
         };
         if(What=="\n") Test(Texts.日誌);
         if(Now_Scene=="メイン"){
-          Text_Areas.日誌._element.value = Texts.日誌;
+          Text_Areas.日誌._element.value = Texts.日誌.replace(/\(自分\)/g,Player_Name);
+          window.localStorage.setItem("日誌",Texts.日誌);
+          window.localStorage.setItem("乗員",JSON.stringify(Datas.乗員数データ));
           SET_color();
+        };
+        if(Datas.プレイヤー名){
+          Text_Areas.日誌._element.value = Text_Areas.日誌._element.value.replaceAll(Player_Name,Datas.プレイヤー名);
+          Player_Name = Datas.プレイヤー名;
+          delete Datas.プレイヤー名;
+          window.localStorage.setItem("自分",Player_Name);
         };
         return;
       };
@@ -216,6 +230,13 @@ function Game_load(width,height){
         return;
       });
 
+      var Save = window.localStorage.getItem("日誌");
+      if(Save){
+        Test_Text = Save;
+        Test_Datas = JSON.parse(window.localStorage.getItem("乗員"));
+        game.replaceScene(Main_Scene());
+      };
+
       return(Scenes[Now_Scene]);
     };
 
@@ -229,7 +250,6 @@ function Game_load(width,height){
       Text_Area_Set(2,"確定内容");
 
       var B_font = [];
-      var Player_Name = "よっちー";
 
       B_font.push("エンジニア");
       B_font.push("ドクター");
@@ -242,7 +262,7 @@ function Game_load(width,height){
       B_font.push("グノーシア");
       B_font.push("嘘");
 
-      B_font.push(Player_Name);
+      B_font.push("(自分)");
       B_font.push("セツ");
       B_font.push("ジナ");
       B_font.push("SQ");
@@ -263,7 +283,7 @@ function Game_load(width,height){
       var J = 0;
       var K = 10;
       for(var I = 0; I < B_font.length; I++){
-        if(B_font[I]==Player_Name){
+        if(B_font[I]=="(自分)"){
           J = 0;
           K = 3;
         };
@@ -277,7 +297,7 @@ function Game_load(width,height){
 
       Scenes[Now_Scene].addEventListener("enterframe",function(e){
         if(Test_Text){
-          Text_Areas.日誌._element.value = Test_Text;
+          Text_Areas.日誌._element.value = Test_Text.replace(/\(自分\)/g,Player_Name);
           Datas.乗員数データ = Test_Datas;
           Test_Text = false;
           What = "\n";

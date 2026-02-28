@@ -5,31 +5,31 @@ Datas.乗員数データ = {乗員:15,グノーシア:5,AC主義者:true,バグ:
 var Test_Datas = {乗員:15,グノーシア:3,AC主義者:true,バグ:true};
 var Test_Text = "ジナとステラが留守番";
 Test_Text += "\nオトメとセツとレムナンがドクター";
-Test_Text += "\nコメットとよっちーがエンジニア";
+Test_Text += "\nコメットと(自分)がエンジニア";
 Test_Text += "\nレムナンが冷凍";
-Test_Text += "\nよっちー「コメットはグノーシア」";
+Test_Text += "\n(自分)「コメットはグノーシア」";
 Test_Text += "\nコメット「シピは人間」";
 Test_Text += "\nオトメ「レムナンは人間」";
 Test_Text += "\nセツ「レムナンはグノーシア」";
 Test_Text += "\nしげみちが冷凍";
 Test_Text += "\nシピが消滅";
-Test_Text += "\nよっちー「セツは人間」";
+Test_Text += "\n(自分)「セツは人間」";
 Test_Text += "\nコメット「ラキオは人間」";
 Test_Text += "\nセツ「しげみちはグノーシア」";
 Test_Text += "\nオトメ「しげみちは人間」";
 Test_Text += "\nオトメが冷凍";
 Test_Text += "\nラキオが消滅";
-Test_Text += "\nよっちー「夕里子は人間」";
+Test_Text += "\n(自分)「夕里子は人間」";
 Test_Text += "\nコメット「セツはグノーシア」";
 Test_Text += "\nセツ「オトメは人間」";
 Test_Text += "\nコメットが冷凍";
 Test_Text += "\n夕里子が消滅";
-Test_Text += "\nよっちー「SQはグノーシア」";
+Test_Text += "\n(自分)「SQはグノーシア」";
 Test_Text += "\nセツ「コメットは人間」";
 //セツは絶対に敵だ
 Test_Text += "\n沙明が冷凍";
 Test_Text += "\nジョナスとステラが消滅";
-//よっちーは絶対にエンジニアだ
+//(自分)は絶対にエンジニアだ
 //SQは絶対にグノーシアだ
 
 /*//
@@ -39,30 +39,30 @@ Test_Text += "\nレムナンとジナと沙明がエンジニア";
 Test_Text += "\nオトメが冷凍";
 Test_Text += "\nジナ「ステラはグノーシア」";
 Test_Text += "\n沙明「ジョナスは人間」";
-Test_Text += "\nレムナン「よっちーはグノーシア」";
+Test_Text += "\nレムナン「(自分)はグノーシア」";
 Test_Text += "\nラキオ「オトメはグノーシア」";
-Test_Text += "\nよっちーが留守番";
+Test_Text += "\n(自分)が留守番";
 Test_Datas = {乗員:12,グノーシア:3,AC主義者:true};
 ////
 
-Test_Text = "よっちーとしげみちとジョナスがエンジニア";
+Test_Text = "(自分)としげみちとジョナスがエンジニア";
 Test_Text += "\nシピとステラがドクター";
 Test_Text += "\nしげみちが冷凍";
 Test_Text += "\nセツが消滅";
-Test_Text += "\nよっちー「シピは人間」";
+Test_Text += "\n(自分)「シピは人間」";
 Test_Text += "\nジョナス「ククルシカはグノーシア」";
 Test_Text += "\nステラ「しげみちはグノーシア」";
 Test_Text += "\nシピ「しげみちはグノーシア」";
 Test_Text += "\nジョナスが冷凍";
 Test_Text += "\nジナとステラが消滅";
-Test_Text += "\nよっちー「ステラは人間」";
+Test_Text += "\n(自分)「ステラは人間」";
 Test_Text += "\nシピ「ジョナスは人間」";
 Test_Text += "\n沙明が冷凍";
 Test_Text += "\nシピが消滅";
-Test_Text += "\nよっちー「夕里子はグノーシア」";
+Test_Text += "\n(自分)「夕里子はグノーシア」";
 Test_Text += "\n夕里子が冷凍";
 Test_Text += "\nSQが消滅";
-Test_Text += "\nよっちー「コメットはグノーシア」";
+Test_Text += "\n(自分)「コメットはグノーシア」";
 Test_Datas = {乗員:15,グノーシア:3,AC主義者:true,バグ:true};
 
 Test_Text = "ククルシカとジナがエンジニア";
@@ -70,11 +70,11 @@ Test_Text += "\nSQと夕里子がドクター";
 Test_Text += "\nセツとラキオが留守番";
 Test_Text += "\n沙明が冷凍";
 Test_Text += "\nコメットが消滅";
-Test_Text += "\nククルシカ「よっちーは人間」";
+Test_Text += "\nククルシカ「(自分)は人間」";
 Test_Text += "\nジナ「レムナンは人間」";
 Test_Text += "\n夕里子「沙明はグノーシア」";
 Test_Text += "\nSQ「沙明は人間」";
-Test_Text += "\nジナ「よっちーは人間」";
+Test_Text += "\nジナ「(自分)は人間」";
 Test_Text += "\nククルシカ「しげみちは人間」";
 Test_Text += "\nジョナスが冷凍";
 Test_Text += "\nSQ「ジョナスは人間」";
@@ -92,6 +92,7 @@ Test_Text += "\nジナ「夕里子はグノーシア」";
 Test_Text += "\nジナが冷凍";
 Test_Datas = {乗員:15,グノーシア:3,AC主義者:false,バグ:false};
 */
+
 
 if(!Test_Play) Test_Text = "";
 
@@ -129,6 +130,7 @@ function Test(Text){
     ADD_Crew(Temp.誰が);
     switch(Temp.タイプ){
       case "設定":
+        Datas.プレイヤー名 = Temp.結果;
         break;
       case "終了":
         break;
@@ -247,8 +249,8 @@ function Loop_Check(){
 };
 
 function Hatugen_Syori(Text){
-  Temp = Text.match(/^プレイヤーの名前?は(.+)$/);
-  if(Temp) return({タイプ:"設定","結果":Temp[1]});
+  Temp = Text.match(/^(俺|プレイヤー)の名前?は(.+)$/);
+  if(Temp) return({タイプ:"設定","結果":Temp[2]});
   Temp = Text.match(/^(.+)「(.+)は(人間|グノーシア)」$/);
   if(Temp) return({タイプ:"判定",誰が:[Temp[1]],誰を:Temp[2],"結果":Temp[3]});
   Temp = Text.match(/^(.+)が(ドクター|エンジニア|消滅|冷凍|CS|凍結|消失|留守番|嘘)$/);
