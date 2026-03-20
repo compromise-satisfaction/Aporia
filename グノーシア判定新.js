@@ -1,4 +1,4 @@
-var Datas = {矛盾内容:"",確定内容:""};
+var Datas = {矛盾内容:"",確定内容:"",日誌:""};
 Datas.乗員データ = {};
 Datas.乗員数データ = {乗員:15,グノーシア:5,AC主義者:true,バグ:true,除外:false};
 
@@ -91,6 +91,28 @@ Test_Text += "\nククルシカ「夕里子は人間」";
 Test_Text += "\nジナ「夕里子はグノーシア」";
 Test_Text += "\nジナが冷凍";
 Test_Datas = {乗員:15,グノーシア:3,AC主義者:false,バグ:false};
+
+ククルシカとジョナスがエンジニア
+セツとステラが留守番
+コメットが冷凍
+ステラが消滅
+ジョナス「シピは人間」
+ククルシカ「沙明はグノーシア」
+レムナンと沙明がドクター
+沙明「コメットは人間」
+レムナン「コメットは人間」
+沙明が冷凍
+セツが消滅
+ジョナス「SQは人間」
+ククルシカ「シピはグノーシア」
+レムナン「沙明はグノーシア」
+シピが冷凍
+ククルシカが消滅
+ジョナス「よっちーは人間」
+レムナン「シピはグノーシア」
+ジョナスは敵
+Test_Datas = {乗員:10,グノーシア:3,AC主義者:true,バグ:false};
+
 */
 
 
@@ -258,6 +280,7 @@ function Loop_Check(){
 };
 
 function Hatugen_Syori(Text){
+  Datas.日誌 += Text;
   if(Text=="終了") return({タイプ:"終了"});
   Temp = Text.match(/^(.+)は(エンジニア|ドクター|乗員|グノーシア|AC主義者|バグ)$/);
   if(Temp) return({タイプ:"自白",誰が:[Temp[1]],"結果":Temp[2]});
@@ -306,9 +329,13 @@ function Check_KAKUTEI(){
   var Temp = Object.keys(Datas.乗員データ);
   var Temp1 = Object.keys(Datas.乗員データ);
   var Temp2 = Object.keys(Datas.可能性.グノーシア);
-  var Numbers = [[],[],[],Datas.乗員数データ.乗員*1,Datas.乗員数データ.グノーシア*1];
+  var Numbers = [[],[],[],Datas.乗員数データ.乗員*1,Datas.乗員数データ.グノーシア*1,[],[]];
   Datas.疑惑 = {エンジニア:[],ドクター:[]}
   for(var I = 0; I < Temp.length; I++){
+    if(Datas.乗員データ[Temp[I]].役割.AC主義者&&Object.keys(Datas.乗員データ[Temp[I]].役割).length==2){
+      if(Datas.乗員データ[Temp[I]].役割.エンジニア) Numbers[5].push(Temp[I]);
+      if(Datas.乗員データ[Temp[I]].役割.ドクター) Numbers[6].push(Temp[I]);
+    };
     if(!Datas.乗員データ[Temp[I]].役割.グノーシア&&Datas.乗員データ[Temp[I]].報告){
       if(Datas.乗員データ[Temp[I]].報告.グノーシア){
         Temp1 = Object.keys(Datas.乗員データ[Temp[I]].報告.グノーシア);
@@ -332,6 +359,20 @@ function Check_KAKUTEI(){
     };
     if(!Datas.乗員データ[Temp[I]].確定&&!Datas.乗員データ[Temp[I]].敵&&Datas.乗員データ[Temp[I]].名乗り){
       Datas.疑惑[Datas.乗員データ[Temp[I]].名乗り].push(Temp[I]);
+    };
+  };
+  if(Numbers[5].length==2){
+    for(var I = 0; I < Temp.length; I++){
+      if(Numbers[5][0]==Temp[I]) continue;
+      if(Numbers[5][1]==Temp[I]) continue;
+      delete Datas.乗員データ[Temp[I]].役割.AC主義者;
+    };
+  };
+  if(Numbers[6].length==2){
+    for(var I = 0; I < Temp.length; I++){
+      if(Numbers[6][0]==Temp[I]) continue;
+      if(Numbers[6][1]==Temp[I]) continue;
+      delete Datas.乗員データ[Temp[I]].役割.AC主義者;
     };
   };
   if(Numbers[1].length==Datas.現在.グノーシア){
@@ -554,7 +595,6 @@ function ADD_Crew(A){
   };
   return;
 };
-
 
 function ED_Tyousa(Darega,Darewo,KEKKA){
   var HANTAI = "グノーシア";
