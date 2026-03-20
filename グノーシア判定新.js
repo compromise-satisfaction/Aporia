@@ -290,6 +290,8 @@ function Check_KAKUTEI(){
     if(Temp2.length==1){
       if(!Datas.乗員データ[Temp2[0]].確定){
         Loop = true;
+        Datas.乗員データ[Temp2[0]].役割 = {};
+        Datas.乗員データ[Temp2[0]].役割[Temp1[I]] = true;
         Datas.乗員データ[Temp2[0]].確定 = Temp1[I];
       };
     };
