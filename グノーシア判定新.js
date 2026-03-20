@@ -146,6 +146,7 @@ function Test(Text){
   var Temp = null;
   var Values = Text.split("\n");
   Values.push("終了");
+  Values.push("終了");
   for(var I = 0; I < Values.length; I++){
     Temp = Hatugen_Syori(Values[I]);
     if(!Temp) continue;
@@ -365,14 +366,20 @@ function Check_KAKUTEI(){
     for(var I = 0; I < Temp.length; I++){
       if(Numbers[5][0]==Temp[I]) continue;
       if(Numbers[5][1]==Temp[I]) continue;
-      delete Datas.乗員データ[Temp[I]].役割.AC主義者;
+      if(Datas.乗員データ[Temp[I]].役割.AC主義者){
+        Loop = true;
+        delete Datas.乗員データ[Temp[I]].役割.AC主義者;
+      };
     };
   };
   if(Numbers[6].length==2){
     for(var I = 0; I < Temp.length; I++){
       if(Numbers[6][0]==Temp[I]) continue;
       if(Numbers[6][1]==Temp[I]) continue;
-      delete Datas.乗員データ[Temp[I]].役割.AC主義者;
+      if(Datas.乗員データ[Temp[I]].役割.AC主義者){
+        Loop = true;
+        delete Datas.乗員データ[Temp[I]].役割.AC主義者;
+      };
     };
   };
   if(Numbers[1].length==Datas.現在.グノーシア){
