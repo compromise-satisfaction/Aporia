@@ -132,6 +132,10 @@ function Test(Text){
       case "設定":
         Datas.プレイヤー名 = Temp.結果;
         break;
+      case "自白":
+        Datas.乗員データ[Temp.誰が[0]].役割 = {};
+        Datas.乗員データ[Temp.誰が[0]].役割[Temp.結果] = true;
+        break;
       case "終了":
         break;
       case "判定":
@@ -254,6 +258,9 @@ function Loop_Check(){
 };
 
 function Hatugen_Syori(Text){
+  if(Text=="終了") return({タイプ:"終了"});
+  Temp = Text.match(/^(.+)は(エンジニア|ドクター|乗員|グノーシア|AC主義者|バグ)$/);
+  if(Temp) return({タイプ:"自白",誰が:[Temp[1]],"結果":Temp[2]});
   Temp = Text.match(/^(俺|プレイヤー)の名前?は(.+)$/);
   if(Temp) return({タイプ:"設定","結果":Temp[2]});
   Temp = Text.match(/^(.+)「(.+)は(人間|グノーシア)」$/);
