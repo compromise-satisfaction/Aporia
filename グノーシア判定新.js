@@ -142,8 +142,7 @@ function Test(Text){
         for(var J = 0; J < Temp.誰が.length; J++){
           Datas.乗員データ[Temp.誰が[J]].嘘 = true;
           Datas.乗員データ[Temp.誰が[J]].敵 = "敵(嘘)";
-          if(Datas.矛盾内容) Datas.矛盾内容 += "\n";
-          Datas.矛盾内容 += Datas.乗員名[Temp.誰が[J]] + "が嘘";
+          Datas.乗員データ[Temp.誰が[J]].矛盾 = "嘘";
         };
         break;
       case "CS":
@@ -193,9 +192,7 @@ function Test(Text){
         if(Datas.矛盾){
           Datas.保存 = JSON.parse(Datas.保存);
           Datas.保存.乗員データ[Datas.現在.真.テスト].敵 = "敵(" + Datas.矛盾 + "が矛盾)";
-          if(Datas.保存.矛盾内容) Datas.保存.矛盾内容 += "\n";
-          Datas.保存.矛盾内容 += Datas.乗員名[Datas.現在.真.テスト];
-          Datas.保存.矛盾内容 += ":" + Datas.矛盾 + "が矛盾";
+          Datas.保存.乗員データ[Datas.現在.真.テスト].矛盾 = Datas.矛盾;
           Datas.保存 = JSON.stringify(Datas.保存);
         };
         Datas = JSON.parse(Datas.保存);
@@ -203,9 +200,16 @@ function Test(Text){
     };
   };
   Text = "";
+  Text2 = "";
   Temp = Object.keys(Datas.乗員データ);
   for(var I = 0; I < Temp.length; I++){
     if(Datas.乗員データ[Temp[I]].確定||Datas.乗員データ[Temp[I]].敵||Datas.乗員データ[Temp[I]].人間){
+      if(Datas.乗員データ[Temp[I]].矛盾){
+        if(Text2) Text2 += "\n";
+        Text2 += Datas.乗員データ[Temp[I]].名前;
+        Text2 += ":";
+        Text2 += Datas.乗員データ[Temp[I]].矛盾;
+      };
       if(Datas.乗員データ[Temp[I]].ステータス&&Datas.乗員数データ.除外) continue;
       if(Datas.乗員データ[Temp[I]].確定!="留守番"||true){
         if(Text) Text += "\n";
@@ -227,6 +231,7 @@ function Test(Text){
     };
   };
   Datas.確定内容 = Text;
+  Datas.矛盾内容 = Text2;
   console.log(Datas);
   return;
 };
@@ -302,8 +307,7 @@ function Check_KAKUTEI(){
           if(!Datas.乗員データ[Temp1[J]].敵){
             Loop = true;
             Datas.乗員データ[Temp1[J]].敵 = "敵(グノーシア判定矛盾)";
-            if(Datas.矛盾内容) Datas.矛盾内容 += "\n";
-            Datas.矛盾内容 += Datas.乗員名[Temp1[J]] + "が人をグノーシアと言った";
+            Datas.乗員データ[Temp1[J]].矛盾 = "人をグノーシアと言った";
           };
         };
       };
@@ -424,6 +428,8 @@ function ZEN_TYOUSA(Darega){
   var N = Object.keys(Datas.乗員データ[Darega].役割).length;
   var H = {エンジニア:{グノーシア:0,人間:0,敵:0},ドクター:{グノーシア:0,人間:0,敵:0}};
   var P = ["人間","グノーシア","敵"];
+  if(Datas.可能性.エンジニア[Darega]) H.エンジニア.人間++;
+  if(Datas.可能性.ドクター[Darega]) H.ドクター.人間++;
   if(Datas.乗員データ[Darega].報告){
     for(J = 0; J < P.length; J++){
       if(Datas.乗員データ[Darega].報告[P[J]]){
@@ -544,7 +550,6 @@ function ADD_Crew(A){
 function ED_Tyousa(Darega,Darewo,KEKKA){
   var HANTAI = "グノーシア";
   if(KEKKA==HANTAI) HANTAI = "人間";
-  var Temp = null;
   if(Datas.消滅){
     if(Datas.消滅.エンジニア[Darega]){
       if(Datas.消滅.誰が[0]==Darewo||Datas.消滅.誰が[1]==Darewo) Datas.乗員データ[Darewo].バグ疑惑 = true;
@@ -566,8 +571,7 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
       if(Darega==Datas.現在.真.エンジニア) Datas.乗員データ[Darewo].役割 = {バグ:true};
       if(Darewo!=Datas.消滅.誰が[0]&&Darewo!=Datas.消滅.誰が[1]&&Datas.乗員データ[Darega].名乗り=="エンジニア"){
         Datas.乗員データ[Darega].敵 = "敵(バグ未調査)";
-        if(Datas.矛盾内容) Datas.矛盾内容 += "\n";
-        Datas.矛盾内容 += Datas.乗員名[Darega] + "がバグ未調査";
+        Datas.乗員データ[Darega].矛盾 = "バグ未調査";
       };
       if(!Datas.乗員データ[Datas.消滅.誰が[0]].役割.バグ) Datas.乗員データ[Datas.消滅.誰が[1]].役割 = {バグ:true};
       if(!Datas.乗員データ[Datas.消滅.誰が[1]].役割.バグ) Datas.乗員データ[Datas.消滅.誰が[0]].役割 = {バグ:true};
@@ -629,9 +633,11 @@ function ED_Nanori(Darega,ED){
     Datas.乗員データ[Darega[I]].名乗り = ED;
     Datas.可能性[ED][Darega[I]] = true;
     Datas.乗員データ[Darega[I]].役割[ED] = true;
+    /*
     Datas.乗員データ[Darega[I]].報告 = {};
     Datas.乗員データ[Darega[I]].報告.人間 = {};
     Datas.乗員データ[Darega[I]].報告.人間[Darega[I]] = ED;
+    */
     if(ED=="エンジニア") Datas.生存エンジニア[Darega[I]] = true;
     for(var J = 0; J < Darega.length; J++){
       if(I==J) continue;
