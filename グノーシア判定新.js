@@ -537,8 +537,8 @@ function ZEN_TYOUSA(Darega){
   };
   if(E_N.length){
     if(H.エンジニア.敵==E_N.length&&!Datas.乗員データ[Darega].敵){
-      Datas.乗員データ[Darega].敵 = "エンジニア全員から敵";
-      Datas.乗員データ[Darega].矛盾 = "エンジニア全員から敵";
+      Datas.乗員データ[Darega].敵 = "エンジニア全員が敵";
+      Datas.乗員データ[Darega].矛盾 = "エンジニア全員が敵";
     };
     if(H.エンジニア.人間==E_N.length){
       delete Datas.乗員データ[Darega].役割.グノーシア;
@@ -548,8 +548,8 @@ function ZEN_TYOUSA(Darega){
   };
   if(D_N.length){
     if(H.ドクター.敵==D_N.length&&!Datas.乗員データ[Darega].敵){
-      Datas.乗員データ[Darega].敵 = "ドクター全員から敵";
-      Datas.乗員データ[Darega].矛盾 = "ドクター全員から敵";
+      Datas.乗員データ[Darega].敵 = "ドクター全員が敵";
+      Datas.乗員データ[Darega].矛盾 = "ドクター全員が敵";
     };
     if(H.ドクター.人間==D_N.length) delete Datas.乗員データ[Darega].役割.グノーシア;
     if(H.ドクター.グノーシア==D_N.length) Datas.乗員データ[Darega].役割 = {グノーシア:true};
