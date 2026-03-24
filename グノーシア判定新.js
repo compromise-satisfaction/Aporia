@@ -495,12 +495,43 @@ function ZEN_TYOUSA(Darega){
   var N = Object.keys(Datas.乗員データ[Darega].役割).length;
   var H = {エンジニア:{グノーシア:0,人間:0,敵:0},ドクター:{グノーシア:0,人間:0,敵:0}};
   var P = ["人間","グノーシア","敵"];
+  var HANTEI = {人間:[],グノーシア:[],敵:[]};
   if(Datas.乗員データ[Darega].報告){
     for(J = 0; J < P.length; J++){
       if(Datas.乗員データ[Darega].報告[P[J]]){
         Temp = Datas.乗員データ[Darega].報告[P[J]];
-        for(var I = 0; I < E_N.length; I++) if(Temp[E_N[I]]) H.エンジニア[P[J]]++;
-        for(var I = 0; I < D_N.length; I++) if(Temp[D_N[I]]) H.ドクター[P[J]]++;
+        for(var I = 0; I < E_N.length; I++){
+          if(Temp[E_N[I]]){
+            H.エンジニア[P[J]]++;
+            HANTEI[P[J]].push(E_N[I]);
+          };
+        };
+        for(var I = 0; I < D_N.length; I++){
+          if(Temp[D_N[I]]){
+            H.ドクター[P[J]]++;
+            HANTEI[P[J]].push(D_N[I]);
+          };
+        };
+      };
+    };
+  };
+  if(HANTEI.人間.length&&HANTEI.グノーシア.length){
+    for(var I = 0; I < HANTEI.人間.length; I++){
+      if(!Datas.乗員データ[HANTEI.人間[I]].報告.敵) Datas.乗員データ[HANTEI.人間[I]].報告.敵 = {};
+      for(var J = 0; J < HANTEI.グノーシア.length; J++){
+        if(!Datas.乗員データ[HANTEI.人間[I]].報告.敵[HANTEI.グノーシア[J]]){
+          Loop = true;
+          Datas.乗員データ[HANTEI.人間[I]].報告.敵[HANTEI.グノーシア[J]] = Datas.乗員データ[HANTEI.グノーシア[J]].名乗り;
+        };
+      };
+    };
+    for(var I = 0; I < HANTEI.グノーシア.length; I++){
+      if(!Datas.乗員データ[HANTEI.グノーシア[I]].報告.敵) Datas.乗員データ[HANTEI.グノーシア[I]].報告.敵 = {};
+      for(var J = 0; J < HANTEI.人間.length; J++){
+        if(!Datas.乗員データ[HANTEI.グノーシア[I]].報告.敵[HANTEI.人間[J]]){
+          Loop = true;
+          Datas.乗員データ[HANTEI.グノーシア[I]].報告.敵[HANTEI.人間[J]] = Datas.乗員データ[HANTEI.人間[J]].名乗り;
+        };
       };
     };
   };
@@ -644,6 +675,10 @@ function ED_Tyousa(Darega,Darewo,KEKKA){
   if(!Datas.乗員データ[Darewo].報告) Datas.乗員データ[Darewo].報告 = {};
   if(!Datas.乗員データ[Darewo].報告[KEKKA]) Datas.乗員データ[Darewo].報告[KEKKA] = {};
   Datas.乗員データ[Darewo].報告[KEKKA][Darega] = Datas.乗員データ[Darega].名乗り;
+  if(KEKKA=="グノーシア"){
+    if(!Datas.乗員データ[Darewo].報告.敵) Datas.乗員データ[Darewo].報告.敵 = {};
+    Datas.乗員データ[Darewo].報告.敵[Darega] = Datas.乗員データ[Darega].名乗り;
+  };
   return;
 };
 
