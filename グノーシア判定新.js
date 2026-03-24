@@ -386,6 +386,16 @@ function Check_KAKUTEI(){
     for(var I = 0; I < Temp.length; I++){
       if(Datas.乗員データ[Temp[I]].確定!="グノーシア"){
         if(Datas.乗員データ[Temp[I]].役割.グノーシア){
+          if(Datas.現在.真.テスト){
+            Datas.保存 = JSON.parse(Datas.保存);
+            if(!Datas.保存.乗員データ[Temp[I]].報告) Datas.保存.乗員データ[Temp[I]].報告 = {};
+            if(!Datas.保存.乗員データ[Temp[I]].報告.人間) Datas.保存.乗員データ[Temp[I]].報告.人間 = {};
+            Datas.保存.乗員データ[Temp[I]].報告.人間[Datas.現在.真.テスト] = Datas.乗員データ[Datas.現在.真.テスト].名乗り;
+            if(Datas.保存.乗員データ[Temp[I]].報告.グノーシア){
+              if(Datas.保存.乗員データ[Temp[I]].報告.グノーシア[Datas.現在.真.テスト]) Datas.矛盾 = "調査";
+            };
+            Datas.保存 = JSON.stringify(Datas.保存);
+          };
           delete Datas.乗員データ[Temp[I]].役割.グノーシア;
           Loop = true;
         };
@@ -485,8 +495,6 @@ function ZEN_TYOUSA(Darega){
   var N = Object.keys(Datas.乗員データ[Darega].役割).length;
   var H = {エンジニア:{グノーシア:0,人間:0,敵:0},ドクター:{グノーシア:0,人間:0,敵:0}};
   var P = ["人間","グノーシア","敵"];
-  if(Datas.可能性.エンジニア[Darega]) H.エンジニア.人間++;
-  if(Datas.可能性.ドクター[Darega]) H.ドクター.人間++;
   if(Datas.乗員データ[Darega].報告){
     for(J = 0; J < P.length; J++){
       if(Datas.乗員データ[Darega].報告[P[J]]){
@@ -689,11 +697,6 @@ function ED_Nanori(Darega,ED){
     Datas.乗員データ[Darega[I]].名乗り = ED;
     Datas.可能性[ED][Darega[I]] = true;
     Datas.乗員データ[Darega[I]].役割[ED] = true;
-    /*
-    Datas.乗員データ[Darega[I]].報告 = {};
-    Datas.乗員データ[Darega[I]].報告.人間 = {};
-    Datas.乗員データ[Darega[I]].報告.人間[Darega[I]] = ED;
-    */
     if(ED=="エンジニア") Datas.生存エンジニア[Darega[I]] = true;
     for(var J = 0; J < Darega.length; J++){
       if(I==J) continue;
@@ -701,6 +704,12 @@ function ED_Nanori(Darega,ED){
       if(!Datas.乗員データ[Darega[J]].報告.敵) Datas.乗員データ[Darega[J]].報告.敵 = {};
       Datas.乗員データ[Darega[J]].報告.敵[Darega[I]] = ED;
     };
+  };
+  for(var I = 0; I < Temp.length; I++){
+    if(!Datas.乗員データ[Temp[I]].役割[ED]) continue;
+    Datas.乗員データ[Temp[I]].報告 = {};
+    Datas.乗員データ[Temp[I]].報告.人間 = {};
+    Datas.乗員データ[Temp[I]].報告.人間[Darega[I]] = ED;
   };
   return;
 };
