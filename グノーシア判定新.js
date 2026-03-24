@@ -709,7 +709,7 @@ function ED_Nanori(Darega,ED){
     if(!Datas.乗員データ[Temp[I]].役割[ED]) continue;
     Datas.乗員データ[Temp[I]].報告 = {};
     Datas.乗員データ[Temp[I]].報告.人間 = {};
-    Datas.乗員データ[Temp[I]].報告.人間[Darega[I]] = ED;
+    Datas.乗員データ[Temp[I]].報告.人間[Temp[I]] = ED;
   };
   return;
 };
