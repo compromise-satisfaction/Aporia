@@ -160,8 +160,18 @@ function Game_load(width,height){
             What = "";
             break;
           case "グノーシア":
-          case "人間":
             Texts.日誌 += "は" + I + "」";
+            What = "\n";
+            break;
+          case "全員":
+          case "自分だけ":
+            Datas.自分 = !Datas.自分;
+            if(Buttons[I]._element.value=="全員") Buttons[I]._element.value = "自分だけ";
+            else Buttons[I]._element.value = "全員";
+            break;
+          case "人間・留守番":
+            if(Texts.日誌.match(/\n[^\n]+?「[^\n]+?$/)) Texts.日誌 += "は" + I + "」";
+            else Texts.日誌 += "が留守番";
             What = "\n";
             break;
           case "消滅":
@@ -253,16 +263,16 @@ function Game_load(width,height){
 
       var B_font = [];
 
+      B_font.push("取り消し");
+      B_font.push("嘘");
+      B_font.push("全員");
       B_font.push("エンジニア");
       B_font.push("ドクター");
-      B_font.push("留守番");
       B_font.push("消滅");
       B_font.push("冷凍");
       B_font.push("「");
-      B_font.push("人間");
-      B_font.push("取り消し");
+      B_font.push("人間・留守番");
       B_font.push("グノーシア");
-      B_font.push("嘘");
 
       B_font.push("(自分)");
       B_font.push("セツ");
