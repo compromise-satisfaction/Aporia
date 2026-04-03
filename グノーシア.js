@@ -160,7 +160,7 @@ function Game_load(width,height){
             What = "";
             break;
           case "グノーシア":
-            Texts.日誌 += "は" + I + "」";
+            Texts.日誌 += "はグノーシア」";
             What = "\n";
             break;
           case "全員":
@@ -170,7 +170,7 @@ function Game_load(width,height){
             else Buttons[I]._element.value = "全員";
             break;
           case "人間・留守番":
-            if(Texts.日誌.match(/\n[^\n]+?「[^\n]+?$/)) Texts.日誌 += "は" + I + "」";
+            if(Texts.日誌.match(/\n[^\n]+?「[^\n]+?$/)) Texts.日誌 += "は人間」";
             else Texts.日誌 += "が留守番";
             What = "\n";
             break;
