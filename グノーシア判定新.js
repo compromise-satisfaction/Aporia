@@ -1,4 +1,4 @@
-var Datas = {矛盾内容:"",確定内容:"",日誌:""};
+var Datas = {矛盾内容:"",確定内容:"",自分:false,日誌:""};
 Datas.乗員データ = {};
 Datas.乗員数データ = {乗員:15,グノーシア:5,AC主義者:true,バグ:true,除外:false};
 
@@ -156,6 +156,8 @@ function Test(Text){
         Datas.プレイヤー名 = Temp.結果;
         break;
       case "自白":
+        console.log(Datas.自分);
+        if(!Datas.自分) break;
         Datas.乗員データ[Temp.誰が[0]].役割 = {};
         Datas.乗員データ[Temp.誰が[0]].役割[Temp.結果] = true;
         break;
@@ -165,7 +167,17 @@ function Test(Text){
         ADD_Crew([Temp.誰を]);
         ED_Tyousa(Temp.誰が[0],Datas.乗員番号[Temp.誰を],Temp.結果);
         break;
+      case "参加":
+        for(var J = 0; J < Temp.誰が.length; J++) delete Datas.乗員データ[Temp.誰が[J]].ステータス;
+        break;
+      case "不在":
+        for(var J = 0; J < Temp.誰が.length; J++){
+          Datas.乗員データ[Temp.誰が[J]].ステータス = "不在";
+          delete Datas.生存エンジニア[Temp.誰が[J]];
+        };
+        break;
       case "嘘":
+        if(!Datas.自分) break;
         for(var J = 0; J < Temp.誰が.length; J++){
           Datas.乗員データ[Temp.誰が[J]].嘘 = true;
           Datas.乗員データ[Temp.誰が[J]].敵 = "敵(嘘)";
