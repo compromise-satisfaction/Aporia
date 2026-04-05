@@ -475,6 +475,36 @@ function Check_KAKUTEI(){
       Datas.保存 = JSON.stringify(Datas.保存);
     };
   };
+  Datas.疑惑.数 = 0;
+  if(Datas.疑惑.エンジニア.length > 1) Datas.疑惑.数 += Datas.疑惑.エンジニア.length - 1;
+  if(Datas.疑惑.ドクター.length > 1) Datas.疑惑.数 += Datas.疑惑.ドクター.length - 1;
+  if(Datas.疑惑.数){
+    Datas.疑惑.数 = Datas.現在.敵 - Datas.疑惑.数;
+    Datas.疑惑.確認 = [];
+    for(var I = 0; I < Temp.length; I++){
+      if(Datas.可能性.エンジニア[Temp[I]]) continue;
+      if(Datas.可能性.ドクター[Temp[I]]) continue;
+      if(Datas.可能性.グノーシア[Temp[I]]){
+        Datas.疑惑.確認.push(Temp[I]);
+        continue;
+      };
+      if(Datas.可能性.AC主義者){
+        if(Datas.可能性.AC主義者[Temp[I]]){
+          Datas.疑惑.確認.push(Temp[I]);
+          continue;
+        };
+      };
+      if(Datas.可能性.バグ){
+        if(Datas.可能性.バグ[Temp[I]]){
+          Datas.疑惑.確認.push(Temp[I]);
+          continue;
+        };
+      };
+    };
+    if(Datas.疑惑.確認.length == Datas.疑惑.数){
+      for(var I = 0; I < Datas.疑惑.確認.length; I++) Datas.乗員データ[Datas.疑惑.確認[I]].敵 = true;
+    };
+  };
   delete Datas.疑惑;
   return;
 };
