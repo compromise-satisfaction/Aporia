@@ -241,6 +241,32 @@ function Test(Text){
         Datas = JSON.parse(Datas.保存);
       };
     };
+    ED = ["AC主義者","バグ"];
+    for(var J = 0; J < ED.length; J++){
+      if(!Datas.可能性[ED[J]]) continue;
+      Temp = Object.keys(Datas.可能性[ED[J]]);
+      for(var K  = 0; K < Temp.length; K++){
+        if(Datas.矛盾){
+          console.log("矛盾が変！");
+          delete Datas.矛盾;
+        };
+        Datas.保存 = JSON.stringify(Datas);
+        Datas.テスト = {乗員:Temp[K],役割:ED[J]};
+        Datas.乗員データ[Datas.テスト.乗員].役割 = {};
+        Datas.乗員データ[Datas.テスト.乗員].役割[ED[J]] = true;
+        for(var L = 0; L < Temp.length; L++){
+          if(Temp[L]==Datas.テスト.乗員) continue;
+          delete Datas.乗員データ[Temp[L]].役割[ED[J]];
+        };
+        Loop_Check();
+        if(Datas.矛盾){
+          Datas.保存 = JSON.parse(Datas.保存);
+          Datas.乗員データ[Datas.テスト.乗員].役割[ED[J]];
+          Datas.保存 = JSON.stringify(Datas.保存);
+        };
+        Datas = JSON.parse(Datas.保存);
+      };
+    };
   };
   Text = "";
   Text2 = "";
@@ -290,6 +316,8 @@ function Loop_Check(){
       console.log("loopが変！");
       break;
     };
+    for(var I = 0; I < Temp.length; I++) Kakutei(Temp[I]);
+    Check_KAKUTEI();
     for(var I = 0; I < Temp.length; I++) Kakutei(Temp[I]);
     Check_KAKUTEI();
   };
@@ -382,12 +410,16 @@ function Check_KAKUTEI(){
     };
   };
   if(Object.keys(Datas.疑惑.グノーシア).length < Datas.現在.グノーシア){
-    Datas.矛盾 = "グノーシア数";
-    return;
+    if(Datas.テスト||Datas.現在.テスト){
+      Datas.矛盾 = "グノーシア数";
+      return;
+    };
   };
   if(Object.keys(Datas.疑惑.敵).length < Datas.現在.敵){
-    Datas.矛盾 = "敵数";
-    return;
+    if(Datas.テスト||Datas.現在.テスト){
+      Datas.矛盾 = "敵数";
+      return;
+    };
   };
   if(Numbers[5].length==2){
     for(var I = 0; I < Temp.length; I++){
