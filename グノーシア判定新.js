@@ -244,6 +244,7 @@ function Test(Text){
     ED = ["AC主義者","バグ"];
     for(var J = 0; J < ED.length; J++){
       if(!Datas.可能性[ED[J]]) continue;
+      continue;
       Temp = Object.keys(Datas.可能性[ED[J]]);
       for(var K  = 0; K < Temp.length; K++){
         if(Datas.矛盾){
@@ -407,18 +408,6 @@ function Check_KAKUTEI(){
     };
     if(!Datas.乗員データ[Temp[I]].確定&&!Datas.乗員データ[Temp[I]].敵&&Datas.乗員データ[Temp[I]].名乗り){
       Datas.疑惑[Datas.乗員データ[Temp[I]].名乗り].push(Temp[I]);
-    };
-  };
-  if(Object.keys(Datas.疑惑.グノーシア).length < Datas.現在.グノーシア){
-    if(Datas.テスト||Datas.現在.テスト){
-      Datas.矛盾 = "グノーシア数";
-      return;
-    };
-  };
-  if(Object.keys(Datas.疑惑.敵).length < Datas.現在.敵){
-    if(Datas.テスト||Datas.現在.テスト){
-      Datas.矛盾 = "敵数";
-      return;
     };
   };
   if(Numbers[5].length==2){
