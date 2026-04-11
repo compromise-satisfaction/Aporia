@@ -48,6 +48,8 @@ function Game_load(width,height){
               BBB = "purple";
               break
             case "留守番":
+              BBB = "#d9ffc9";
+              break;
             case "乗員":
               BBB = "green";
               break;
@@ -117,9 +119,16 @@ function Game_load(width,height){
       Buttons[I]._element.onclick = function(e){
         if(I=="(自分)") I = Player_Name;
         switch(I){
+          case "エンジニア切替":
+            Datas.乗員数データ.エンジニア = !Datas.乗員数データ.エンジニア;
+            break;
+          case "ドクター切替":
+            Datas.乗員数データ.ドクター = !Datas.乗員数データ.ドクター;
+            break;
           case "除外":
           case "バグ":
           case "AC主義者":
+          case "守護天使":
             Datas.乗員数データ[I] = !Datas.乗員数データ[I];
             break;
           case "乗員+":
@@ -175,6 +184,10 @@ function Game_load(width,height){
             What = "\n";
             break;
           case "消滅":
+            if(What == "\n") Texts.日誌 += "\n消滅無し";
+            else Texts.日誌 += "が" + I;
+            What = "\n";
+            break;
           case "冷凍":
           case "エンジニア":
           case "ドクター":
@@ -214,25 +227,40 @@ function Game_load(width,height){
 
       Label_Set("乗員",1);
       Label_Set("グノーシア",2);
-      Label_Set("AC主義者",3);
-      Label_Set("バグ",4);
-      Label_Set("除外",5);
+      Label_Set("エンジニア",3);
+      Label_Set("ドクター",4);
+      Label_Set("守護天使",5);
+      Label_Set("AC主義者",6);
+      Label_Set("バグ",7);
+      Label_Set("除外",8);
 
-      Button_Set(0,1,1,"開始",15);
-      Button_Set(0,2,1,"バグ",15);
-      Button_Set(0,3,1,"AC主義者",15);
-      Button_Set(0,4,2,"グノ+",15);
-      Button_Set(2,4,2,"グノ-",15);
-      Button_Set(0,5,2,"乗員+",15);
-      Button_Set(2,5,2,"乗員-",15);
-      Button_Set(0,6,1,"除外",15);
+      Button_Set(0,1,2,"開始",15);
+      Button_Set(2,2,2,"バグ",15);
+      Button_Set(0,2,2,"AC主義者",15);
+      Button_Set(0,3,2,"グノ+",15);
+      Button_Set(2,3,2,"グノ-",15);
+      Button_Set(0,4,2,"乗員+",15);
+      Button_Set(2,4,2,"乗員-",15);
+      Button_Set(0,5,2,"エンジニア切替",15);
+      Button_Set(2,5,2,"ドクター切替",15);
+      Button_Set(2,6,2,"除外",15);
+      Button_Set(2,1,2,"守護天使",15);
 
       Scenes[Now_Scene].addEventListener("enterframe",function(e){
         Labels.乗員.text = "乗員:" + Datas.乗員数データ.乗員;
         Labels.グノーシア.text = "グノーシア:" + Datas.乗員数データ.グノーシア;
+        Labels.エンジニア.text = "エンジニア:";
+        Labels.ドクター.text = "ドクター:";
         Labels.AC主義者.text = "AC主義者:";
+        Labels.守護天使.text = "守護天使:";
         Labels.バグ.text = "バグ:";
         Labels.除外.text = "消滅と冷凍を除外:";
+        if(Datas.乗員数データ.エンジニア) Labels.エンジニア.text += "いる";
+        else Labels.エンジニア.text += "いない";
+        if(Datas.乗員数データ.ドクター) Labels.ドクター.text += "いる";
+        else Labels.ドクター.text += "いない";
+        if(Datas.乗員数データ.守護天使) Labels.守護天使.text += "いる";
+        else Labels.守護天使.text += "いない";
         if(Datas.乗員数データ.AC主義者) Labels.AC主義者.text += "いる";
         else Labels.AC主義者.text += "いない";
         if(Datas.乗員数データ.バグ) Labels.バグ.text += "いる";
