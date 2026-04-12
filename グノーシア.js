@@ -14,6 +14,7 @@ function Game_load(width,height){
     var What = "";
     var Player_Name = window.localStorage.getItem("自分");
     if(!Player_Name) Player_Name = "よっちー";
+    var B_font = [];
 
     function SET_color(){
       var MMM = "break";
@@ -70,6 +71,53 @@ function Game_load(width,height){
       };
       Text_Areas.矛盾内容._element.value = Datas.矛盾内容;
       Text_Areas.確定内容._element.value = Datas.確定内容;
+      return;
+    };
+
+    function Button_Set_Again(){
+      var Number = [{},{},{}];
+      var Set_B = [];
+      var Temp = Object.keys(Buttons);
+      for(var I = 0; I < Temp.length; I++){
+        if(!Datas.乗員番号) continue;
+        if(!Datas.乗員番号[Temp[I]]) continue;
+        if(Datas.乗員データ[Datas.乗員番号[Temp[I]]]){
+          switch(Datas.乗員データ[Datas.乗員番号[Temp[I]]].ステータス){
+            case undefined:
+              Number[0][Temp[I]] = true;
+              break;
+            case "コールドスリープ":
+              Number[1][Temp[I]] = true;
+              break;
+            case "消滅":
+              Number[2][Temp[I]] = true;
+              break;
+          }
+        };
+      };
+      for(var I = 11; I < B_font.length; I++){
+        if(Number[0][B_font[I]]||(!Number[1][B_font[I]]&&!Number[2][B_font[I]])){
+          if(Number[0][B_font[I]]) Set_B.push(B_font[I]);
+          else{
+            if(Object.keys(Datas.乗員番号).length!=Datas.乗員数データ.乗員){
+              Set_B.push(B_font[I]);
+            };
+          };
+        };
+      };
+      for(var I = 11; I < B_font.length; I++) if(Number[1][B_font[I]]) Set_B.push(B_font[I]);
+      for(var I = 11; I < B_font.length; I++) if(Number[2][B_font[I]]) Set_B.push(B_font[I]);
+      for(var I = 11; I < B_font.length; I++) Buttons[B_font[I]].moveTo(height*2,height*2);
+      var J = 1;
+      var K = 3;
+      for(var I = 0; I < Set_B.length; I++){
+        Buttons[Set_B[I]].moveTo(width/5*J,height-height/10*K);
+        J++;
+        if(J>4){
+          K--;
+          J = 0;
+        };
+      };
       return;
     };
 
@@ -197,7 +245,7 @@ function Game_load(width,height){
             What = "\n";
             break;
           default:
-            if(Datas.冷凍) Datas.冷凍.発言 = I;
+            if(Datas.冷凍[0]) Datas.冷凍[Datas.冷凍.length-1].発言 = I;
             if(Datas.乗員データ[I]) console.log(Datas.乗員データ[I]);
             Texts.日誌 += What + I;
             What = "と";
@@ -209,6 +257,7 @@ function Game_load(width,height){
           window.localStorage.setItem("日誌",Texts.日誌);
           window.localStorage.setItem("乗員",JSON.stringify(Datas.乗員数データ));
           SET_color();
+          Button_Set_Again();
         };
         if(Datas.プレイヤー名){
           Text_Areas.日誌._element.value = Text_Areas.日誌._element.value.replaceAll(Player_Name,Datas.プレイヤー名);
@@ -289,8 +338,6 @@ function Game_load(width,height){
       Text_Area_Set(1,"矛盾内容");
       Text_Area_Set(2,"確定内容");
 
-      var B_font = [];
-
       B_font.push("取り消し");
       B_font.push("嘘");
       B_font.push("全員");
@@ -346,6 +393,7 @@ function Game_load(width,height){
           Texts.日誌 = Text_Areas.日誌._element.value;
           Test(Texts.日誌);
           SET_color();
+          Button_Set_Again();
         };
         return;
       });

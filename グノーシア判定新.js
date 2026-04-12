@@ -120,6 +120,9 @@ Test_Play = false;
 if(!Test_Play) Test_Text = "";
 
 function Test(Text){
+  Datas.乗員数データ.敵 = Datas.乗員数データ.グノーシア;
+  if(Datas.乗員数データ.AC主義者) Datas.乗員数データ.敵++;
+  if(Datas.乗員数データ.バグ) Datas.乗員数データ.敵++;
   Datas.乗員データ = {};
   Datas.乗員名 = {};
   Datas.乗員番号 = {};
@@ -129,7 +132,6 @@ function Test(Text){
   Datas.報告 = {};
   Datas.判定 = {};
   Datas.乗員データ = {};
-  Datas.自分 = false;
   Test2(Datas.乗員数データ.乗員);
   var Temp = null;
   var Values = Text.split("\n");
@@ -209,7 +211,8 @@ function Test(Text){
     if(Datas.乗員データ[Temp[I]].確定||Datas.乗員データ[Temp[I]].敵||Datas.乗員データ[Temp[I]].人間){
       if(Datas.乗員データ[Temp[I]].敵){
         if(Text2) Text2 += "\n";
-        Text2 += Datas.乗員データ[Temp[I]].名前;
+        if(!Datas.乗員データ[Temp[I]].名前) Text2 += Temp[I];
+        else Text2 += Datas.乗員データ[Temp[I]].名前;
         Text2 += ":";
         Text2 += Datas.乗員データ[Temp[I]].敵;
       };
@@ -225,10 +228,6 @@ function Test(Text){
           if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は人間";
           else Text += Datas.乗員データ[Temp[I]].名前 + "は人間";
           continue;
-        };
-        if(Datas.乗員データ[Temp[I]].敵){
-          if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は敵";
-          else Text += Datas.乗員データ[Temp[I]].名前 + "は敵";
         };
       };
     };
@@ -321,10 +320,18 @@ function Test10(Json){
   if(Json=="敵") return;
   var Check = false;
   var Check2 = false;
-  var N = {処理グノーシア:0,敵:0,グノーシア:0,敵疑惑:0,グノーシア疑惑:0,生存者:0,生存グノーシア1:0};
+  var N = {処理グノーシア:0,敵1:0,敵2:0,グノーシア:0,敵疑惑:0,グノーシア疑惑:0,生存者:0,生存グノーシア1:0};
   N.生存グノーシア2 = Datas.乗員数データ.グノーシア;
   for(var I = 0; I < Temp.length; I++){
-    if(Json[Temp[I]].敵) N.敵++;
+    if(Json[Temp[I]].役割.エンジニア&&!Json[Temp[I]].確定){
+      if(N.エンジニア) N.敵2++;
+      else N.エンジニア = true;
+    };
+    if(Json[Temp[I]].役割.ドクター&&!Json[Temp[I]].確定){
+      if(N.ドクター) N.敵2++;
+      else N.ドクター = true;
+    };
+    if(Json[Temp[I]].敵) N.敵1++;
     if(!Json[Temp[I]].ステータス) N.生存者++;
     if(Json[Temp[I]].確定=="グノーシア"){
       N.グノーシア++;
@@ -340,8 +347,10 @@ function Test10(Json){
     if(Json[Temp[I]].役割.AC主義者) Check2 = true;
     if(Json[Temp[I]].役割.グノーシア) Check2 = true;
     if(Check2) N.敵疑惑++;
+    if(!Json[Temp[I]].役割.エンジニア&&!Json[Temp[I]].役割.ドクター&&Check2) N.敵2++;
   };
-  if(N.敵 > Datas.乗員数データ.敵) Check = "敵数";
+  if(N.敵1 > Datas.乗員数データ.敵) Check = "敵数";
+  if(N.敵2 < Datas.乗員数データ.敵) Check = "敵数";
   if(N.敵疑惑 < Datas.乗員数データ.敵) Check = "敵数";
   if(N.グノーシア > Datas.乗員数データ.グノーシア) Check = "グノーシア数";
   if(N.処理グノーシア==Datas.乗員数データ.グノーシア) Check = "グノーシア数";
@@ -386,17 +395,24 @@ function Test9(A){
     if(!A) Test6(B_N[0],"確定","バグ");
     else Test5(Json,B_N[0],"確定","バグ");
   };
+  E_N = [];
+  D_N = [];
+  for(var I = 0; I < Temp.length; I++){
+    if(Datas.乗員名[Temp[I]].データ=="敵") continue;
+    if(Json[Temp[I]].役割.エンジニア) E_N.push(Temp[I]);
+    if(Json[Temp[I]].役割.ドクター) D_N.push(Temp[I]);
+  };
   var N = null;
   for(var I = 0; I < Temp.length; I++){
     N = [{人間:0,敵:0,グノーシア:0},{人間:0,敵:0,グノーシア:0}];
     for(var J = 0; J < E_N.length; J++){
-      if(Datas.乗員名[E_N[J]].データ[Temp[I]].人間) N[0].人間++;
       if(Datas.乗員名[E_N[J]].データ[Temp[I]].敵) N[0].敵++;
+      if(Datas.乗員名[E_N[J]].データ[Temp[I]].人間) N[0].人間++;
       if(Datas.乗員名[E_N[J]].データ[Temp[I]].確定 == "グノーシア") N[0].グノーシア++;
     };
     for(var J = 0; J < D_N.length; J++){
-      if(Datas.乗員名[D_N[J]].データ[Temp[I]].人間) N[1].人間++;
       if(Datas.乗員名[D_N[J]].データ[Temp[I]].敵) N[1].敵++;
+      if(Datas.乗員名[D_N[J]].データ[Temp[I]].人間) N[1].人間++;
       if(Datas.乗員名[D_N[J]].データ[Temp[I]].確定 == "グノーシア") N[1].グノーシア++;
     };
     if(E_N[0]&&E_N.length==N[0].人間) Kakutei.人間.push(Temp[I]);
@@ -468,8 +484,14 @@ function Test8(Darega){
     if(!Datas.乗員数データ.守護天使){
       Temp = Object.keys(Datas.乗員データ);
       for(var I = 0; I < Temp.length; I++){
-        if(Datas.乗員データ[Temp[I]].ステータス!="コールドスリープ") continue;
-        Test6(Temp[I],"削除","バグ");
+        switch (Datas.乗員データ[Temp[I]].ステータス) {
+          case "消滅":
+          case "コールドスリープ":
+            Test6(Temp[I],"削除","バグ");
+            break;
+          default:
+            break;
+        };
       };
     };
   };
