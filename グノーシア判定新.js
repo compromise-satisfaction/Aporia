@@ -133,7 +133,24 @@ function Test(Text){
   Datas.判定 = {};
   Datas.乗員データ = {};
   Test2(Datas.乗員数データ.乗員);
-  var Temp = null;
+  var Temp = [];
+  if(Datas.乗員数データ.乗員==15){
+    Temp.push("セツ");
+    Temp.push("ジナ");
+    Temp.push("SQ");
+    Temp.push("ラキオ");
+    Temp.push("ステラ");
+    Temp.push("しげみち");
+    Temp.push("シピ");
+    Temp.push("コメット");
+    Temp.push("ジョナス");
+    Temp.push("ククルシカ");
+    Temp.push("オトメ");
+    Temp.push("沙明");
+    Temp.push("レムナン");
+    Temp.push("夕里子");
+    Test3(Temp);
+  };
   var Values = Text.split("\n");
   Values.push("終了");
   for(var I = 0; I < Values.length; I++){
@@ -322,6 +339,7 @@ function Test10(Json){
   var Check2 = false;
   var N = {処理グノーシア:0,敵1:0,敵2:0,グノーシア:0,敵疑惑:0,グノーシア疑惑:0,生存者:0,生存グノーシア1:0};
   N.生存グノーシア2 = Datas.乗員数データ.グノーシア;
+  N.生存グノーシア3 = 0;
   for(var I = 0; I < Temp.length; I++){
     if(Json[Temp[I]].役割.エンジニア&&!Json[Temp[I]].確定){
       if(N.エンジニア) N.敵2++;
@@ -336,11 +354,12 @@ function Test10(Json){
     if(Json[Temp[I]].確定=="グノーシア"){
       N.グノーシア++;
       if(Json[Temp[I]].ステータス) N.処理グノーシア++;
-      else N.生存グノーシア++;
+      else N.生存グノーシア1++;
     };
     if(Json[Temp[I]].役割.グノーシア){
       N.グノーシア疑惑++;
       if(Json[Temp[I]].ステータス) N.生存グノーシア2--;
+      else N.生存グノーシア3++;
     };
     Check2 = false;
     if(Json[Temp[I]].役割.バグ) Check2 = true;
@@ -357,6 +376,7 @@ function Test10(Json){
   if(N.グノーシア疑惑 < Datas.乗員数データ.グノーシア) Check = "グノーシア数";
   if(N.生存グノーシア1*2 >= N.生存者) Check = "終了判定";
   if(N.生存グノーシア2*2 >= N.生存者) Check = "終了判定";
+  if(!N.生存グノーシア3) Check = "終了判定";
   for(var I = 0; I < Temp.length; I++){
     if(!Object.keys(Json[Temp[I]].役割).length) Check = Temp[I];
   };
