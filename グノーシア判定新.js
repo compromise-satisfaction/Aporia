@@ -1,4 +1,5 @@
 var Datas = {矛盾内容:"",確定内容:"",自分:false,日誌:""};
+Datas.乗員番号 = {};
 Datas.乗員データ = {};
 Datas.乗員数データ = {乗員:15,グノーシア:5,AC主義者:true,バグ:true,除外:false,守護天使:false,エンジニア:true,ドクター:true};
 
@@ -125,7 +126,6 @@ function Test(Text){
   if(Datas.乗員数データ.バグ) Datas.乗員数データ.敵++;
   Datas.乗員データ = {};
   Datas.乗員名 = {};
-  Datas.乗員番号 = {};
   Datas.矛盾内容 = "";
   Datas.消滅 = [];
   Datas.冷凍 = [];
@@ -495,6 +495,16 @@ function Test8(Darega){
         };
         if(Datas.Temp.length==1) Test6(Datas.Temp[0],"確定","エンジニア");
         delete Datas.Temp;
+      }
+      else{
+        Temp = Object.keys(Datas.乗員データ);
+        for(var I = 0; I < Temp.length; I++){
+          if(Datas.乗員データ[Temp[I]].ステータス) continue;
+          if(!Datas.乗員データ[Temp[I]].役割.エンジニア) continue;
+          Temp = false;
+          break;
+        };
+        if(Temp) Test6(Darega[0],"削除","バグ");
       };
     };
     if(Darega) Datas.消滅.push({誰が:Darega});
