@@ -17,7 +17,6 @@ function Test(Text){
   Test2(Datas.乗員数データ.乗員);
   var Temp = [];
   if(Datas.乗員数データ.乗員==15){
-    Temp.push("(自分)");
     Temp.push("セツ");
     Temp.push("ジナ");
     Temp.push("SQ");
