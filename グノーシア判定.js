@@ -134,7 +134,7 @@ function Test(Text){
   };
   Datas.確定内容 = Text;
   Temp = Object.keys(Datas.乗員名);
-  for(var I = Temp.length-1; I >= 0; I--){
+  for(var I = 0; I < Temp.length; I++){
     if(Datas.乗員名[Temp[I]].名前){
       Datas.処理内容 = Datas.処理内容.replaceAll(Temp[I],Datas.乗員名[Temp[I]].名前);
     };
@@ -286,7 +286,7 @@ function Test9(A){
   var D_N = [];
   var A_N = [];
   var B_N = [];
-  var Kakutei = {人間:[],敵:[],グノーシア:[]};
+  var Kakutei = {人間:[],敵:[],グノーシア:[],グノーシアでない:[]};
   for(var I = 0; I < Temp.length; I++){
     if(Json[Temp[I]].役割.AC主義者) A_N.push(Temp[I]);
     if(Json[Temp[I]].役割.バグ) B_N.push(Temp[I]);
@@ -319,25 +319,29 @@ function Test9(A){
   };
   var N = null;
   for(var I = 0; I < Temp.length; I++){
-    N = [{人間:0,敵:0,グノーシア:0},{人間:0,敵:0,グノーシア:0}];
+    N = [{人間:0,敵:0,グノーシア:0},{人間:0,敵:0,グノーシア:0,グノーシアでない:0}];
     for(var J = 0; J < E_N.length; J++){
       if(Datas.乗員名[E_N[J]].データ[Temp[I]].敵) N[0].敵++;
       if(Datas.乗員名[E_N[J]].データ[Temp[I]].人間) N[0].人間++;
       if(Datas.乗員名[E_N[J]].データ[Temp[I]].確定 == "グノーシア") N[0].グノーシア++;
+      if(!Datas.乗員名[E_N[J]].データ[Temp[I]].役割.グノーシア) N[0].グノーシアでない++;
     };
     for(var J = 0; J < D_N.length; J++){
       if(Datas.乗員名[D_N[J]].データ[Temp[I]].敵) N[1].敵++;
       if(Datas.乗員名[D_N[J]].データ[Temp[I]].人間) N[1].人間++;
       if(Datas.乗員名[D_N[J]].データ[Temp[I]].確定 == "グノーシア") N[1].グノーシア++;
+      if(!Datas.乗員名[D_N[J]].データ[Temp[I]].役割.グノーシア) N[1].グノーシアでない++;
     };
     if(E_N[0]&&E_N.length==N[0].人間) Kakutei.人間.push(Temp[I]);
     if(E_N[0]&&E_N.length==N[0].敵) Kakutei.敵.push(Temp[I]);
     if(E_N[0]&&E_N.length==N[0].グノーシア) Kakutei.グノーシア.push(Temp[I]);
+    if(E_N[0]&&E_N.length==N[0].グノーシアでない) Kakutei.グノーシアでない.push(Temp[I]);
     if(D_N[0]&&D_N.length==N[1].人間) Kakutei.人間.push(Temp[I]);
     if(D_N[0]&&D_N.length==N[1].敵) Kakutei.敵.push(Temp[I]);
     if(D_N[0]&&D_N.length==N[1].グノーシア) Kakutei.グノーシア.push(Temp[I]);
+    if(D_N[0]&&D_N.length==N[1].グノーシアでない) Kakutei.グノーシアでない.push(Temp[I]);
   };
-  Temp = [Kakutei.人間,Kakutei.敵,Kakutei.グノーシア];
+  Temp = [Kakutei.人間,Kakutei.敵,Kakutei.グノーシア,Kakutei.グノーシアでない];
   for(var I = 0; I < Temp.length; I++){
     for(var J = 0; J < Temp[I].length; J++){
       switch(I){
@@ -358,6 +362,10 @@ function Test9(A){
         case 2:
           if(!A) Test6(Temp[I][J],"確定","グノーシア");
           else Test5(Json,Temp[I][J],"確定","グノーシア");
+          break;
+        case 3:
+          if(!A) Test6(Temp[I][J],"削除","グノーシア");
+          else Test5(Json,Temp[I][J],"削除","グノーシア");
           break;
       };
     };
@@ -569,13 +577,16 @@ function Test4(Darega,ED){
 
 function Test3(A){
   if(!A) return;
-  var N = 1;
+  var N = "01";
   for(var I = 0; I < A.length; I++){
     if(Datas.乗員番号[A[I]]){
       A[I] = Datas.乗員番号[A[I]];
       continue;
     };
-    while(Datas.乗員データ["乗員"+N].名前) N++;
+    while(Datas.乗員データ["乗員"+N].名前){
+      N++;
+      if(N<10) N = "0" + N;
+    };
     Datas.乗員名["乗員"+N].名前 = A[I];
     Datas.乗員番号[A[I]] = "乗員" + N;
     Datas.乗員データ["乗員"+N].名前 = A[I];
@@ -587,18 +598,20 @@ function Test3(A){
 function Test2(N){
   var Temp = ["エンジニア","ドクター","AC主義者","バグ"];
   for(var I = 1; I <= N; I++){
+    if(I<10) I = "0" + I;
     Datas.乗員データ["乗員"+I] = {役割:{グノーシア:true,乗員:true}};
     for(var J = 0; J < Temp.length; J++){
       if(!Datas.乗員数データ[Temp[J]]) continue;
       Datas.乗員データ["乗員"+I].役割[Temp[J]] = true;
     };
   };
-  var N = 1;
+  N = "01";
   while(Datas.乗員データ["乗員"+N]){
     Datas.乗員名["乗員"+N] = JSON.stringify({データ:Datas.乗員データ});
     Datas.乗員名["乗員"+N] = JSON.parse(Datas.乗員名["乗員"+N]);
     Datas.乗員名["乗員"+N].データ["乗員"+N].人間 = "自認";
     N++;
+    if(N<10) N = "0" + N;
   };
   return;
 };
