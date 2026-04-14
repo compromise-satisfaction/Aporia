@@ -1,7 +1,7 @@
 //enchantjsの画面サイズの設定
 
 var Tate = 2;
-var Test_Play = false;
+var Test_Play = true;
 
 function resetScreen(gameWidth,gameHeight){
 
