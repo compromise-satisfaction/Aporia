@@ -17,6 +17,7 @@ function Test(Text){
   Test2(Datas.乗員数データ.乗員);
   var Temp = [];
   if(Datas.乗員数データ.乗員==15){
+    Temp.push(Player_Name);
     Temp.push("セツ");
     Temp.push("ジナ");
     Temp.push("SQ");
@@ -117,13 +118,14 @@ function Test(Text){
       };
       if(Datas.乗員データ[Temp[I]].ステータス&&Datas.乗員数データ.除外) continue;
       if(Datas.乗員データ[Temp[I]].確定!="留守番"||true){
-        if(Text) Text += "\n";
         if(Datas.乗員データ[Temp[I]].確定){
+          if(Text) Text += "\n";
           if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は" + Datas.乗員データ[Temp[I]].確定;
           else Text += Datas.乗員データ[Temp[I]].名前 + "は" + Datas.乗員データ[Temp[I]].確定;
           continue;
         };
         if(Datas.乗員データ[Temp[I]].人間){
+          if(Text) Text += "\n";
           if(!Datas.乗員データ[Temp[I]].名前) Text += Temp[I] + "は人間";
           else Text += Datas.乗員データ[Temp[I]].名前 + "は人間";
           continue;
@@ -133,7 +135,7 @@ function Test(Text){
   };
   Datas.確定内容 = Text;
   Temp = Object.keys(Datas.乗員名);
-  for(var I = Temp.length-1; I > 0; I--){
+  for(var I = Temp.length-1; I >= 0; I--){
     if(Datas.乗員名[Temp[I]].名前){
       Datas.処理内容 = Datas.処理内容.replaceAll(Temp[I],Datas.乗員名[Temp[I]].名前);
     };
@@ -372,19 +374,23 @@ function Test8(Darega){
       if(I){
         if(!Datas.乗員データ[Darega[0]].役割.バグ) Test6(Darega[1],"確定","バグ");
         if(!Datas.乗員データ[Darega[1]].役割.バグ) Test6(Darega[0],"確定","バグ");
+        Temp = Object.keys(Datas.乗員データ);
+        for(var J = 0; J < Temp.length; J++){
+          if(Temp[J]==Darega[0]||Temp[J]==Darega[1]) continue;
+          if(Datas.乗員データ[Temp[J]].ステータス) Test6(Temp[J],"削除","エンジニア");
+        };
         if(Datas.乗員データ[Darega[0]].役割.バグ&&Datas.乗員データ[Darega[1]].役割.バグ){
-          Temp = Object.keys(Datas.乗員データ);
-          for(var I = 0; I < Temp.length; I++){
-            if(Temp[I]==Darega[0]||Temp[I]==Darega[1]) continue;
-            Test6(Temp[I],"削除","バグ");
+          for(var J = 0; J < Temp.length; J++){
+            if(Temp[J]==Darega[0]||Temp[J]==Darega[1]) continue;
+            Test6(Temp[J],"削除","バグ");
           };
         };
         Datas.Temp = [];
         Temp = Object.keys(Datas.乗員データ);
-        for(var I = 0; I < Temp.length; I++){
-          if(Datas.乗員名[Temp[I]].データ=="敵") continue;
-          if(Datas.乗員名[Temp[I]].データ[Temp[I]].確定 == "エンジニア"){
-            if(!Datas.乗員データ[Temp[I]].ステータス) Datas.Temp.push(Temp[I]);
+        for(var J = 0; J < Temp.length; J++){
+          if(Datas.乗員名[Temp[J]].データ=="敵") continue;
+          if(Datas.乗員名[Temp[J]].データ[Temp[J]].確定 == "エンジニア"){
+            if(!Datas.乗員データ[Temp[J]].ステータス) Datas.Temp.push(Temp[J]);
           };
         };
         if(Datas.Temp.length==1) Test6(Datas.Temp[0],"確定","エンジニア");
@@ -392,9 +398,9 @@ function Test8(Darega){
       }
       else{
         Temp = Object.keys(Datas.乗員データ);
-        for(var I = 0; I < Temp.length; I++){
-          if(Datas.乗員データ[Temp[I]].ステータス) continue;
-          if(!Datas.乗員データ[Temp[I]].役割.エンジニア) continue;
+        for(var J = 0; J < Temp.length; J++){
+          if(Datas.乗員データ[Temp[J]].ステータス) continue;
+          if(!Datas.乗員データ[Temp[J]].役割.エンジニア) continue;
           Temp = false;
           break;
         };
