@@ -69,48 +69,45 @@ function Game_load(width,height){
         Buttons[Temp[I]]._style.color = MMM;
         Buttons[Temp[I]].backgroundColor = BBB;
       };
-      Text_Areas.矛盾内容._element.value = Datas.矛盾内容;
+      Text_Areas.処理内容._element.value = Datas.処理内容;
       Text_Areas.確定内容._element.value = Datas.確定内容;
       return;
     };
 
     function Button_Set_Again(){
-      var Number = [{},{},{}];
       var Set_B = [];
-      var Temp = Object.keys(Buttons);
-      for(var I = 0; I < Temp.length; I++){
-        if(!Datas.乗員番号) continue;
-        if(!Datas.乗員番号[Temp[I]]) continue;
-        if(Datas.乗員データ[Datas.乗員番号[Temp[I]]]){
-          switch(Datas.乗員データ[Datas.乗員番号[Temp[I]]].ステータス){
-            case undefined:
-              Number[0][Temp[I]] = true;
-              break;
-            case "コールドスリープ":
-              Number[1][Temp[I]] = true;
-              break;
-            case "消滅":
-              Number[2][Temp[I]] = true;
-              break;
-          }
-        };
-      };
-      for(var I = 11; I < B_font.length; I++){
-        if(Number[0][B_font[I]]||(!Number[1][B_font[I]]&&!Number[2][B_font[I]])){
-          if(Number[0][B_font[I]]) Set_B.push(B_font[I]);
-          else{
-            if(Object.keys(Datas.乗員番号).length!=Datas.乗員数データ.乗員){
-              Set_B.push(B_font[I]);
-            };
-          };
-        };
-      };
-      for(var I = 11; I < B_font.length; I++) if(Number[1][B_font[I]]) Set_B.push(B_font[I]);
-      for(var I = 11; I < B_font.length; I++) if(Number[2][B_font[I]]) Set_B.push(B_font[I]);
+      var Number = {};
       for(var I = 11; I < B_font.length; I++) Buttons[B_font[I]].moveTo(height*2,height*2);
-      var J = 1;
-      var K = 3;
+      if(!Datas.冷凍) Datas.冷凍 = [];
+      for(var I = Datas.冷凍.length-1; I >= 0; I--){
+        if(!Datas.冷凍[I]) continue;
+        for(var J = 0; J < Datas.冷凍[I].誰が.length; J++){
+          Number[Datas.乗員名[Datas.冷凍[I].誰が[J]].名前] = true;
+          Set_B.push(Datas.乗員名[Datas.冷凍[I].誰が[J]].名前);
+        };
+      };
+      if(!Datas.消滅) Datas.消滅 = [];
+      for(var I = Datas.消滅.length-1; I >= 0; I--){
+        if(!Datas.消滅[I]) continue;
+        for(var J = 0; J < Datas.消滅[I].誰が.length; J++){
+          Number[Datas.乗員名[Datas.消滅[I].誰が[J]].名前] = true;
+          Set_B.push(Datas.乗員名[Datas.消滅[I].誰が[J]].名前);
+        };
+      };
+      for(var I = B_font.length-1; I > 10; I--){
+        if(Number[B_font[I]]) continue;
+        Set_B.unshift(B_font[I]);
+      };
+      if(!Datas.乗員番号) Datas.乗員番号 = {};
+      if(Object.keys(Datas.乗員番号).length==Datas.乗員数データ.乗員){
+        for(var I = 0; I < Set_B.length; I++){
+          if(!Datas.乗員番号[Set_B[I]]) Set_B[I] = null;
+        };
+      };
+      J = 1;
+      K = 3;
       for(var I = 0; I < Set_B.length; I++){
+        if(!Set_B[I]) continue;
         Buttons[Set_B[I]].moveTo(width/5*J,height-height/10*K);
         J++;
         if(J>4){
@@ -149,9 +146,9 @@ function Game_load(width,height){
     };
 
     function Button_Set(X,Y,W,I){
-      if(Now_Scene=="メイン") X = width/5*X;
-      else if(X) X = width/X;
       W = width/W;
+      if(Now_Scene=="メイン") X = width/5*X;
+      else if(X) X = width - W;
       Buttons[I] = new Entity();
       Buttons[I].moveTo(X,height-height/10*Y);
       Buttons[I].width = W;
@@ -162,6 +159,7 @@ function Game_load(width,height){
       Buttons[I]._element.value = I;
       if(Now_Scene=="メイン") Buttons[I]._style["font-size"] = height/(30*Tate);
       else Buttons[I]._style["font-size"] = height/20;
+      if(I.match(/切替/)) Buttons[I]._style["font-size"] = height/(15*Tate);
       Buttons[I].backgroundColor = "buttonface";
       Scenes[Now_Scene].addChild(Buttons[I]);
       Buttons[I]._element.onclick = function(e){
@@ -246,8 +244,9 @@ function Game_load(width,height){
             What = "\n";
             break;
           default:
+            if(!Datas.冷凍) Datas.冷凍 = [];
             if(Datas.冷凍[0]) Datas.冷凍[Datas.冷凍.length-1].発言 = I;
-            if(Datas.乗員データ[I]) console.log(Datas.乗員データ[I]);
+            //if(Datas.乗員データ[I]) console.log(Datas.乗員データ[I]);
             Texts.日誌 += What + I;
             What = "と";
             break;
@@ -293,7 +292,7 @@ function Game_load(width,height){
       Button_Set(2,4,2,"乗員-",15);
       Button_Set(0,5,2,"エンジニア切替",15);
       Button_Set(2,5,2,"ドクター切替",15);
-      Button_Set(2,6,2,"除外",15);
+      Button_Set(2,10,3,"除外",15);
       Button_Set(2,1,2,"守護天使",15);
 
       Scenes[Now_Scene].addEventListener("enterframe",function(e){
@@ -336,7 +335,7 @@ function Game_load(width,height){
       else return(Scenes[Now_Scene]);
 
       Text_Area_Set(0,"日誌");
-      Text_Area_Set(1,"矛盾内容");
+      Text_Area_Set(1,"処理内容");
       Text_Area_Set(2,"確定内容");
 
       B_font.push("取り消し");
